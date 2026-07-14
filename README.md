@@ -139,6 +139,9 @@ graph TB
 │   ├── episodic/                    # decisions.jsonl + sessions.jsonl
 │   ├── semantic/                    # project_knowledge.md + patterns.json
 │   └── procedural/                  # workflows.json + playbooks.md
+├── agents/                          # Custom specialized agent profiles
+│   ├── index.json                   # Agent active profiles catalog
+│   └── templates/                   # Default developer/QA worker templates
 └── registry/                        # Skill catalogs (.sk/)
 ```
 

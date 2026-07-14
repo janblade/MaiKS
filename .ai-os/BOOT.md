@@ -111,9 +111,11 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
    - Check if `installed_skills` in `manifest.json` have the capabilities/commands to handle the new stack.
 8. **Module Discovery & Auto-Scaffolding**:
    - Scan the project structure for distinct sub-modules (e.g. `frontend/`, `backend/`, `services/api/`, `apps/web/`, `db/`).
-   - If a distinct workspace module is identified, check if a corresponding workspace skill exists in `registry/index.json` (e.g., `moonlight-api.sk` for an `api/` or `services/api/` folder).
-   - If missing: Trigger `EVOLVE_PROPOSE` to auto-scaffold a custom workspace skill for that module. The generated skill must contain commands tailored for building, running, linting, and testing that specific directory (delegated to `infra.sk` and `evolution.sk`).
-   - Log the discovered modules and generated skills in `progress.md` and `decisions.jsonl`.
+   - If a distinct workspace module is identified:
+     - Check if a corresponding skill folder (e.g., `registry/moonlight-api.sk/`) and custom agent profile (e.g., `agents/moonlight-api.json`) exist.
+     - If missing: Trigger `EVOLVE_PROPOSE` to auto-scaffold the skill and custom agent profile. The skill must define scoped directory commands, and the agent profile must define specialized system prompts, allowed skills, and execution boundary constraints (delegated to `infra.sk` and `evolution.sk`).
+   - Log the discovered modules, generated skills, and generated agent profiles in `progress.md` and `decisions.jsonl`.
+
 
 
 

@@ -136,9 +136,11 @@ Discover distinct codebase modules and trigger auto-generation of modular worksp
    - Distinct logical subfolders (e.g. `frontend/`, `backend/`, `api/`, `services/`, `db/`).
 3. For each discovered module:
    - Identify the name (e.g., `moonlight-web` or `api-service`).
-   - Check if a corresponding skill folder (e.g., `/.ai-os/registry/moonlight-web.sk/`) exists.
-   - If missing and `--auto-scaffold` is enabled: Trigger `EVOLVE_PROPOSE` to auto-scaffold a customized skill containing commands (like `DEV`, `BUILD`, `TEST`) scoped explicitly to that subfolder.
-4. Report list of discovered modules and skill generation status.
+   - Check if a corresponding skill folder (e.g., `/.ai-os/registry/moonlight-web.sk/`) and custom agent profile (e.g., `/.ai-os/agents/moonlight-web.json`) exist.
+   - If missing and `--auto-scaffold` is enabled: Trigger `EVOLVE_PROPOSE` to auto-scaffold:
+     1. A customized skill containing commands (like `DEV`, `BUILD`, `TEST`) scoped to that folder.
+     2. A customized agent profile that defines restricted folder execution boundaries and specialized prompts.
+4. Report list of discovered modules, skill status, and agent profile generation status.
 
 ---
 

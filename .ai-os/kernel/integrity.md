@@ -40,6 +40,11 @@ The following paths MUST exist for a healthy boot:
 .ai-os/registry/context-engine.sk/SKILL.md
 .ai-os/registry/self-healing.sk/SKILL.md
 .ai-os/registry/architect.sk/SKILL.md
+.ai-os/agents/index.json
+.ai-os/agents/supervisor.json
+.ai-os/agents/templates/web_developer.json
+.ai-os/agents/templates/api_developer.json
+.ai-os/agents/templates/qa_auditor.json
 .ai-os/commands/index.json
 .ai-os/commands/aliases.json
 .ai-os/progress.md
