@@ -13,21 +13,41 @@
     "max_retries_per_action": 3,
     "model_routing": {
       "escalation_policy": "auto",
+      "discovery_mode": "auto",
+      "allow_host_fallback": true,
       "tiers": {
         "reasoning": {
-          "primary": "claude-3-opus",
-          "fallback": "gemini-1.5-pro",
-          "description": "High reasoning, complex logic, security audits, self-healing diagnostics"
+          "primary": "claude-fable-5",
+          "fallback": "gemini-3.5-pro",
+          "description": "High reasoning, complex logic, security audits, self-healing diagnostics",
+          "provider_mappings": {
+            "openai": "gpt-5.6-sol",
+            "anthropic": "claude-fable-5",
+            "google": "gemini-3.5-pro",
+            "ollama": "llama4:maverick"
+          }
         },
         "balanced": {
-          "primary": "claude-3-sonnet",
-          "fallback": "gemini-1.5-flash",
-          "description": "Coding tasks, scaffolding, test writing, standard refactoring"
+          "primary": "claude-sonnet-5",
+          "fallback": "gemini-3.5-flash",
+          "description": "Coding tasks, scaffolding, test writing, standard refactoring",
+          "provider_mappings": {
+            "openai": "gpt-5.6-terra",
+            "anthropic": "claude-sonnet-5",
+            "google": "gemini-3.5-flash",
+            "ollama": "llama4:scout"
+          }
         },
         "lightweight": {
-          "primary": "claude-3-haiku",
-          "fallback": "gpt-4o-mini",
-          "description": "Syntax check, text styling, log parsing, config reading"
+          "primary": "gpt-5.6-luna",
+          "fallback": "gemini-3.5-flash",
+          "description": "Syntax check, text styling, log parsing, config reading",
+          "provider_mappings": {
+            "openai": "gpt-5.6-luna",
+            "anthropic": "claude-sonnet-5",
+            "google": "gemini-3.5-flash",
+            "ollama": "llama4:scout"
+          }
         }
       }
     }

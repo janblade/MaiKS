@@ -173,7 +173,7 @@ When a skill is OPEN:
 
 ### Recovery from Loop
 1. Stop the current action chain.
-2. **Escalate AI Model**: Check `manifest.json.agent_config.model_routing`. Instantly switch the active worker agent's execution to the **Reasoning Tier** (highest intelligence) to run deep diagnostics and break the loop.
+2. **Escalate AI Model**: Check `manifest.json.agent_config.model_routing`. Instantly switch the active worker agent's execution to the **Reasoning Tier** (highest intelligence) to run deep diagnostics and break the loop. If the specified reasoning model is not available in the user's environment, follow the **Model Auto-Discovery & Fallback Protocol** (BOOT.md §7.5) to select the next best reasoning alternative or the host model.
 3. Log: `{loop_type, steps_taken, tokens_consumed, repeated_actions, escalated_to: "reasoning"}`.
 4. Try alternative strategy using the higher model tier.
 5. If de-escalation check passes after success: downgrade model to default tier.
@@ -181,7 +181,7 @@ When a skill is OPEN:
 
 ## Model Escalation during Repair
 When the `HEAL_REPAIR` command runs after a build or test failure:
-1. If the first simple repair attempt fails, **escalate the model** to the **Reasoning Tier**.
+1. If the first simple repair attempt fails, **escalate the model** to the **Reasoning Tier** (using the **Model Auto-Discovery & Fallback Protocol** if the primary model is unavailable).
 2. Run detailed diagnostics using the high reasoning model to analyze trace logs and propose architectural corrections.
 3. Once the build passes (verified via `INFRA_HEALTH_CHECK`), automatically **de-escalate the model** back to the agent's default configured tier.
 

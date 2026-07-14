@@ -140,7 +140,8 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
 4. Read `commands/index.json` — catalog all available commands.
 5. Read `commands/aliases.json` — load user shortcuts.
 6. Scan workspace for local scripts, Makefiles, CI/CD pipelines — register as "System Commands."
-7. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
+7. **Model Environment Validation**: Run the model auto-discovery protocol (per §7.5) to check for configured API keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, etc.). Probe for local model services (like Ollama). Map detected model environments to the configured tiers in `manifest.json`. If no predefined or provider-specific models are available, bind all tiers to the host/active session model.
+8. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
 
 **Boot is complete.** Proceed to serve the user.
 
@@ -424,6 +425,17 @@ Once the escalating condition is resolved:
 1. Run `INFRA_HEALTH_CHECK` to verify the build passes.
 2. Log the resolution: `{"type": "de-escalation", "resolved_issue": "...", "model_tier": "balanced"}`.
 3. Automatically return the worker agent to its default configured tier (`balanced` or `lightweight`) to conserve token budgets.
+
+#### D. Model Auto-Discovery & Fallback Protocol
+If predefined models in `manifest.json` are not available/supported in the user's environment:
+1. **API Key Detection**: Scan environment variables for active provider credentials:
+   - `ANTHROPIC_API_KEY` → Enables Anthropic models
+   - `OPENAI_API_KEY` → Enables OpenAI models
+   - `GEMINI_API_KEY` or `GOOGLE_API_KEY` → Enables Google Gemini models
+   - `OLLAMA_HOST` or checking local `ollama` commands → Enables Ollama models
+2. **Dynamic Mapping**: If a tier's primary and fallback models are both unavailable, query the `provider_mappings` in `manifest.json` for the first available provider discovered.
+3. **IDE/Host Fallback**: If no compatible API keys are set, or `allow_host_fallback` is enabled, route execution through the host editor's current active model (Gemini/Claude/GPT session currently running).
+4. **Graceful Warning**: Log the fallback behavior in `memory/episodic/sessions.jsonl` (e.g. `{"type": "model_fallback", "tier": "reasoning", "target": "claude-3-opus", "used": "gemini-1.5-pro", "reason": "auth_error"}`).
 
 ---
 
