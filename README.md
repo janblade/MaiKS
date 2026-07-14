@@ -7,11 +7,11 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 ## 🚀 Key Features
 
 *   **Microkernel Architecture**: Strict separation between the kernel space (immutable governance, rules, configuration) and user space (evolvable skills, memory, commands).
-*   **Standards-Driven**: Built-in compliance checks aligned with **ISO/IEC 42001** (AI Management Systems) and **OWASP GenAI Top 10 (2025)** security standards.
-*   **Three-Tier Memory**: Episodic (decisions), Semantic (project knowledge), and Procedural (learned workflows) logs that persist context across sessions.
-*   **Perception & Stack-Drift Detection**: Scans the workspace on boot, detects technology stacks, and automatically proposes skill updates if teammates introduce new tools/languages.
+*   **Supervisor-Worker Topology**: Enforced multi-agent delegation (Rule R19). The primary agent operates strictly as a Coordinator, delegating all codebase modifications to restricted, specialized sub-agents.
+*   **Dynamic Model-Tiering & Escalation**: Intelligent model routing (Reasoning, Balanced, and Lightweight tiers). Automatically escalates workers to high reasoning models during critical errors, loop healing, or audits, and de-escalates back to save token budget.
+*   **Perception & Stack-Drift Detection**: Scans the workspace on boot, maps codebase sub-modules, and automatically synthesizes custom skills and agent profiles if stack drift or new modules are detected.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
-*   **Self-Healing**: Built-in circuit breakers, loop detection, and failure recovery to keep autonomous workflows stable and reliable.
+*   **Self-Healing & Resilience**: Built-in circuit breakers, loop detection, and failure recovery to keep autonomous workflows stable and reliable.
 
 ---
 
@@ -172,6 +172,7 @@ Once booted, you can direct the agent using standard commands or aliases in your
 > OS_COMMAND audit            # Run full security vuln scan
 > OS_COMMAND fix              # Run auto-healing diagnostic & repair
 > OS_COMMAND plan --idea="..." # Kick off greenfield planning pipeline
+> OS_COMMAND INFRA_DISCOVER_MODULES --auto-scaffold # Auto-generate skills and agent profiles for modules
 ```
 
 ---
