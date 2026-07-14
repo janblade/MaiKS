@@ -108,8 +108,13 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
 7. **Stack Drift & Gap Analysis**:
    - Compare the newly detected `tech_stack` against the previously cached genome.
    - If changes or new files are found: Flag a `stack-drift` event.
-   - Check if `installed_skills` in `manifest.json` have the capabilities/commands to handle the new stack (e.g., if a Python service was added by a teammate, does the testing skill support `pytest`?).
-   - If a gap is detected: Instantly trigger `EVOLVE_PROPOSE` to scaffold or update the relevant skills/conventions. Log the proposal in `progress.md`.
+   - Check if `installed_skills` in `manifest.json` have the capabilities/commands to handle the new stack.
+8. **Module Discovery & Auto-Scaffolding**:
+   - Scan the project structure for distinct sub-modules (e.g. `frontend/`, `backend/`, `services/api/`, `apps/web/`, `db/`).
+   - If a distinct workspace module is identified, check if a corresponding workspace skill exists in `registry/index.json` (e.g., `moonlight-api.sk` for an `api/` or `services/api/` folder).
+   - If missing: Trigger `EVOLVE_PROPOSE` to auto-scaffold a custom workspace skill for that module. The generated skill must contain commands tailored for building, running, linting, and testing that specific directory (delegated to `infra.sk` and `evolution.sk`).
+   - Log the discovered modules and generated skills in `progress.md` and `decisions.jsonl`.
+
 
 
 ### Phase 4: MEMORY RESTORE
@@ -210,6 +215,7 @@ These are provided by installed skills (see Layer 5):
 | `INFRA_SETUP_CI` | infra.sk | Generate CI/CD pipeline |
 | `INFRA_HEALTH_CHECK` | infra.sk | Project health diagnostic |
 | `INFRA_DIAGNOSE` | infra.sk | Deep diagnostic |
+| `INFRA_DISCOVER_MODULES` | infra.sk | Discover codebase modules and scaffold modular skills |
 | `TEST_RUN` | testing.sk | Execute test suites |
 | `TEST_COVERAGE` | testing.sk | Coverage analysis |
 | `TEST_GENERATE` | testing.sk | AI-assisted test generation |

@@ -121,6 +121,27 @@ Deep project diagnostic.
 
 ---
 
+### INFRA_DISCOVER_MODULES
+
+Discover distinct codebase modules and trigger auto-generation of modular workspace skills.
+
+```
+> OS_COMMAND INFRA_DISCOVER_MODULES [--auto-scaffold]
+```
+
+**Procedure:**
+1. Scan directories down to depth 2 (excluding node_modules, .git, .ai-os, build/dist).
+2. Identify distinct modules based on presence of stack-specific markers:
+   - Directory containing its own `package.json`, `Cargo.toml`, `pyproject.toml`, `requirements.txt`, `go.mod`, etc.
+   - Distinct logical subfolders (e.g. `frontend/`, `backend/`, `api/`, `services/`, `db/`).
+3. For each discovered module:
+   - Identify the name (e.g., `moonlight-web` or `api-service`).
+   - Check if a corresponding skill folder (e.g., `/.ai-os/registry/moonlight-web.sk/`) exists.
+   - If missing and `--auto-scaffold` is enabled: Trigger `EVOLVE_PROPOSE` to auto-scaffold a customized skill containing commands (like `DEV`, `BUILD`, `TEST`) scoped explicitly to that subfolder.
+4. Report list of discovered modules and skill generation status.
+
+---
+
 ## Stack-Specific Best Practices
 
 The infra skill references these best practices based on detected stack:

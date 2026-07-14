@@ -165,7 +165,7 @@ Once booted, you can direct the agent using standard commands or aliases in your
 
 ```
 > OS_COMMAND STATUS           # Show system health & stats
-> OS_COMMAND HELP             # View all 39 available commands
+> OS_COMMAND HELP             # View all 40 available commands
 > OS_COMMAND audit            # Run full security vuln scan
 > OS_COMMAND fix              # Run auto-healing diagnostic & repair
 > OS_COMMAND plan --idea="..." # Kick off greenfield planning pipeline

@@ -14,7 +14,7 @@
 | **Last Boot** | Never |
 | **Active Archetype** | Not yet determined |
 | **Skills Installed** | 8 |
-| **Commands Available** | 39 (6 built-in + 33 skill-backed) |
+| **Commands Available** | 40 (6 built-in + 34 skill-backed) |
 | **Security Status** | Clean (no scans run yet) |
 | **Memory Status** | Initialized (empty) |
 
