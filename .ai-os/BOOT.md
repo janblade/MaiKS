@@ -124,11 +124,16 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
 
 ### Phase 5: CAPABILITY MAPPING
 
-1. Read `registry/index.json` — catalog all installed skills.
-2. Read `commands/index.json` — catalog all available commands.
-3. Read `commands/aliases.json` — load user shortcuts.
-4. Scan workspace for local scripts, Makefiles, CI/CD pipelines — register as "System Commands."
-5. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
+1. **Local Skill Absorption**: Scan typical workspace locations (e.g. `.agents/skills/`, `.gemini/skills/`, `.cursor/rules/`) for custom agent skill folders.
+   - If a custom skill containing `SKILL.md` is found outside `.ai-os/`: Auto-register it in `registry/index.json` as an imported capability.
+   - Generate standard command mappings for its subcommands inside `commands/index.json`.
+2. **Rule & Guideline Ingestion**: Scan for existing workspace instruction/rule files (e.g. custom `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md` containing non-system rules).
+   - Parse key architectural or styling instructions and merge them into the **Project-Specific Addendum** of `rules/ultimate_rules.md`.
+3. Read `registry/index.json` — catalog all active skills (including absorbed ones).
+4. Read `commands/index.json` — catalog all available commands.
+5. Read `commands/aliases.json` — load user shortcuts.
+6. Scan workspace for local scripts, Makefiles, CI/CD pipelines — register as "System Commands."
+7. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
 
 **Boot is complete.** Proceed to serve the user.
 
