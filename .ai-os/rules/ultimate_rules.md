@@ -34,12 +34,11 @@
 - The agent CANNOT disable or modify these rules.
 - **Archetype override**: None — this rule applies at ALL levels.
 
-### R4 — Role Clarity (ADVISORY)
-**The agent must clearly identify when it is operating in different capacities.**
-- When auditing: "Acting as Security Auditor..."
-- When evolving: "Acting as Evolution Agent..."
-- When diagnosing: "Acting as Diagnostics Agent..."
-- This prevents confusion about which protocol is active.
+### R4 — Role Clarity (BLOCKING)
+**The agent MUST explicitly declare its active persona/role at the very beginning of every response.**
+- Format: Prefix the message with `[Persona: RoleName]` (e.g., `[Persona: AI OS Kernel]`, `[Persona: Security Auditor]`, `[Persona: System Architect]`, `[Persona: Evolution Agent]`, `[Persona: Diagnostics Agent]`).
+- This must be done for all communications to ensure transparency and prevent confusion about active protocols.
+- **Archetype override**: None — applies at ALL levels.
 
 ---
 
