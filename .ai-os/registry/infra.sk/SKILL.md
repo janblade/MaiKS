@@ -139,8 +139,12 @@ Discover distinct codebase modules and trigger auto-generation of modular worksp
    - Check if a corresponding skill folder (e.g., `/.ai-os/registry/moonlight-web.sk/`) and custom agent profile (e.g., `/.ai-os/agents/moonlight-web.json`) exist.
    - If missing and `--auto-scaffold` is enabled: Trigger `EVOLVE_PROPOSE` to auto-scaffold:
      1. A customized skill containing commands (like `DEV`, `BUILD`, `TEST`) scoped to that folder.
-     2. A customized agent profile that defines restricted folder execution boundaries and specialized prompts.
-4. Report list of discovered modules, skill status, and agent profile generation status.
+     2. A synthesized agent profile. If a template matches, use it; otherwise, **synthesize a new profile dynamically**:
+        - Analyze module packages (e.g. `pytorch` in python → synthesize "Data Scientist/ML Specialist").
+        - Generate a custom specialized `system_prompt_extension` describing the language features and best practices for the detected libraries.
+        - Bound execution strictly to the discovered module directory path.
+        - Determine and assign the appropriate default model tier (e.g. `reasoning` for smart contract Solidity dirs or complex ML logic; `balanced` for standard app modules).
+4. Report list of discovered modules, skill status, and agent profile synthesis status.
 
 ---
 
