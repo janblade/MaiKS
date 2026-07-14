@@ -157,8 +157,9 @@ graph TB
    - For **Cursor**: `.cursor/rules/ai-os.md`
    - For **Windsurf**: `.windsurfrules`
    - Or just keep `AGENTS.md` at the project root as a generic fallback.
-3. Open your project in your AI editor or launch your terminal assistant.
-4. The agent will read the bridge file, load `BOOT.md`, initialize, and greet you with the status banner!
+3. **Environment Setup (Optional)**: If you intend to use dynamic model routing/escalation (per §7.5 of `BOOT.md`), set your provider credentials (such as `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or local `OLLAMA_HOST`) in your environment.
+4. Open your project in your AI editor or launch your terminal assistant.
+5. The agent will read the bridge file, load `BOOT.md`, initialize, and greet you with the status banner!
 
 ---
 
