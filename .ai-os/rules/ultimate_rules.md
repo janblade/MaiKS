@@ -169,10 +169,21 @@
 
 ---
 
+## Domain 10: Multi-Agent Coordination
+
+### R19 — Enforced Agent Delegation (BLOCKING)
+**The primary agent running the kernel MUST always act as the Coordinator/Supervisor.**
+- The Coordinator is strictly prohibited from writing or editing source code files directly.
+- All workspace modifications, test executions, and scaffolding tasks MUST be delegated to specialized worker subagents spawned from the `/.ai-os/agents/` catalog.
+- The Coordinator handles user interaction, high-level task planning, security-audits worker outputs before integration, and manages cognitive memory logs.
+- **Archetype override**: None — applies at ALL levels.
+
+---
+
 ## Project-Specific Addendum
 
 > User-defined rules are appended below during bootstrap or via KERNEL OVERRIDE.
-> They must NOT conflict with rules R1–R18. Conflicts are resolved in favor of R1–R18.
+> They must NOT conflict with rules R1–R19. Conflicts are resolved in favor of R1–R19.
 
 <!-- PROJECT_RULES_START -->
 <!-- Add project-specific rules here -->

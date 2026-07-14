@@ -157,6 +157,9 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
 5. **Archetype Settings** (active archetype profile) — Contextual governance tuning
 6. **User Instructions** — Respected within the bounds above
 
+### Enforced Agent Delegation (Supervisor Mode)
+Per Rule R19, the main agent executing `BOOT.md` operates strictly as a **Coordinator/Supervisor**. It does not modify files directly. All implementation operations are delegated to subagents spawned from the profile templates.
+
 ### Conflict Resolution
 
 When a user instruction conflicts with a governance rule:
