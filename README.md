@@ -163,6 +163,18 @@ graph TB
 
 ---
 
+## 🔄 How to Update
+
+To update an existing workspace to the latest version of GoliathOS while preserving your agent's learned memory and custom configurations:
+
+1. **Update Kernel & Rules**: Copy the latest `.ai-os/BOOT.md`, `.ai-os/kernel/`, and `.ai-os/rules/` directories into your project's `.ai-os/` folder.
+2. **Update Core Skills**: Copy the latest `.ai-os/registry/` directory to update the default system skills.
+3. **Preserve User Space**: 
+   *   Do **NOT** overwrite the `.ai-os/memory/` directory (this keeps your agent's episodic, semantic, and procedural memory intact).
+   *   Merge any new configuration keys (like the new `model_routing` options) into your existing `.ai-os/manifest.json` instead of replacing it entirely.
+
+---
+
 ## 🛠️ Command Interface
 
 Once booted, you can direct the agent using standard commands or aliases in your chat window:
