@@ -8,7 +8,7 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 
 *   **Microkernel Architecture**: Strict separation between the kernel space (immutable governance, rules, configuration) and user space (evolvable skills, memory, commands).
 *   **Supervisor-Worker Topology**: Enforced multi-agent delegation (Rule R19). The primary agent operates strictly as a Coordinator, delegating all codebase modifications to restricted, specialized sub-agents.
-*   **Dynamic Model-Tiering & Escalation**: Intelligent model routing (Reasoning, Balanced, and Lightweight tiers). Automatically escalates workers to high reasoning models during critical errors, loop healing, or audits, and de-escalates back to save token budget.
+*   **Dynamic Model-Tiering & Escalation**: Intelligent model routing (Reasoning, Balanced, and Lightweight tiers) with built-in **Auto-Discovery & Fallback Protocol**. Automatically escalates workers to high reasoning models during critical errors, loop healing, or audits, maps active provider keys (OpenAI, Anthropic, Gemini, Ollama), and de-escalates back to the default or host editor session to conserve token budgets.
 *   **Perception & Stack-Drift Detection**: Scans the workspace on boot, maps codebase sub-modules, and automatically synthesizes custom skills and agent profiles if stack drift or new modules are detected.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
 *   **Self-Healing & Resilience**: Built-in circuit breakers, loop detection, and failure recovery to keep autonomous workflows stable and reliable.
