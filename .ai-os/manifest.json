@@ -10,7 +10,27 @@
     "max_autonomous_steps": 25,
     "token_budget_warning": 50000,
     "loop_detection_threshold": 15,
-    "max_retries_per_action": 3
+    "max_retries_per_action": 3,
+    "model_routing": {
+      "escalation_policy": "auto",
+      "tiers": {
+        "reasoning": {
+          "primary": "claude-3-opus",
+          "fallback": "gemini-1.5-pro",
+          "description": "High reasoning, complex logic, security audits, self-healing diagnostics"
+        },
+        "balanced": {
+          "primary": "claude-3-sonnet",
+          "fallback": "gemini-1.5-flash",
+          "description": "Coding tasks, scaffolding, test writing, standard refactoring"
+        },
+        "lightweight": {
+          "primary": "claude-3-haiku",
+          "fallback": "gpt-4o-mini",
+          "description": "Syntax check, text styling, log parsing, config reading"
+        }
+      }
+    }
   },
   "boot_count": 0,
   "last_boot": null,

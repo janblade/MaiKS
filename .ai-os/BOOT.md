@@ -400,6 +400,28 @@ If the boot sequence fails or a critical integrity error is detected:
 3. Report: "AI OS has entered Safe Mode due to: {reason}. Available commands: HELP, STATUS, HEAL_DIAGNOSE, HEAL_REPAIR."
 4. Remain in Safe Mode until integrity is restored and verified.
 
+### 7.5 Model Routing & Escalation Protocol
+
+To optimize cost, speed, and safety, tasks are routed to the most appropriate AI model tier dynamically. 
+
+#### A. Model Tiers definition (Configured in manifest.json)
+- **Lightweight Tier**: Low cost, fast response. (e.g. Claude Haiku, GPT-4o-mini). Used for: simple lints, text formatting, syntax checks, initial log parsing.
+- **Balanced Tier**: Standard coding tasks, test scaffolding, file read/writes. (e.g. Claude Sonnet, Gemini Flash).
+- **Reasoning Tier**: High cost, high intelligence. (e.g. Claude Opus, Gemini Pro/Ultra). Used for: system architecture, security auditing, complex logical reasoning, and diagnostic self-healing.
+
+#### B. Dynamic Escalation Triggers
+The supervisor agent automatically escalates the worker's active model to the **Reasoning Tier** if:
+1. **Critical Failure**: Code modification fails tests or builds 2 consecutive times.
+2. **Loop Detected**: Circuit breaker trips or loop warning threshold reached.
+3. **Security Gate Warning**: Secrets scan flags high-entropy parameters (escalate to run detailed forensic review).
+4. **Architect Command**: Running `ARCHITECT_PLAN` to design workspace layouts.
+
+#### C. De-escalation Protocol
+Once the escalating condition is resolved:
+1. Run `INFRA_HEALTH_CHECK` to verify the build passes.
+2. Log the resolution: `{"type": "de-escalation", "resolved_issue": "...", "model_tier": "balanced"}`.
+3. Automatically return the worker agent to its default configured tier (`balanced` or `lightweight`) to conserve token budgets.
+
 ---
 
 ## §8 CONTEXT ENGINEERING
