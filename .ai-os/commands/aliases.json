@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "description": "User-defined command shortcuts. The agent can create new aliases via EVOLVE_PROPOSE.",
+  "aliases": {
+    "audit": "SECURITY_AUDIT --depth=all",
+    "scan": "SECURITY_SCAN_FILE",
+    "deps": "SECURITY_CHECK_DEPS",
+    "fix": "HEAL_DIAGNOSE --auto-repair",
+    "health": "REPORT_HEALTH",
+    "status": "STATUS",
+    "test": "TEST_RUN",
+    "coverage": "TEST_COVERAGE",
+    "ship": "TEST_RUN && SECURITY_AUDIT --depth=standard && INFRA_HEALTH_CHECK",
+    "evolve": "EVOLVE_STATUS",
+    "genome": "GENOME",
+    "circuit": "HEAL_CIRCUIT_STATUS",
+    "plan": "ARCHITECT_PLAN"
+  }
+}

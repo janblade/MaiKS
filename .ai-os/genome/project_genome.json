@@ -1,0 +1,31 @@
+{
+  "detected_at": null,
+  "scan_version": "1.0.0",
+  "languages": [],
+  "primary_language": null,
+  "frameworks": [],
+  "package_managers": [],
+  "build_tools": [],
+  "ci_cd": [],
+  "architecture_pattern": "unknown",
+  "project_maturity": "unknown",
+  "estimated_complexity": "unknown",
+  "entry_points": [],
+  "test_frameworks": [],
+  "config_files_found": [],
+  "indicators": {
+    "has_readme": false,
+    "has_license": false,
+    "has_contributing": false,
+    "has_changelog": false,
+    "has_ci": false,
+    "has_docker": false,
+    "has_tests": false,
+    "has_linter": false,
+    "has_formatter": false,
+    "has_type_checking": false,
+    "git_initialized": false,
+    "estimated_contributors": 0
+  },
+  "notes": "This file is auto-populated during Boot Phase 3 (Perception Scan). Do not edit manually."
+}
