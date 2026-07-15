@@ -207,19 +207,41 @@ Because GoliathOS stores all of its memory, skills, and governance in plain-text
 
 ---
 
-## 🛠️ Command Interface
+## 🛠️ Command Reference
 
-Once booted, you can direct the agent using standard commands or aliases in your chat window:
+Once booted, you can direct the agent using standard commands or their aliases in your chat window (e.g., `> OS_COMMAND audit`):
 
-```
-> OS_COMMAND STATUS           # Show system health & stats
-> OS_COMMAND HELP             # View all available pragmatic commands
-> OS_COMMAND audit            # Run full cognitive security scan
-> OS_COMMAND fix              # Run troubleshooting checklist to break out of loops
-> OS_COMMAND plan --idea="..." # Kick off greenfield planning interview
-> OS_COMMAND discover         # Profile workspace to detect tech stack and modules
-> OS_COMMAND wrap             # Log recent decisions and consolidate semantic memory
-```
+### Core System
+| Command | Alias | Description | When to use |
+|---|---|---|---|
+| `STATUS` | `status` | Show system health and memory stats | To check if the OS is booted and memory is loaded |
+| `HELP` | | View all available pragmatic commands | To explore OS capabilities |
+
+### Security & Healing
+| Command | Alias | Description | When to use |
+|---|---|---|---|
+| `SECURITY_AUDIT` | `audit` | Full workspace cognitive vulnerability scan | Before committing major changes |
+| `SECURITY_SCAN_FILE` | `scan` | Cognitive security scan on a specific file | After writing a complex new file |
+| `HEAL_DIAGNOSE` | `fix` | Run troubleshooting checklist | When the agent is stuck in an error loop |
+
+### Architecture & Infrastructure
+| Command | Alias | Description | When to use |
+|---|---|---|---|
+| `ARCHITECT_PLAN` | `plan` | Interactive interview to plan a feature | Starting a massive new feature or greenfield app |
+| `INFRA_DISCOVER` | `discover` | Profile codebase to detect stack drift | When you add a new framework or major dependency |
+| `INFRA_SCAFFOLD` | | Generate boilerplate project structure | When initializing a new module |
+
+### Memory & Observability
+| Command | Alias | Description | When to use |
+|---|---|---|---|
+| `LOG_DECISION` | | Record architectural decision to memory | When you make a structural choice (e.g. "Use Redux") |
+| `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | To ensure the agent remembers rules tomorrow |
+| *(Combined)* | `wrap` | Logs a decision AND consolidates memory | Run this at the end of every coding session! |
+
+### Testing
+| Command | Alias | Description | When to use |
+|---|---|---|---|
+| `TEST_GENERATE` | `test` | AI-assisted test generation | When you need robust unit tests for a specific file |
 
 ---
 
