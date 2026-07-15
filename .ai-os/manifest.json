@@ -8,40 +8,7 @@
     "approval_mode": "high-risk-only",
     "verbosity": "normal",
     "max_autonomous_steps": 25,
-    "token_budget_warning": 1500000,
-    "loop_detection_threshold": 15,
-    "max_retries_per_action": 3,
-    "model_routing": {
-      "escalation_policy": "auto",
-      "discovery_mode": "auto",
-      "allow_host_fallback": true,
-      "tiers": {
-        "reasoning": {
-          "primary": "gemini-3.1-pro-high",
-          "fallback": "gemini-3.1-pro-low",
-          "description": "High reasoning, complex logic, security audits, self-healing diagnostics",
-          "provider_mappings": {
-            "google": "gemini-3.1-pro-high"
-          }
-        },
-        "balanced": {
-          "primary": "gemini-3.1-pro-low",
-          "fallback": "gemini-3.1-pro-low",
-          "description": "Coding tasks, scaffolding, test writing, standard refactoring",
-          "provider_mappings": {
-            "google": "gemini-3.1-pro-low"
-          }
-        },
-        "lightweight": {
-          "primary": "gemini-3.1-pro-low",
-          "fallback": "gemini-3.1-pro-low",
-          "description": "Syntax check, text styling, log parsing, config reading",
-          "provider_mappings": {
-            "google": "gemini-3.1-pro-low"
-          }
-        }
-      }
-    }
+    "max_retries_per_action": 3
   },
   "boot_count": 0,
   "last_boot": null,

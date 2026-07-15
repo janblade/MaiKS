@@ -30,27 +30,9 @@ Diagnose system issues.
 ```
 
 **Procedure:**
-1. **Framework diagnosis:**
-   - Run kernel integrity check (verify all expected files exist and parse)
-   - Check `registry/index.json` consistency (all registered skills exist on disk)
-   - Check `commands/index.json` consistency (all commands map to valid skills)
-   - Check memory file integrity (JSONL parse, JSON parse, MD readability)
-   - Check circuit breaker states (any skills in OPEN or DEGRADED?)
-   - Check for orphaned evolution proposals (PROPOSED but never resolved)
-
-2. **Project diagnosis:**
-   - Run `INFRA_HEALTH_CHECK` (build, lint, type-check, test)
-   - Check for common project health issues (missing lock file, outdated deps)
-
-3. **Report findings:**
-   | Severity | Examples |
-   |---|---|
-   | CRITICAL | Kernel files missing, manifest corrupt, security.sk broken |
-   | HIGH | Skill circuit breaker OPEN, integrity check failures |
-   | MEDIUM | Orphaned registrations, stale memory entries |
-   | LOW | Missing optional files, outdated genome |
-
-4. If `--auto-repair`: Automatically fix LOW and MEDIUM issues (see HEAL_REPAIR)
+1. **Framework Diagnosis:** Review `ultimate_rules.md` and `BOOT.md` to ensure you haven't violated any governance constraints.
+2. **Project Diagnosis:** Run tests or builds to identify the root cause of the current failure.
+3. **Report Findings:** Clearly explain the root cause of the failure to the user before attempting a fix.
 
 ---
 
@@ -108,86 +90,21 @@ Rollback to last known good state.
 
 ---
 
-### HEAL_CIRCUIT_STATUS
+## Cognitive Loop Detection
 
-Circuit breaker dashboard.
+If you find yourself attempting the same fix 3 times and receiving the same error, **STOP**.
+Do not blindly retry a 4th time. Escalate to the user and ask for guidance or alternative approaches.
 
-```
-> OS_COMMAND HEAL_CIRCUIT_STATUS
-```
+## Cognitive Repair Protocol
 
-**Output:** Status of every skill's circuit breaker:
-
-```
-┌──────────────────────┬──────────┬──────────┬───────────────┐
-│ Skill                │ State    │ Failures │ Last Invoked  │
-├──────────────────────┼──────────┼──────────┼───────────────┤
-│ security.sk          │ CLOSED   │ 0        │ 2 min ago     │
-│ infra.sk             │ CLOSED   │ 0        │ 5 min ago     │
-│ testing.sk           │ DEGRADED │ 2        │ 1 min ago     │
-│ evolution.sk         │ CLOSED   │ 0        │ 10 min ago    │
-│ observability.sk     │ CLOSED   │ 0        │ 30 sec ago    │
-│ context-engine.sk    │ CLOSED   │ 0        │ 3 min ago     │
-│ self-healing.sk      │ CLOSED   │ 0        │ now           │
-└──────────────────────┴──────────┴──────────┴───────────────┘
-```
-
----
-
-## Circuit Breaker Protocol
-
-### State Transitions
-
-```
-CLOSED ──[3 consecutive failures]──→ OPEN
-OPEN ──[probe succeeds after 5 interactions]──→ DEGRADED
-DEGRADED ──[3 consecutive successes]──→ CLOSED
-DEGRADED ──[1 failure]──→ OPEN
-```
-
-### Critical Failure (Instant OPEN)
-These bypass the 3-failure threshold:
-- Security breach detection
-- Data loss or corruption
-- Infinite loop detected
-- Memory file corruption
-
-### Probe Protocol
-When a skill is OPEN:
-1. Every 5 interactions, attempt a minimal "probe" invocation of the skill
-2. If probe succeeds → transition to DEGRADED
-3. If probe fails → remain OPEN, increment failure count
-4. After 10 consecutive probe failures → escalate to user
-
----
-
-## Loop Detection Protocol
-
-### Detection Triggers
-| Metric | Threshold | Action |
-|---|---|---|
-| Steps without progress | >15 | Pause and reassess |
-| Tokens without output | > manifest `token_budget_warning` | Pause and report |
-| Same action repeated | 3+ times, same result | Stop, try alternative |
-| Circular reasoning | Contradictory conclusions | Reset context, re-approach |
-
-### Recovery from Loop
+When you encounter a persistent failure:
 1. Stop the current action chain.
-2. **Escalate AI Model**: Check `manifest.json.agent_config.model_routing`. Instantly switch the active worker agent's execution to the **Reasoning Tier** (highest intelligence) to run deep diagnostics and break the loop. If the specified reasoning model is not available in the user's environment, follow the **Model Auto-Discovery & Fallback Protocol** (BOOT.md §7.5) to select the next best reasoning alternative or the host model.
-3. Log: `{loop_type, steps_taken, tokens_consumed, repeated_actions, escalated_to: "reasoning"}`.
-4. Try alternative strategy using the higher model tier.
-5. If de-escalation check passes after success: downgrade model to default tier.
-6. If no alternative works at highest tier: escalate to user with summary.
-
-## Model Escalation during Repair
-When the `HEAL_REPAIR` command runs after a build or test failure:
-1. If the first simple repair attempt fails, **escalate the model** to the **Reasoning Tier** (using the **Model Auto-Discovery & Fallback Protocol** if the primary model is unavailable).
-2. Check context engine mode. If Massive Context Strategy is active, supply the **global codebase context** to the reasoning model rather than just the failing local function, enabling root-cause analysis across the entire dependency graph.
-3. Run detailed diagnostics using the high reasoning model to analyze trace logs and propose architectural corrections.
-4. Once the build passes (verified via `INFRA_HEALTH_CHECK`), automatically **de-escalate the model** back to the agent's default configured tier.
+2. Formulate a new hypothesis. If the local fix isn't working, consider if the root cause is in a different file or dependency.
+3. Use your file reading tools (`view_file`, `grep_search`) to gather broader context.
+4. Attempt an alternative strategy.
 
 ## Common Mistakes
 
-1. **Ignoring DEGRADED state** — DEGRADED means "partially working." Investigate before it goes OPEN.
-2. **Manually resetting circuit breakers** — Let the probe protocol handle it. Manual resets bypass failure learning.
-3. **Not logging repairs** — Every repair is a learning opportunity. Always log what was broken and how it was fixed.
+1. **Blind Retries** — Retrying the exact same command hoping it will work.
+2. **Ignoring Root Causes** — Fixing the symptom instead of the underlying architectural flaw.
+3. **Not Logging Repairs** — Every repair is a learning opportunity. Always log what was broken and how it was fixed.

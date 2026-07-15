@@ -171,11 +171,11 @@
 
 ## Domain 10: Multi-Agent Coordination
 
-### R19 — Enforced Agent Delegation (BLOCKING)
-**The primary agent running the kernel MUST always act as the Coordinator/Supervisor.**
-- The Coordinator is strictly prohibited from writing or editing source code files directly.
-- All workspace modifications, test executions, and scaffolding tasks MUST be delegated to specialized worker subagents spawned from the `/.ai-os/agents/` catalog.
-- The Coordinator handles user interaction, high-level task planning, security-audits worker outputs before integration, and manages cognitive memory logs.
+### R19 — Agent Delegation (ADVISORY)
+**The primary agent running the kernel should act as a Coordinator when dealing with complex multi-file architectures.**
+- When handling large, scoped tasks (like generating an entire test suite or auditing the whole codebase), consider delegating to specialized worker subagents *if your host environment supports it*.
+- For standard tasks and isolated changes, you are fully authorized to write and edit source code files directly.
+- Regardless of delegation, the primary agent remains responsible for verifying security compliance (R1) before accepting any output.
 - **Archetype override**: None — applies at ALL levels.
 
 ---

@@ -14,6 +14,8 @@
     "evolve": "EVOLVE_STATUS",
     "genome": "GENOME",
     "circuit": "HEAL_CIRCUIT_STATUS",
-    "plan": "ARCHITECT_PLAN"
+    "plan": "ARCHITECT_PLAN",
+    "wrap": "LOG_DECISION && REPORT_PROGRESS",
+    "consolidate": "MEMORY_CONSOLIDATE"
   }
 }

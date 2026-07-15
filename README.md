@@ -7,13 +7,12 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 ## 🚀 Key Features
 
 *   **Microkernel Architecture**: Strict separation between the kernel space (immutable governance, rules, configuration) and user space (evolvable skills, memory, commands).
-*   **Supervisor-Worker Topology**: Enforced multi-agent delegation (Rule R19). The primary agent operates strictly as a Coordinator, delegating all codebase modifications to restricted, specialized sub-agents.
-*   **Dynamic Model-Tiering & Escalation**: Intelligent model routing (Reasoning, Balanced, and Lightweight tiers) with built-in **Auto-Discovery & Fallback Protocol**. Automatically escalates workers to high reasoning models during critical errors, loop healing, or audits, maps active provider keys (OpenAI, Anthropic, Gemini, Ollama), and de-escalates back to the default or host editor session to conserve token budgets.
-*   **Perception & Stack-Drift Detection**: Scans the workspace on boot, maps codebase sub-modules, and automatically synthesizes custom skills and agent profiles if stack drift or new modules are detected.
+*   **Flexible Agent Delegation**: The primary agent acts as a Coordinator that can edit code directly, but can also delegate complex, multi-file architectures to specialized subagents if the host environment supports it.
+*   **Cognitive Security Gates**: No blind regex scanners. The OS enforces a strict pre-mutation cognitive security review, leveraging the LLM's natural reasoning to spot injection flaws, leaked credentials, and unsafe functions before writing to disk.
+*   **Pragmatic Self-Healing**: Instead of pretending to run background daemon scripts, the OS uses cognitive loop detection and troubleshooting checklists to break out of failure cycles and find root causes.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
-*   **Self-Healing & Resilience**: Built-in circuit breakers, loop detection, and failure recovery to keep autonomous workflows stable and reliable.
-*   **Massive Context Strategy**: Dynamically scales token budgets up to 1.5M tokens (e.g., Gemini 3.1 Pro), avoiding premature context pruning during deep architectural and security reviews.
-*   **External Memory & Agent Absorption**: Automatically absorbs active IDE chat transcripts, global workspace knowledge (e.g., `.cursor/memory`), and custom user-defined subagents (e.g., `.agents/agents/`) into the OS layer on boot.
+*   **Native IDE Absorption**: Bridges natively with your IDE's customization systems (like `.agents/skills.json` and `AGENTS.md`) to guarantee that OS skills and semantic memory are absorbed immediately into the agent's context window.
+*   **Three-Tier Cognitive Memory**: Maintains Episodic (what happened), Semantic (what we know), and Procedural (how we do things) memory across chat sessions via persistent markdown and JSON logs, preventing agent amnesia.
 
 ---
 
@@ -151,17 +150,10 @@ graph TB
 
 ## ⚙️ How to Install & Use
 
-1. Copy the `.ai-os/` directory into your project root.
-2. Copy the relevant bridge file(s) for the AI assistant you use:
-   - For **Antigravity (Gemini)** or **Codex**: `.agents/AGENTS.md`
-   - For **Claude Code**: `CLAUDE.md`
-   - For **GitHub Copilot**: `.github/copilot-instructions.md`
-   - For **Cursor**: `.cursor/rules/ai-os.md`
-   - For **Windsurf**: `.windsurfrules`
-   - Or just keep `AGENTS.md` at the project root as a generic fallback.
-3. **Environment Setup (Optional)**: If you intend to use dynamic model routing/escalation (per §7.5 of `BOOT.md`), set your provider credentials (such as `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or local `OLLAMA_HOST`) in your environment.
-4. Open your project in your AI editor or launch your terminal assistant.
-5. The agent will read the bridge file, load `BOOT.md`, initialize, and greet you with the status banner!
+1. Copy the `.ai-os/` and `.ai-os-installer/` directories into your project root.
+2. Open your project in your AI editor or launch your terminal assistant.
+3. Open your AI chat and type: **"Please install the AI OS using the instructions in `.ai-os-installer/INSTALL_PROMPT.md`"**
+4. The agent will act as an installer. It will safely merge the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, clean up the installer directory, and boot up!
 
 ---
 
@@ -173,7 +165,31 @@ To update an existing workspace to the latest version of GoliathOS while preserv
 2. **Update Core Skills**: Copy the latest `.ai-os/registry/` directory to update the default system skills.
 3. **Preserve User Space**: 
    *   Do **NOT** overwrite the `.ai-os/memory/` directory (this keeps your agent's episodic, semantic, and procedural memory intact).
-   *   Merge any new configuration keys (like the new `model_routing` options) into your existing `.ai-os/manifest.json` instead of replacing it entirely.
+   *   Merge any new configuration keys into your existing `.ai-os/manifest.json` instead of replacing it entirely.
+
+---
+
+## 🏎️ Efficient Workflow
+
+How to get the most out of GoliathOS in your daily development:
+
+1. **The Boot**: When you start your day, let the agent initialize. It will read `BOOT.md`, load the rules, and absorb the semantic memory (`project_knowledge.md`).
+2. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently in the background.
+3. **Complex Planning**: If you have a massive architectural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
+4. **End of Session Consolidation**: Before you close your IDE for the day, tell the agent: **"Wrap up and consolidate memory."** The agent will analyze everything you did today, extract architectural rules, and save them to `project_knowledge.md` so it never suffers from amnesia tomorrow!
+
+---
+
+## 💾 Backup & Restore (Portability)
+
+Because GoliathOS stores all of its memory, skills, and governance in plain-text markdown and JSON files within your workspace, **the OS state travels with your code**.
+
+- **To Backup**: Simply commit the `.ai-os/` directory to your project's Git repository.
+- **Merge Conflicts?**: 
+  - *Append-only Logs (`decisions.jsonl`)*: Git naturally auto-merges append-only logs very well.
+  - *Semantic Memory (`project_knowledge.md`)*: If two agents learn conflicting architectural rules on different branches, Git will throw a merge conflict. **This is a feature, not a bug!** It forces the human developers to reconcile conflicting AI architectures just like conflicting code.
+  - *Noisy Files*: The Agentic Installer automatically adds noisy, high-frequency files (like `sessions.jsonl` and `progress.md`) to your `.gitignore` to prevent conflict hell.
+- **To Restore**: When you clone your repo on a new laptop (or a teammate clones it), the host AI agent will instantly absorb the exact same episodic memories, architectural rules, and custom skills the moment they open the project! There are no hidden databases or cloud states to sync.
 
 ---
 

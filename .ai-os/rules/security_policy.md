@@ -28,17 +28,8 @@
 
 ### Defense: No-Leak Protocol
 
-1. **Credential Detection Patterns**:
-   ```
-   API keys:       (?i)(api[_-]?key|apikey)\s*[=:]\s*['"]?[A-Za-z0-9_\-]{16,}
-   AWS keys:       (AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}
-   Private keys:   -----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----
-   Tokens:         (ghp_|gho_|ghu_|ghs_|ghr_)[A-Za-z0-9_]{36,}
-   Generic secrets: (?i)(secret|password|passwd|pwd)\s*[=:]\s*['"][^'"]{8,}
-   ```
-
-2. **Output Scanning**: Before displaying any output, scan for patterns above.
-   If a match is found, redact with `[REDACTED]` and warn the user.
+1. **Credential Awareness**: Always be aware of potential secrets (API keys, AWS keys, Private keys, Tokens, Passwords) in the workspace context.
+2. **Output Review**: Before displaying any output or generating code, review it to ensure no sensitive credentials are leaked. Redact with `[REDACTED]` if necessary.
 
 3. **Memory Sanitization**: Decision logs and session logs MUST NOT contain
    credential values, even if they appeared in the context.
@@ -68,33 +59,13 @@
 
 ### Defense: Treat All Generated Code as Untrusted
 
-1. **Pre-commit Scan Gate**: All code the agent generates or modifies MUST pass
-   the security scan before being written to disk:
-   - Secrets scan (see LLM02 patterns)
-   - Injection pattern scan (command injection, SQL injection, XSS)
-   - Unsafe function detection (`eval()`, `exec()`, `os.system()`, etc.)
-   - Path traversal detection
+1. **Cognitive Security Review**: Before you write any code to disk, perform a mental check for common vulnerabilities:
+   - **Secrets Check**: Ensure no hardcoded credentials.
+   - **Injection Check**: Look for potential command injection, SQL injection, or XSS in your generated code. Avoid unsafe string concatenations.
+   - **Unsafe Functions**: Avoid `eval()`, `exec()`, or unrestricted shell execution (`os.system`) unless explicitly required and sanitized.
+   - **Path Traversal**: Ensure any file paths derived from user input are strictly validated.
 
-2. **Dangerous Pattern Blocklist**:
-   ```
-   # Command Injection
-   os.system(              subprocess.call(.*shell=True
-   child_process.exec(     Runtime.exec(
-
-   # SQL Injection
-   f"SELECT.*{             f"INSERT.*{             f"DELETE.*{
-   "SELECT " + var         .format(*sql
-
-   # Deserialization
-   pickle.loads(           yaml.load(.*Loader      eval(request.
-   unserialize(
-
-   # Path Traversal
-   ../                     ..\\                    os.path.join(.*\.\.
-   ```
-
-3. **If scan fails**: Block the write operation. Report the specific vulnerability
-   found. Suggest a safe alternative.
+2. **Vulnerability Mitigation**: If you detect a potential vulnerability during your review, fix it before executing the write command, or ask the user for clarification.
 
 ---
 

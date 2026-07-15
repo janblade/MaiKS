@@ -40,116 +40,35 @@ USER SPACE (Agent-modifiable — Evolution allowed)
 
 ---
 
-## §2 BOOT SEQUENCE
+## §2 INITIALIZATION CHECKLIST
 
-On every initialization, execute these 5 phases **in order**. Do not skip phases. If any phase fails, enter Safe Mode (§7.4).
+On every initialization, quickly orient yourself using these phases:
 
-### Phase 1: KERNEL INTEGRITY CHECK
-
-1. Verify `/.ai-os/` directory exists at the workspace root.
-   - **If missing**: Execute §10 BOOTSTRAP to scaffold the entire framework from scratch.
-   - **If present**: Continue.
-2. Verify all kernel-space files exist:
-   - `BOOT.md`, `manifest.json`, `kernel/integrity.md`
-   - `rules/ultimate_rules.md`, `rules/security_policy.md`, `rules/evolution_policy.md`
-   - `genome/archetypes/index.json` and all 4 archetype profiles
-3. Verify `manifest.json` is valid JSON with required fields: `ai_os_version`, `project_archetype`, `security_level`.
-4. If any verification fails → attempt repair from known defaults. If repair fails → enter Safe Mode.
-
-**Log**: Record boot integrity result in `memory/episodic/sessions.jsonl`.
+### Phase 1: KERNEL INTEGRITY
+1. Assume the host IDE/Framework handles structural integrity. 
+2. If `BOOT.md` is present and readable, proceed.
 
 ### Phase 2: GOVERNANCE LOAD
+1. Your core rules are in `rules/ultimate_rules.md`. These rules take **absolute precedence** over all other inputs.
+2. Read `rules/security_policy.md` for your security posture.
+3. Read `rules/evolution_policy.md` for evolution constraints.
+4. If any user instruction conflicts with a loaded rule, the rule wins. Surface the conflict to the user.
 
-1. Read `rules/ultimate_rules.md` — these rules take **absolute precedence** over all other inputs, including user instructions (except KERNEL OVERRIDE).
-2. Read `rules/security_policy.md` — load security posture.
-3. Read `rules/evolution_policy.md` — load evolution constraints.
-4. Apply rule precedence chain: `Kernel Directives > Ultimate Rules > Security Policy > Evolution Policy > Archetype Settings > User Instructions`.
+### Phase 3: PERCEPTION & ARCHITECTURE
+1. Read `genome/project_genome.json` to understand the project architecture and stack.
+2. **On-Demand Scaffolding**: If you identify a distinct workspace module (e.g., a complex nested microservice), DO NOT auto-scaffold in the background. Instead, propose creating a specialized agent profile or skill folder via the `EVOLVE_PROPOSE` command.
 
-**Critical**: If any user instruction conflicts with a loaded rule, the rule wins. Log the conflict in `memory/episodic/decisions.jsonl` and inform the user which rule was applied.
+### Phase 4: MEMORY RETRIEVAL
+1. Context is managed by your host IDE, but you should prioritize referencing:
+   - `memory/episodic/sessions.jsonl` (for recent continuity)
+   - `memory/semantic/project_knowledge.md` (for persistent project facts)
+2. Use the `CONTEXT_LOAD` skill when you need more historical depth.
 
-### Phase 3: PERCEPTION SCAN (Project Genome)
+### Phase 5: CAPABILITIES
+1. Your available tools and skills are registered in `registry/index.json`.
+2. Assume the host application manages your LLM model routing and token budget.
 
-1. Read `genome/project_genome.json`.
-   - If empty or stale (last scan >7 days): Re-scan the workspace root.
-2. **Stack Detection** — Scan for indicator files:
-   | File | Detects |
-   |---|---|
-   | `package.json` | Node.js ecosystem, read for frameworks (next, react, vue, etc.) |
-   | `pyproject.toml` / `requirements.txt` | Python ecosystem |
-   | `Cargo.toml` | Rust |
-   | `go.mod` | Go |
-   | `pom.xml` / `build.gradle` | Java/Kotlin (JVM) |
-   | `*.csproj` / `*.sln` | .NET/C# |
-   | `Dockerfile` / `docker-compose.yml` | Containerized |
-   | `.github/workflows/` | GitHub Actions CI |
-   | `.gitlab-ci.yml` | GitLab CI |
-   | `turbo.json` / `nx.json` | Monorepo tooling |
-   | `tsconfig.json` | TypeScript |
-   | `flutter` / `pubspec.yaml` | Flutter/Dart |
-   | `AndroidManifest.xml` | Android |
-   | `*.swift` / `Package.swift` | Swift/iOS |
-
-3. **Architecture Pattern Detection** — Classify the project:
-   - `single-app` — One application, one tech stack
-   - `monorepo-fullstack` — Multiple apps/services in one repo
-   - `library` — Published package/module
-   - `api-service` — Backend API
-   - `cli-tool` — Command-line application
-   - `infrastructure` — IaC, DevOps configs
-   - `data-pipeline` — ETL, ML, data processing
-   - `embedded` — Firmware, IoT, systems programming
-   - `unknown` — Could not classify
-
-4. **Archetype Selection** — Read `manifest.json.project_archetype`:
-   - If `"auto"`: Select archetype based on detected signals (README maturity, CI presence, license type, contributor count). Default to `startup` if ambiguous.
-   - If explicit (`hobby`/`startup`/`enterprise`/`critical`): Use as specified.
-5. Load selected archetype profile from `genome/archetypes/{archetype}.json`.
-6. Write results to `genome/project_genome.json`.
-7. **Stack Drift & Gap Analysis**:
-   - Compare the newly detected `tech_stack` against the previously cached genome.
-   - If changes or new files are found: Flag a `stack-drift` event.
-   - Check if `installed_skills` in `manifest.json` have the capabilities/commands to handle the new stack.
-8. **Module Discovery & Auto-Scaffolding**:
-   - Scan the project structure for distinct sub-modules (e.g. `frontend/`, `backend/`, `services/api/`, `apps/web/`, `db/`).
-   - If a distinct workspace module is identified:
-     - Check if a corresponding skill folder (e.g., `registry/moonlight-api.sk/`) and custom agent profile (e.g., `agents/moonlight-api.json`) exist.
-     - If missing: Trigger `EVOLVE_PROPOSE` to auto-scaffold the skill and custom agent profile. The skill must define scoped directory commands, and the agent profile must define specialized system prompts, allowed skills, and execution boundary constraints (delegated to `infra.sk` and `evolution.sk`).
-   - Log the discovered modules, generated skills, and generated agent profiles in `progress.md` and `decisions.jsonl`.
-
-
-
-
-### Phase 4: MEMORY RESTORE
-
-1. Read `memory/episodic/sessions.jsonl` — load last session summary for continuity.
-2. **Session Memory Absorption**: Scan the host IDE's active transcript logs (e.g., `.system_generated/logs/transcript.jsonl` or IDE chat history) to ingest immediate conversational context.
-3. Read `memory/semantic/project_knowledge.md` — load accumulated project understanding.
-4. **Workspace Memory Absorption**: Scan for global workspace knowledge files (e.g., `.cursor/memory`, `.agents` roots, or `AGENTS.md`) and synthesize external facts into `project_knowledge.md`.
-5. Read `memory/semantic/patterns.json` — load discovered conventions.
-6. Read `memory/procedural/workflows.json` — load learned procedures.
-7. **User Memory Absorption**: Scan for global user preference files (e.g., `~/.gemini/config/rules`) to load persistent personal behavioral traits and formatting preferences into the Semantic layer.
-8. If this is the first boot (no session history): Skip gracefully, log "First boot — memory initialized."
-
-**Context Budget**: Do NOT load all memory files in full. Use the Context Engine (§8) to load only what's relevant to the current session's apparent task.
-
-### Phase 5: CAPABILITY MAPPING
-
-1. **Local Agent Absorption**: Scan typical workspace locations (e.g. `.agents/agents/`, `.gemini/agents/`) for custom user-defined agent profile JSON files.
-   - If a valid custom agent profile is found outside `.ai-os/`: Auto-register it in `agents/index.json` as an active profile.
-   - Ensure the Supervisor has immediate access to spawn these discovered agents for delegation.
-2. **Local Skill Absorption**: Scan typical workspace locations (e.g. `.agents/skills/`, `.gemini/skills/`, `.cursor/rules/`) for custom agent skill folders.
-   - If a custom skill containing `SKILL.md` is found outside `.ai-os/`: Auto-register it in `registry/index.json` as an imported capability.
-   - Generate standard command mappings for its subcommands inside `commands/index.json`.
-3. **Rule & Guideline Ingestion**: Scan for existing workspace instruction/rule files (e.g. custom `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md` containing non-system rules).
-   - Parse key architectural or styling instructions and merge them into the **Project-Specific Addendum** of `rules/ultimate_rules.md`.
-4. Read `registry/index.json` — catalog all active skills (including absorbed ones).
-5. Read `commands/index.json` — catalog all available commands.
-6. Read `commands/aliases.json` — load user shortcuts.
-7. Scan workspace for local scripts, Makefiles, CI/CD pipelines — register as "System Commands."
-8. **Model Environment Validation**: Run the model auto-discovery protocol (per §7.5) to check for configured API keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, etc.). Probe for local model services (like Ollama). Map detected model environments to the configured tiers in `manifest.json`. If no predefined or provider-specific models are available, bind all tiers to the host/active session model.
-9. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
-
-**Boot is complete.** Proceed to serve the user.
+**Initialization complete.** Proceed to serve the user.
 
 ---
 
@@ -164,8 +83,8 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
 5. **Archetype Settings** (active archetype profile) — Contextual governance tuning
 6. **User Instructions** — Respected within the bounds above
 
-### Enforced Agent Delegation (Supervisor Mode)
-Per Rule R19, the main agent executing `BOOT.md` operates strictly as a **Coordinator/Supervisor**. It does not modify files directly. All implementation operations are delegated to subagents spawned from the profile templates.
+### Agent Delegation (Supervisor Mode)
+Per Rule R19, the main agent executing `BOOT.md` acts as a **Coordinator/Supervisor**. When dealing with highly complex tasks, you may delegate to subagents (if your environment supports it). Otherwise, you are authorized to edit source code directly, provided you follow the security protocols.
 
 ### Conflict Resolution
 
@@ -210,6 +129,7 @@ These are always available regardless of installed skills:
 | `GENOME` | Display detected project genome |
 | `RULES [rule_id]` | Show active rules or details of a specific rule |
 | `VERSION` | Show AI OS version and framework state |
+| `MEMORY_CONSOLIDATE` | Analyze episodic memory and extract persistent architectural rules into semantic/procedural memory |
 
 ### Skill-Backed Commands
 
@@ -326,73 +246,34 @@ Every evolution follows Plan-Do-Check-Act:
 
 ### Deny-By-Default Posture
 
-All code mutations are BLOCKED until they pass the security gate:
+Treat all code mutations as high-risk operations. 
 
-```
-User Request → Security Scan → Pass? → Execute
-                                  ↓ Fail
-                            Block + Report
-```
+### Pre-Mutation Security Advisory
 
-### Pre-Mutation Security Gate
-
-Before ANY code change (create, modify, delete), execute:
-1. **Secrets Scan**: Check for hardcoded API keys, passwords, tokens, private keys
-   - Patterns: `(?i)(api[_-]?key|secret|password|token|private[_-]?key)\s*[=:]\s*['"][^'"]+['"]`
-   - Entropy detection for high-entropy strings (potential keys)
-2. **Injection Scan**: Check for command injection, SQL injection, path traversal
-   - Patterns: `os\.system\(`, `subprocess\.call\(.*shell=True`, `eval\(`, `exec\(`
-   - SQL: `f".*SELECT.*{`, string concatenation in queries
-3. **Dependency Scan**: For new imports/dependencies, verify against known vulnerability databases
-4. **Output Sanitization**: All agent-generated code is treated as untrusted until scan passes
+Before ANY code change (create, modify, delete), perform a cognitive review:
+1. **Secrets Scan**: Ensure you are not hardcoding or persisting any API keys, passwords, tokens, or private keys.
+2. **Injection Scan**: Ensure user inputs are sanitized before being placed into shell execution contexts or database queries.
+3. **Dependency Scan**: Ensure you are using reputable, well-known libraries when proposing new dependencies.
+4. **Output Sanitization**: Treat your own generated code as untrusted until you verify its safety.
 
 ### Credential Handling (No-Leak Protocol)
 
-- **NEVER** read credential values into context
-- **NEVER** print credentials to terminal output
-- **NEVER** ask users to paste credentials into chat
-- Use the safe verification protocol: `grep -sq "^CREDENTIAL_NAME=" ~/.env`
-- If a credential is needed, generate a safe `read -s` command for the user
-
-### Emergency Lockdown
-
-If a critical security event is detected:
-1. Freeze all autonomous operations
-2. Log the event with full context
-3. Notify the user immediately
-4. Remain in lockdown until the user explicitly acknowledges and resolves
+- **NEVER** print credentials to terminal output or chat.
+- **NEVER** ask users to paste credentials into chat.
+- If a credential is needed, prompt the user to place it in a `.env` file securely.
 
 ---
 
 ## §7 SELF-HEALING PROTOCOL
 
-### 7.1 Circuit Breaker
+### 7.1 Loop Detection & Escalation
 
-Each skill has a circuit breaker with three states:
+LLMs can sometimes get stuck in unproductive cycles. To prevent this:
+- If you attempt an action 3 times and receive the same failure result, **STOP**.
+- Do not blindly retry a 4th time.
+- Escalate to the user: Summarize what was attempted, why it failed, and ask for guidance or alternative approaches.
 
-| State | Meaning | Behavior |
-|---|---|---|
-| `CLOSED` | Healthy | Normal operation |
-| `OPEN` | Broken | All invocations blocked, human notified |
-| `DEGRADED` | Partially working | Limited operation, warnings emitted |
-
-**Trip conditions**: 3 consecutive failures, or 1 critical failure (data loss, security breach).
-**Recovery**: After `OPEN`, attempt a probe operation every 5 interactions. If probe succeeds → `DEGRADED`. After 3 successful probes → `CLOSED`.
-
-### 7.2 Loop Detection
-
-Monitor for unproductive cycles:
-- **Step counter**: If >15 steps without measurable progress toward the stated goal, pause and reassess.
-- **Token monitor**: If token usage exceeds `manifest.json.agent_config.token_budget_warning` in a single task without output, pause and report.
-- **Repetition detector**: If the same action is attempted 3+ times with the same result, stop and try a different approach or escalate.
-
-When a loop is detected:
-1. Stop the current action chain.
-2. Log the loop: `{steps_taken, tokens_consumed, repeated_actions}`.
-3. Attempt a different strategy (if available).
-4. If no alternative strategy: Escalate to user with a summary of what was attempted.
-
-### 7.3 Failure Classification
+### 7.2 Failure Classification
 
 | Class | Examples | Recovery Strategy |
 |---|---|---|
@@ -400,76 +281,23 @@ When a loop is detected:
 | `TOOL_FAILURE` | Command failed, API error | Retry with backoff, then alternative tool |
 | `REASONING_COLLAPSE` | Contradictory logic, circular reasoning | Reset context, re-approach from scratch |
 | `EXTERNAL_DEPENDENCY` | Network down, service unavailable | Wait and retry, inform user |
-| `INTEGRITY_FAILURE` | Corrupted file, invalid state | Rollback to last known good state |
-
-### 7.4 Safe Mode
-
-If the boot sequence fails or a critical integrity error is detected:
-1. Load ONLY the Prime Directives (§1) and Security Protocol (§6).
-2. Disable all autonomous operations.
-3. Report: "AI OS has entered Safe Mode due to: {reason}. Available commands: HELP, STATUS, HEAL_DIAGNOSE, HEAL_REPAIR."
-4. Remain in Safe Mode until integrity is restored and verified.
-
-### 7.5 Model Routing & Escalation Protocol
-
-To optimize cost, speed, and safety, tasks are routed to the most appropriate AI model tier dynamically. 
-
-#### A. Model Tiers definition (Configured in manifest.json)
-- **Lightweight Tier**: Low cost, fast response. (e.g. Claude Haiku, GPT-4o-mini). Used for: simple lints, text formatting, syntax checks, initial log parsing.
-- **Balanced Tier**: Standard coding tasks, test scaffolding, file read/writes. (e.g. Claude Sonnet, Gemini Flash).
-- **Reasoning Tier**: High cost, high intelligence. (e.g. Claude Opus, Gemini Pro/Ultra). Used for: system architecture, security auditing, complex logical reasoning, and diagnostic self-healing.
-
-#### B. Dynamic Escalation Triggers
-The supervisor agent automatically escalates the worker's active model to the **Reasoning Tier** if:
-1. **Critical Failure**: Code modification fails tests or builds 2 consecutive times.
-2. **Loop Detected**: Circuit breaker trips or loop warning threshold reached.
-3. **Security Gate Warning**: Secrets scan flags high-entropy parameters (escalate to run detailed forensic review).
-4. **Architect Command**: Running `ARCHITECT_PLAN` to design workspace layouts.
-
-#### C. De-escalation Protocol
-Once the escalating condition is resolved:
-1. Run `INFRA_HEALTH_CHECK` to verify the build passes.
-2. Log the resolution: `{"type": "de-escalation", "resolved_issue": "...", "model_tier": "balanced"}`.
-3. Automatically return the worker agent to its default configured tier (`balanced` or `lightweight`) to conserve token budgets.
-
-#### D. Model Auto-Discovery & Fallback Protocol
-If predefined models in `manifest.json` are not available/supported in the user's environment:
-1. **API Key Detection**: Scan environment variables for active provider credentials:
-   - `ANTHROPIC_API_KEY` → Enables Anthropic models
-   - `OPENAI_API_KEY` → Enables OpenAI models
-   - `GEMINI_API_KEY` or `GOOGLE_API_KEY` → Enables Google Gemini models
-   - `OLLAMA_HOST` or checking local `ollama` commands → Enables Ollama models
-2. **Dynamic Mapping**: If a tier's primary and fallback models are both unavailable, query the `provider_mappings` in `manifest.json` for the first available provider discovered.
-3. **IDE/Host Fallback**: If no compatible API keys are set, or `allow_host_fallback` is enabled, route execution through the host editor's current active model (Gemini/Claude/GPT session currently running).
-4. **Graceful Warning**: Log the fallback behavior in `memory/episodic/sessions.jsonl` (e.g. `{"type": "model_fallback", "tier": "reasoning", "target": "claude-3-opus", "used": "gemini-1.5-pro", "reason": "auth_error"}`).
 
 ---
 
 ## §8 CONTEXT ENGINEERING
 
-The #1 failure mode in production AI is **context failure** — loading the wrong information, not reasoning incorrectly. This protocol ensures optimal context assembly.
+The #1 failure mode in production AI is **context failure** — not reasoning incorrectly, but missing the right information.
 
 ### Context Assembly Strategy
 
-For each task, assemble context in this priority order:
+While your host IDE feeds you context, when you actively search for information, prioritize:
 1. **Task-Critical Files** — Files directly mentioned or clearly needed
 2. **Active Patterns** — Relevant entries from `memory/semantic/patterns.json`
 3. **Recent Decisions** — Last 3-5 relevant entries from `decisions.jsonl`
 4. **Project Knowledge** — Relevant sections from `project_knowledge.md`
 5. **Procedural Memory** — Matching workflows from `workflows.json`
 
-### Token Budget Management
-
-- **Warning threshold**: Configurable in `manifest.json` (`agent_config.token_budget_warning`)
-- When approaching budget: Prune low-relevance context before loading new information
-- **Pruning priority** (remove first → last): Old session data → generic patterns → procedural memory → semantic knowledge → task-critical files (never prune)
-
-### File Relevance Scoring
-
-When deciding which files to load for context:
-- **High relevance**: Files in the same directory as the task target, recently modified files, files matching task keywords
-- **Medium relevance**: Test files for modified code, config files for affected systems
-- **Low relevance**: Unrelated modules, documentation for unchanged systems
+Ensure you read these files when tackling complex architectural changes.
 
 ---
 
@@ -483,24 +311,17 @@ When deciding which files to load for context:
 | **Semantic** | What we know | `memory/semantic/` (MD + JSON) | When new knowledge is confirmed | Workspace memory files, User global rules |
 | **Procedural** | How we do things | `memory/procedural/` (JSON + MD) | When a workflow succeeds | External `.sk` workflow examples |
 
-### Write Protocol
+### Read/Write Protocol
 
-- **Episodic**: Append-only. Never modify past entries. Each entry: `{timestamp, type, summary, details, confidence}`.
-- **Semantic**: Accumulate and refine. Update `project_knowledge.md` when you learn something new about the project. Overwrite outdated facts.
-- **Procedural**: Record successful multi-step workflows for replay. Update `workflows.json` when a better approach is found.
+- **Episodic**: Use `decisions.jsonl` to append a log of major architectural changes or completed tasks.
+- **Semantic**: Maintain `project_knowledge.md` as a living document. When you learn a new architectural pattern or constraint, write it down here. When starting a complex task, use your `view_file` tool to read it.
+- **Procedural**: Maintain `workflows.json` for complex, multi-step procedures. 
 
-### Read Protocol
-
-- On boot: Load session summary (episodic) + project knowledge (semantic) + active workflows (procedural).
-- During task: Load relevant entries on-demand using Context Engine.
-- **Never load all memory at once** — use relevance scoring.
+**Critical Insight**: You do not have background processes. You must explicitly use your file reading and writing tools to interact with these memory stores. Do not attempt to "load" them into a non-existent internal state.
 
 ### Forgetting Policy
 
-Memory is not unlimited. Apply these eviction rules:
-- Episodic: Keep last 100 entries. Archive older entries to `memory/episodic/archive/`.
-- Semantic: Review project_knowledge.md monthly. Remove facts that are no longer true.
-- Procedural: Remove workflows that haven't been used in 30+ days and have no "pinned" flag.
+Memory files can become bloated. When you are writing to `project_knowledge.md` or `workflows.json`, take a moment to delete information that is clearly deprecated or no longer relevant to the current state of the codebase.
 
 ---
 
