@@ -148,6 +148,38 @@ Discover distinct codebase modules and trigger auto-generation of modular worksp
 
 ---
 
+### INFRA_SHOW_ENV
+
+Show environment variables and configurations of the current workspace.
+
+```
+> OS_COMMAND INFRA_SHOW_ENV [--file=<config_file>]
+```
+
+**Procedure:**
+1. Locate workspace environment configuration files (e.g. `.env`, `.env.local`, `config.json`, project settings).
+2. Scan active environment variables related to the project.
+3. Check for structural or configuration mismatch warnings.
+4. Output a formatted list of environment configurations (masking credentials to prevent leaks in compliance with Rule R11).
+
+---
+
+### INFRA_SWITCH_ENV
+
+Switch the active workspace configuration or release environment profile.
+
+```
+> OS_COMMAND INFRA_SWITCH_ENV --profile=<profile_name> [--target-file=<destination_file>]
+```
+
+**Procedure:**
+1. Check if the specified environment profile file exists (e.g. `.env.development`, `.env.production`).
+2. Backup the current active configuration file.
+3. Swap/overwrite the active configuration target file (defaults to `.env`) with the selected profile source.
+4. Run `INFRA_HEALTH_CHECK` to verify that the workspace builds and runs under the new profile.
+
+---
+
 ## Stack-Specific Best Practices
 
 The infra skill references these best practices based on detected stack:

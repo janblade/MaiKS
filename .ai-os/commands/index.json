@@ -21,6 +21,8 @@
     {"name": "INFRA_HEALTH_CHECK", "skill": "infra.sk", "description": "Project health diagnostic", "parameters": {}},
     {"name": "INFRA_DIAGNOSE", "skill": "infra.sk", "description": "Deep diagnostic", "parameters": {"focus": {"type": "enum", "values": ["dependencies", "build", "tests", "config", "structure", "all"]}}},
     {"name": "INFRA_DISCOVER_MODULES", "skill": "infra.sk", "description": "Discover distinct codebase modules and trigger auto-generation of modular skills", "parameters": {"auto-scaffold": {"type": "flag"}}},
+    {"name": "INFRA_SHOW_ENV", "skill": "infra.sk", "description": "Show environment variables and configurations of the current workspace", "parameters": {"file": {"type": "string"}}},
+    {"name": "INFRA_SWITCH_ENV", "skill": "infra.sk", "description": "Switch the active workspace configuration or release environment profile", "parameters": {"profile": {"type": "string", "required": true}, "target-file": {"type": "string"}}},
     {"name": "TEST_RUN", "skill": "testing.sk", "description": "Execute test suites", "parameters": {"suite": {"type": "string"}, "filter": {"type": "string"}, "verbose": {"type": "flag"}}},
     {"name": "TEST_COVERAGE", "skill": "testing.sk", "description": "Coverage analysis", "parameters": {"threshold": {"type": "number"}}},
     {"name": "TEST_GENERATE", "skill": "testing.sk", "description": "AI-assisted test generation", "parameters": {"file": {"type": "string", "required": true}, "style": {"type": "enum", "values": ["unit", "integration"], "default": "unit"}}},
