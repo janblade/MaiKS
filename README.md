@@ -15,6 +15,17 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 *   **Native IDE Absorption**: Bridges natively with your IDE's customization systems (like `.agents/skills.json` and `AGENTS.md`) to guarantee that OS skills and semantic memory are absorbed immediately into the agent's context window.
 *   **Three-Tier Cognitive Memory**: Maintains Episodic (what happened), Semantic (what we know), and Procedural (how we do things) memory across chat sessions via persistent markdown and JSON logs, preventing agent amnesia.
 
+## 💸 Token Economics & Prompt Caching
+
+**"Wait, if the agent reads the entire OS framework and memory on boot, won't that cost a fortune in tokens?"**
+
+No! GoliathOS is specifically designed to leverage **Context Caching** (supported natively by Claude 3.5, Gemini 1.5 Pro, and GPT-4o). 
+
+Because the core OS files (`BOOT.md`, `project_knowledge.md`, rules, and skills) are largely static between chats, they are cached by the LLM provider. This means:
+1. **Near-Zero Latency**: The agent absorbs the entire OS context in milliseconds.
+2. **Fractional Cost**: Cached input tokens cost ~90% less than raw input tokens (often fractions of a cent per boot).
+You get the power of a deeply context-aware OS without the massive token tax.
+
 ---
 
 ## 📊 System Architecture
