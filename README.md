@@ -213,11 +213,12 @@ Once booted, you can direct the agent using standard commands or aliases in your
 
 ```
 > OS_COMMAND STATUS           # Show system health & stats
-> OS_COMMAND HELP             # View all 40 available commands
-> OS_COMMAND audit            # Run full security vuln scan
-> OS_COMMAND fix              # Run auto-healing diagnostic & repair
-> OS_COMMAND plan --idea="..." # Kick off greenfield planning pipeline
-> OS_COMMAND INFRA_DISCOVER_MODULES --auto-scaffold # Auto-generate skills and agent profiles for modules
+> OS_COMMAND HELP             # View all available pragmatic commands
+> OS_COMMAND audit            # Run full cognitive security scan
+> OS_COMMAND fix              # Run troubleshooting checklist to break out of loops
+> OS_COMMAND plan --idea="..." # Kick off greenfield planning interview
+> OS_COMMAND discover         # Profile workspace to detect tech stack and modules
+> OS_COMMAND wrap             # Log recent decisions and consolidate semantic memory
 ```
 
 ---
