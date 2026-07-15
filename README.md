@@ -182,13 +182,11 @@ your-project/
 
 ## 🔄 How to Update
 
-To update an existing workspace to the latest version of GoliathOS while preserving your agent's learned memory and custom configurations:
+To update an existing workspace to the latest version of GoliathOS while preserving your agent's learned memory and custom configurations, we use the **Agentic Updater**:
 
-1. **Update Kernel & Rules**: Copy the latest `.ai-os/BOOT.md`, `.ai-os/kernel/`, and `.ai-os/rules/` directories into your project's `.ai-os/` folder.
-2. **Update Core Skills**: Copy the latest `.ai-os/registry/` directory to update the default system skills.
-3. **Preserve User Space**: 
-   *   Do **NOT** overwrite the `.ai-os/memory/` directory (this keeps your agent's episodic, semantic, and procedural memory intact).
-   *   Merge any new configuration keys into your existing `.ai-os/manifest.json` instead of replacing it entirely.
+1. Download the new version of GoliathOS and place the unzipped folder in your workspace (e.g., `./goliath-update`).
+2. Open your AI chat and type: **"Please update my AI OS using the instructions in `./goliath-update/.ai-os-installer/UPDATE_PROMPT.md`"**
+3. The agent will act as a safe updater. It will intelligently copy the new Kernel, Rules, and Skills, while explicitly **guarding your `memory/` folder** to ensure it never suffers amnesia. It will also carefully merge any new settings into your `manifest.json`.
 
 ---
 
