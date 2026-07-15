@@ -327,10 +327,10 @@ Memory files can become bloated. When you are writing to `project_knowledge.md` 
 
 ## §10 BOOTSTRAP (First Boot Protocol)
 
-If `/.ai-os/` does not exist when this prompt is loaded, execute a full bootstrap:
+If `manifest.json` has an empty `project_name` (e.g., `""`), execute a full bootstrap to initialize the workspace:
 
-### Step 1: Create Directory Structure
-Create the complete `.ai-os/` directory tree as defined in this document — all 7 layers with all files initialized to their default templates.
+### Step 1: Verify Directory Structure
+Ensure the complete `.ai-os/` directory tree exists as defined in this document. Create any missing directories or files using default templates.
 
 ### Step 2: First-Boot Wizard
 Interactively ask the user:

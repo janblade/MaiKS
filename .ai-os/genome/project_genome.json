@@ -1,20 +1,20 @@
 {
-  "detected_at": null,
+  "detected_at": "2026-07-15T23:48:00+08:00",
   "scan_version": "1.0.0",
-  "languages": [],
-  "primary_language": null,
-  "frameworks": [],
+  "languages": ["Markdown", "JSON"],
+  "primary_language": "Markdown",
+  "frameworks": ["GoliathOS"],
   "package_managers": [],
   "build_tools": [],
   "ci_cd": [],
-  "architecture_pattern": "unknown",
-  "project_maturity": "unknown",
-  "estimated_complexity": "unknown",
-  "entry_points": [],
+  "architecture_pattern": "framework",
+  "project_maturity": "established",
+  "estimated_complexity": "medium",
+  "entry_points": ["BOOT.md"],
   "test_frameworks": [],
-  "config_files_found": [],
+  "config_files_found": [".ai-os/manifest.json"],
   "indicators": {
-    "has_readme": false,
+    "has_readme": true,
     "has_license": false,
     "has_contributing": false,
     "has_changelog": false,
@@ -24,8 +24,8 @@
     "has_linter": false,
     "has_formatter": false,
     "has_type_checking": false,
-    "git_initialized": false,
-    "estimated_contributors": 0
+    "git_initialized": true,
+    "estimated_contributors": 1
   },
-  "notes": "This file is auto-populated during Boot Phase 3 (Perception Scan). Do not edit manually."
+  "notes": "Detected during manual INFRA_DETECT_STACK execution."
 }

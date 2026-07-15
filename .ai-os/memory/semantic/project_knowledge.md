@@ -27,6 +27,7 @@ The system avoids background daemon loops or complex external runtime orchestrat
 
 - **Bridge File Amnesia:** The biggest failure mode in AI coding agents is failing to read the system prompt. We solved this by mapping our custom framework directories (`.ai-os/registry`) into the native `.agents/skills.json` so the IDE forces the agent to read them.
 - **Over-Delegation:** Forcing an agent to delegate *all* code edits (strict Rule R19) breaks many host environments. The primary agent operates as a Flexible Coordinator that *can* edit code itself if necessary.
+- **First-Boot Detection Logic:** The OS Kernel must not rely on the existence of `.ai-os/` to trigger the First-Boot wizard, because agentic installers often copy the entire `.ai-os/` folder into the workspace prior to the first boot. Instead, the trigger checks if `manifest.json` has an empty `project_name`.
 
 ---
 

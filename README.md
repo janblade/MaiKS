@@ -177,6 +177,7 @@ your-project/
 2. Open your project in your AI editor or launch your terminal assistant.
 3. Open your AI chat and type: **"Please install the AI OS using the instructions in `.ai-os-installer/INSTALL_PROMPT.md`"**
 4. The agent will act as an installer. It will safely merge the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, clean up the installer directory, and boot up!
+5. Upon its first boot, the OS will notice that your `manifest.json` is unpopulated, which triggers the **First-Boot Wizard**. This wizard will ask for your project name and automatically run a perception scan (`INFRA_DETECT_STACK`) to map your tech stack.
 
 ---
 
