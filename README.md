@@ -12,6 +12,8 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 *   **Perception & Stack-Drift Detection**: Scans the workspace on boot, maps codebase sub-modules, and automatically synthesizes custom skills and agent profiles if stack drift or new modules are detected.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
 *   **Self-Healing & Resilience**: Built-in circuit breakers, loop detection, and failure recovery to keep autonomous workflows stable and reliable.
+*   **Massive Context Strategy**: Dynamically scales token budgets up to 1.5M tokens (e.g., Gemini 3.1 Pro), avoiding premature context pruning during deep architectural and security reviews.
+*   **External Memory & Agent Absorption**: Automatically absorbs active IDE chat transcripts, global workspace knowledge (e.g., `.cursor/memory`), and custom user-defined subagents (e.g., `.agents/agents/`) into the OS layer on boot.
 
 ---
 
