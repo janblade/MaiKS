@@ -187,8 +187,8 @@ To update an existing workspace to the latest version of GoliathOS while preserv
 
 How to get the most out of GoliathOS in your daily development:
 
-1. **The Boot**: When you start your day, let the agent initialize. It will read `BOOT.md`, load the rules, and absorb the semantic memory (`project_knowledge.md`).
-2. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently in the background.
+1. **The Boot**: While the bridge files (e.g. `AGENTS.md`) naturally instruct the agent to read `.ai-os/BOOT.md` in the background, LLMs don't act until spoken to. To guarantee a verified load of your project's memory and rules before you start coding, begin your first chat of the day with: **`> OS_COMMAND BOOT`**.
+2. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently as it works.
 3. **Complex Planning**: If you have a massive architectural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
 4. **End of Session Consolidation**: Before you close your IDE for the day, tell the agent: **"Wrap up and consolidate memory."** The agent will analyze everything you did today, extract architectural rules, and save them to `project_knowledge.md` so it never suffers from amnesia tomorrow!
 
