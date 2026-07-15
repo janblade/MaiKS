@@ -85,8 +85,7 @@ graph TB
             TST_SK["testing.sk<br>(Validation Run)"]:::userspace
             EVO_SK["evolution.sk<br>(PDCA Lifecycle)"]:::userspace
             OBS_SK["observability.sk<br>(Audit Logs)"]:::userspace
-            CTX_SK["context-engine.sk<br>(Budget Engine)"]:::userspace
-            HEAL_SK["self-healing.sk<br>(Circuit Breakers)"]:::userspace
+            HEAL_SK["self-healing.sk<br>(Cognitive Checklists)"]:::userspace
             ARC_SK["architect.sk<br>(Greenfield Plan)"]:::userspace
         end
 
@@ -126,9 +125,8 @@ graph TB
     OBS_SK -->|Record Success| PROCEDURAL
     
     %% Resilience
-    HEAL_SK -.->|Monitor loop & circuit breakers| TargetSkill
+    HEAL_SK -.->|Detect loops & run checklists| TargetSkill
     EVO_SK -.->|Propose & verify self-updates| CoreSkills
-    CTX_SK -.->|Calculate token budgets| TargetSkill
 ```
 
 ---
