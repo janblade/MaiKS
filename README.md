@@ -124,27 +124,40 @@ graph TB
 
 ## 📂 Directory Layout
 
+### 1. Before Install (The Downloaded Package)
 ```
-.ai-os/
-├── BOOT.md                          # Master boot prompt
-├── manifest.json                    # Project config & metadata
-├── kernel/
-│   └── integrity.md                 # System self-verification checks
-├── rules/
-│   ├── ultimate_rules.md            # ISO 42001 rules
-│   ├── security_policy.md           # OWASP safety policy
-│   └── evolution_policy.md          # Evolution boundary rules
-├── genome/
-│   ├── project_genome.json          # Detected stack DNA
-│   └── archetypes/                  # Governance profiles (hobby -> critical)
-├── memory/
-│   ├── episodic/                    # decisions.jsonl + sessions.jsonl
-│   ├── semantic/                    # project_knowledge.md + patterns.json
-│   └── procedural/                  # workflows.json + playbooks.md
-├── agents/                          # Custom specialized agent profiles
-│   ├── index.json                   # Agent active profiles catalog
-│   └── templates/                   # Default developer/QA worker templates
-└── registry/                        # Skill catalogs (.sk/)
+goliath-os/
+├── .ai-os/                          # The OS Kernel (Copy this to your project)
+├── .ai-os-installer/                # The Agentic Installer (Copy this to your project)
+│   ├── INSTALL_PROMPT.md            # The script you feed to your AI
+│   └── templates/                   # Bridge file templates (CLAUDE.md, etc.)
+└── README.md
+```
+
+### 2. After Install (Your Workspace)
+```
+your-project/
+├── .ai-os/                          
+│   ├── BOOT.md                      # Master boot prompt
+│   ├── manifest.json                # Project config & metadata
+│   ├── kernel/                      # System self-verification checks
+│   ├── rules/                       # ISO 42001 rules & OWASP safety policy
+│   ├── genome/                      # Detected stack DNA & Archetypes
+│   ├── memory/                      
+│   │   ├── episodic/                # decisions.jsonl + sessions.jsonl
+│   │   ├── semantic/                # project_knowledge.md + patterns.json
+│   │   └── procedural/              # workflows.json + playbooks.md
+│   ├── agents/                      # Custom specialized agent profiles
+│   └── registry/                    # Skill catalogs (.sk/)
+│
+├── .gitignore                       # (Updated by installer to ignore OS noise)
+├── src/                             # (Your actual app code)
+│
+└── [Bridge File]                    # (Merged by the installer)
+    ├── CLAUDE.md                    # ...if using Claude Code
+    ├── .windsurfrules               # ...if using Windsurf
+    ├── .cursor/rules/ai-os.md       # ...if using Cursor
+    └── .agents/AGENTS.md            # ...if using Antigravity/Gemini
 ```
 
 ---
