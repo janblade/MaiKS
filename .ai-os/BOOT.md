@@ -122,26 +122,32 @@ On every initialization, execute these 5 phases **in order**. Do not skip phases
 ### Phase 4: MEMORY RESTORE
 
 1. Read `memory/episodic/sessions.jsonl` — load last session summary for continuity.
-2. Read `memory/semantic/project_knowledge.md` — load accumulated project understanding.
-3. Read `memory/semantic/patterns.json` — load discovered conventions.
-4. Read `memory/procedural/workflows.json` — load learned procedures.
-5. If this is the first boot (no session history): Skip gracefully, log "First boot — memory initialized."
+2. **Session Memory Absorption**: Scan the host IDE's active transcript logs (e.g., `.system_generated/logs/transcript.jsonl` or IDE chat history) to ingest immediate conversational context.
+3. Read `memory/semantic/project_knowledge.md` — load accumulated project understanding.
+4. **Workspace Memory Absorption**: Scan for global workspace knowledge files (e.g., `.cursor/memory`, `.agents` roots, or `AGENTS.md`) and synthesize external facts into `project_knowledge.md`.
+5. Read `memory/semantic/patterns.json` — load discovered conventions.
+6. Read `memory/procedural/workflows.json` — load learned procedures.
+7. **User Memory Absorption**: Scan for global user preference files (e.g., `~/.gemini/config/rules`) to load persistent personal behavioral traits and formatting preferences into the Semantic layer.
+8. If this is the first boot (no session history): Skip gracefully, log "First boot — memory initialized."
 
 **Context Budget**: Do NOT load all memory files in full. Use the Context Engine (§8) to load only what's relevant to the current session's apparent task.
 
 ### Phase 5: CAPABILITY MAPPING
 
-1. **Local Skill Absorption**: Scan typical workspace locations (e.g. `.agents/skills/`, `.gemini/skills/`, `.cursor/rules/`) for custom agent skill folders.
+1. **Local Agent Absorption**: Scan typical workspace locations (e.g. `.agents/agents/`, `.gemini/agents/`) for custom user-defined agent profile JSON files.
+   - If a valid custom agent profile is found outside `.ai-os/`: Auto-register it in `agents/index.json` as an active profile.
+   - Ensure the Supervisor has immediate access to spawn these discovered agents for delegation.
+2. **Local Skill Absorption**: Scan typical workspace locations (e.g. `.agents/skills/`, `.gemini/skills/`, `.cursor/rules/`) for custom agent skill folders.
    - If a custom skill containing `SKILL.md` is found outside `.ai-os/`: Auto-register it in `registry/index.json` as an imported capability.
    - Generate standard command mappings for its subcommands inside `commands/index.json`.
-2. **Rule & Guideline Ingestion**: Scan for existing workspace instruction/rule files (e.g. custom `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md` containing non-system rules).
+3. **Rule & Guideline Ingestion**: Scan for existing workspace instruction/rule files (e.g. custom `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md` containing non-system rules).
    - Parse key architectural or styling instructions and merge them into the **Project-Specific Addendum** of `rules/ultimate_rules.md`.
-3. Read `registry/index.json` — catalog all active skills (including absorbed ones).
-4. Read `commands/index.json` — catalog all available commands.
-5. Read `commands/aliases.json` — load user shortcuts.
-6. Scan workspace for local scripts, Makefiles, CI/CD pipelines — register as "System Commands."
-7. **Model Environment Validation**: Run the model auto-discovery protocol (per §7.5) to check for configured API keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, etc.). Probe for local model services (like Ollama). Map detected model environments to the configured tiers in `manifest.json`. If no predefined or provider-specific models are available, bind all tiers to the host/active session model.
-8. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
+4. Read `registry/index.json` — catalog all active skills (including absorbed ones).
+5. Read `commands/index.json` — catalog all available commands.
+6. Read `commands/aliases.json` — load user shortcuts.
+7. Scan workspace for local scripts, Makefiles, CI/CD pipelines — register as "System Commands."
+8. **Model Environment Validation**: Run the model auto-discovery protocol (per §7.5) to check for configured API keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, etc.). Probe for local model services (like Ollama). Map detected model environments to the configured tiers in `manifest.json`. If no predefined or provider-specific models are available, bind all tiers to the host/active session model.
+9. Report boot status: `"AI OS v{version} booted. Archetype: {archetype}. Skills: {count}. Commands: {count}."`
 
 **Boot is complete.** Proceed to serve the user.
 
@@ -377,7 +383,7 @@ Each skill has a circuit breaker with three states:
 
 Monitor for unproductive cycles:
 - **Step counter**: If >15 steps without measurable progress toward the stated goal, pause and reassess.
-- **Token monitor**: If >50,000 tokens consumed in a single task without output, pause and report.
+- **Token monitor**: If token usage exceeds `manifest.json.agent_config.token_budget_warning` in a single task without output, pause and report.
 - **Repetition detector**: If the same action is attempted 3+ times with the same result, stop and try a different approach or escalate.
 
 When a loop is detected:
@@ -471,11 +477,11 @@ When deciding which files to load for context:
 
 ### Three-Tier Memory Model
 
-| Tier | Purpose | Storage | Update Frequency |
-|---|---|---|---|
-| **Episodic** | What happened | `memory/episodic/` (JSONL) | Every significant action |
-| **Semantic** | What we know | `memory/semantic/` (MD + JSON) | When new knowledge is confirmed |
-| **Procedural** | How we do things | `memory/procedural/` (JSON + MD) | When a workflow succeeds |
+| Tier | Purpose | Storage | Update Frequency | External Sources Absorbed |
+|---|---|---|---|---|
+| **Episodic** | What happened | `memory/episodic/` (JSONL) | Every significant action | IDE chat transcripts, Session logs |
+| **Semantic** | What we know | `memory/semantic/` (MD + JSON) | When new knowledge is confirmed | Workspace memory files, User global rules |
+| **Procedural** | How we do things | `memory/procedural/` (JSON + MD) | When a workflow succeeds | External `.sk` workflow examples |
 
 ### Write Protocol
 

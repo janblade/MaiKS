@@ -38,12 +38,13 @@ Full workspace vulnerability scan.
 - `--scope` (default: `.`): Limit scan to a specific directory or file
 
 **Procedure:**
-1. Scan all files in scope for secret patterns (see `security_policy.md` LLM02 patterns)
-2. Scan for injection vulnerabilities (command injection, SQL injection, XSS, path traversal)
-3. Scan for unsafe function usage (`eval`, `exec`, `os.system`, `pickle.loads`, etc.)
-4. If `--depth=all`: Run dependency vulnerability check (SECURITY_CHECK_DEPS)
-5. Generate report: findings count by severity, file locations, recommended fixes
-6. Log scan result in `memory/episodic/decisions.jsonl`
+1. Check context engine mode. If Massive Context Strategy is active, load dependency graph and perform full-codebase cross-file taint analysis simultaneously.
+2. Scan all files in scope for secret patterns (see `security_policy.md` LLM02 patterns)
+3. Scan for injection vulnerabilities (command injection, SQL injection, XSS, path traversal). With massive context, track variables across module boundaries to find complex injection vectors.
+4. Scan for unsafe function usage (`eval`, `exec`, `os.system`, `pickle.loads`, etc.)
+5. If `--depth=all`: Run dependency vulnerability check (SECURITY_CHECK_DEPS)
+6. Generate report: findings count by severity, file locations, recommended fixes
+7. Log scan result in `memory/episodic/decisions.jsonl`
 
 **Output:** Structured scan report with findings categorized as CRITICAL / HIGH / MEDIUM / LOW.
 

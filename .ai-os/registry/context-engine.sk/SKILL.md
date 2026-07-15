@@ -30,11 +30,12 @@ Assemble optimal context for a task.
 
 **Procedure:**
 1. Parse the task description to identify key topics, files, and domains
-2. Score available context sources by relevance (see CONTEXT_SCORE)
-3. Assemble context in priority order (see priority list below)
-4. Track accumulated token count against budget
-5. Stop adding context when budget is 80% consumed (reserve 20% for reasoning + output)
-6. Report: "Context loaded: {items_count} sources, ~{tokens} tokens, {budget_remaining}% budget remaining"
+2. Check model tier. If reasoning tier model with massive context (>1M tokens) is active: enable **Massive Context Strategy** and skip aggressive pruning. Load full workspace modules.
+3. Score available context sources by relevance (see CONTEXT_SCORE)
+4. Assemble context in priority order (see priority list below)
+5. Track accumulated token count against budget
+6. Stop adding context when budget is 80% consumed (reserve 20% for reasoning + output)
+7. Report: "Context loaded: {items_count} sources, ~{tokens} tokens, {budget_remaining}% budget remaining"
 
 **Priority order for context assembly:**
 1. **Task-critical files** — Files directly mentioned or clearly needed for the task
@@ -103,6 +104,7 @@ Remove low-value context to make room for high-value information.
 5. *(Never prune)* Task-critical files and active code
 
 If `--aggressive`: Prune up to 50% of context. Normal mode prunes ~20%.
+*Note: If Massive Context Strategy is active, bypass pruning unless token budget explicitly exhausted.*
 
 **Output:** "Pruned {count} items, freed ~{tokens} tokens. New budget: {remaining}%"
 

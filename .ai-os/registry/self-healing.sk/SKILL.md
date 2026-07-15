@@ -167,7 +167,7 @@ When a skill is OPEN:
 | Metric | Threshold | Action |
 |---|---|---|
 | Steps without progress | >15 | Pause and reassess |
-| Tokens without output | >50,000 | Pause and report |
+| Tokens without output | > manifest `token_budget_warning` | Pause and report |
 | Same action repeated | 3+ times, same result | Stop, try alternative |
 | Circular reasoning | Contradictory conclusions | Reset context, re-approach |
 
@@ -182,8 +182,9 @@ When a skill is OPEN:
 ## Model Escalation during Repair
 When the `HEAL_REPAIR` command runs after a build or test failure:
 1. If the first simple repair attempt fails, **escalate the model** to the **Reasoning Tier** (using the **Model Auto-Discovery & Fallback Protocol** if the primary model is unavailable).
-2. Run detailed diagnostics using the high reasoning model to analyze trace logs and propose architectural corrections.
-3. Once the build passes (verified via `INFRA_HEALTH_CHECK`), automatically **de-escalate the model** back to the agent's default configured tier.
+2. Check context engine mode. If Massive Context Strategy is active, supply the **global codebase context** to the reasoning model rather than just the failing local function, enabling root-cause analysis across the entire dependency graph.
+3. Run detailed diagnostics using the high reasoning model to analyze trace logs and propose architectural corrections.
+4. Once the build passes (verified via `INFRA_HEALTH_CHECK`), automatically **de-escalate the model** back to the agent's default configured tier.
 
 ## Common Mistakes
 
