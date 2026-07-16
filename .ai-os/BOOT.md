@@ -330,8 +330,9 @@ Ensure you read these files when tackling complex architectural changes.
 ### Consolidation Protocol
 When a task is completed, you MUST perform a consolidation step (via `TASK_CLOSE`):
 1. Review the task's memory file in `tasks/`.
-2. Extract any newly discovered "global truths" (e.g., API constraints, environment specific gotchas) and add them to `semantic/project_knowledge.md`.
-3. Move the raw, technical task memory file to `archived_tasks/` for fast future retrieval.
+2. **Semantic Extraction**: Extract any newly discovered "global truths" (e.g., API constraints, environment specific gotchas) and add them to `semantic/project_knowledge.md`.
+3. **Procedural Extraction**: If you notice a complex, repeatable workflow was successfully executed during this task, ask the user: *"I noticed we executed a complex sequence to [do X]. Would you like me to extract this into a reusable playbook?"*
+4. Move the raw, technical task memory file to `archived_tasks/` for fast future retrieval.
 
 **Critical Insight**: You do not have background processes. You must explicitly use your file reading and writing tools to interact with these memory stores. Do not attempt to "load" them into a non-existent internal state.
 

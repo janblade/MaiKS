@@ -102,6 +102,7 @@ When you encounter a persistent failure:
 2. Formulate a new hypothesis. If the local fix isn't working, consider if the root cause is in a different file or dependency.
 3. Use your file reading tools (`view_file`, `grep_search`) to gather broader context.
 4. Attempt an alternative strategy.
+5. **If the repair is successful**, ask the user: *"I have successfully repaired the issue. Would you like me to document this fix in `playbooks.md` so I know how to resolve it automatically next time?"*
 
 ## Common Mistakes
 
