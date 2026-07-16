@@ -14,6 +14,7 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
 *   **Native IDE Absorption**: Bridges natively with your IDE's customization systems (like `.agents/skills.json` and `AGENTS.md`) to guarantee that OS skills and semantic memory are absorbed immediately into the agent's context window.
 *   **Three-Tier Cognitive Memory**: Maintains Episodic (what happened), Semantic (what we know), and Procedural (how we do things) memory across chat sessions via persistent markdown and JSON logs, preventing agent amnesia.
+*   **Hub and Spoke Task Memory**: Integrates seamlessly with Git! When you switch to an ephemeral feature or bugfix branch, the OS automatically isolates your technical working memory into a specialized task file, keeping your global project knowledge clean and lightning fast.
 
 ## 💸 Token Economics & Prompt Caching
 
@@ -73,9 +74,10 @@ graph TB
     subgraph UserSpace ["USER SPACE - Agent-Evolvable"]
         direction TB
         
-        subgraph MemorySystem ["Memory System - 3-Tier Cognitive Model"]
+        subgraph MemorySystem ["Memory System - Cognitive Model"]
             EPISODIC["Episodic Memory<br>(decisions.jsonl + sessions.jsonl)"]:::database
-            SEMANTIC["Semantic Memory<br>(project_knowledge.md + patterns.json)"]:::database
+            SEMANTIC["Semantic (Hub)<br>(project_knowledge.md + patterns.json)"]:::database
+            TASK["Task (Spokes)<br>(tasks/ + archived_tasks/)"]:::database
             PROCEDURAL["Procedural Memory<br>(workflows.json + playbooks.md)"]:::database
         end
 
@@ -155,7 +157,9 @@ your-project/
 │   ├── memory/                      
 │   │   ├── episodic/                # decisions.jsonl + sessions.jsonl
 │   │   ├── semantic/                # project_knowledge.md + patterns.json
-│   │   └── procedural/              # workflows.json + playbooks.md
+│   │   ├── procedural/              # workflows.json + playbooks.md
+│   │   ├── tasks/                   # Active Jira/feature branch working memory
+│   │   └── archived_tasks/          # History of closed tasks
 │   ├── agents/                      # Custom specialized agent profiles
 │   └── registry/                    # Skill catalogs (.sk/)
 │
@@ -195,10 +199,11 @@ To update an existing workspace to the latest version of GoliathOS while preserv
 
 How to get the most out of GoliathOS in your daily development:
 
-1. **The Boot**: While the bridge files (e.g. `AGENTS.md`) naturally instruct the agent to read `.ai-os/BOOT.md` in the background, LLMs don't act until spoken to. To guarantee a verified load of your project's memory and rules before you start coding, begin your first chat of the day with: **`> OS_COMMAND BOOT`**.
-2. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently as it works.
-3. **Complex Planning**: If you have a massive architectural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
-4. **End of Session Consolidation**: Before you close your IDE for the day, tell the agent: **"Wrap up and consolidate memory."** The agent will analyze everything you did today, extract architectural rules, and save them to `project_knowledge.md` so it never suffers from amnesia tomorrow!
+1. **The Boot**: While the bridge files naturally instruct the agent to read `.ai-os/BOOT.md` in the background, LLMs don't always act until spoken to. Begin your first chat of the day with: **`> OS_COMMAND BOOT`** to guarantee a verified load of your project's memory.
+2. **Branch Auto-Detection (Zero Setup)**: Start a new ticket by checking out a branch (e.g., `git checkout -b feature/JIRA-123`). The OS will automatically detect this branch and create a dedicated, isolated task memory file (`tasks/feature_JIRA-123.md`). It will use this file to log deep technical debugging steps so your main project memory isn't polluted. *(Note: The OS is smart enough to skip this and only use global memory if you are directly on `main` or `release` branches!)*
+3. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently as it works.
+4. **Complex Planning**: If you have a massive architectural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
+5. **Task Completion & Consolidation**: When you finish your feature and are ready to open a Pull Request, tell the agent: **`> OS_COMMAND TASK_CLOSE`** (or just say "summarize and close this task"). The AI will read your task memory, extract any globally useful architectural truths it learned, save them to the `semantic/` hub, and archive the messy task file.
 
 ---
 
@@ -244,7 +249,7 @@ Once booted, you can direct the agent using standard commands or their aliases i
 |---|---|---|---|
 | `LOG_DECISION` | | Record architectural decision to memory | When you make a structural choice (e.g. "Use Redux") |
 | `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | To ensure the agent remembers rules tomorrow |
-| *(Combined)* | `wrap` | Logs a decision AND consolidates memory | Run this at the end of every coding session! |
+| `TASK_CLOSE` | `close` | Execute the Consolidation Protocol | Run this when finishing a feature branch before opening a PR! |
 
 ### Testing
 | Command | Alias | Description | When to use |
