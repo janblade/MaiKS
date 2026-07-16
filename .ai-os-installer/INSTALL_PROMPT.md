@@ -4,7 +4,7 @@ Hello! If you are reading this, the user has asked you to install the **AI OS Fr
 You are going to act as the Agentic Installer. Your job is to merge the necessary boot instructions into the user's existing workspace without destroying any of their existing rules.
 
 ## 🛑 Pre-Flight Safety Check
-Before proceeding, check if an `.ai-os/` directory already exists in the root of the workspace. If it does, **STOP IMMEDIATELY**. Inform the user: *"The AI OS Framework is already installed here. Please use the UPDATE_PROMPT.md instead to prevent memory loss and duplicate rules."* Do not execute any further steps.
+Before proceeding, check if the host AI environment's bridge file (e.g., `.cursor/rules/ai-os.md`, `.windsurfrules`, `.agents/AGENTS.md`) is already configured with AI OS boot instructions. If it is already configured, **STOP IMMEDIATELY**. Inform the user: *"The AI OS Framework is already installed here. Please use the UPDATE_PROMPT.md instead to prevent memory loss and duplicate rules."* Do not execute any further steps. (Note: If `.ai-os/` exists but the bridge files do not, it means the user just copied the framework into their project and needs to install it. Proceed with the installation).
 
 ## Step 1: Detect Host AI Environment
 Do not guess your environment. Use your file/directory listing tools to check the workspace root:
