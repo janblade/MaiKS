@@ -18,7 +18,13 @@ Using your file manipulation tools, carefully copy the following files and direc
 
 *Note: For `manifest.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys from the update into the user's existing file to preserve their custom settings.*
 
-## Step 4: Verify and Finalize
+## Step 4: Execute Migrations
+Read the `.ai-os-installer/MIGRATIONS.md` file from the update source.
+- Carefully review any deprecations or obsoleted files listed.
+- Explicitly delete ONLY the files listed as obsolete in the migration document.
+- Do NOT delete any other files in the user's `registry/` or `commands/` directories, as those are custom user configurations.
+
+## Step 5: Verify and Finalize
 1. Verify that `.ai-os/memory/` is fully intact and still contains `project_knowledge.md` and `decisions.jsonl`.
 2. Do NOT delete the update source folder. Leave it intact so the user can reference it if needed.
 3. Announce to the user that the upgrade is complete!
