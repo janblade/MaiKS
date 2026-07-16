@@ -154,8 +154,10 @@ your-project/
 ├── .ai-os/                          
 │   ├── BOOT.md                      # Master boot prompt
 │   ├── manifest.json                # Project config & metadata
+│   ├── progress.md                  # Living dashboard & status tracker
 │   ├── kernel/                      # System self-verification checks
 │   ├── rules/                       # ISO 42001 rules & OWASP safety policy
+│   ├── commands/                    # User aliases and command catalog
 │   ├── genome/                      # Detected stack DNA & Archetypes
 │   ├── memory/                      
 │   │   ├── episodic/                # decisions.jsonl + sessions.jsonl
