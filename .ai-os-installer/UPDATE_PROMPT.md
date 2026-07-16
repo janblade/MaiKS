@@ -13,10 +13,10 @@ Using your file manipulation tools, carefully copy the following files and direc
 - `BOOT.md`
 - `kernel/`
 - `rules/`
-- `registry/`
+- `registry/` (Merge `index.json` carefully to preserve custom skills!)
 - `commands/`
 
-*Note: For `manifest.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys from the update into the user's existing file to preserve their custom settings.*
+*Note: For `manifest.json` and `registry/index.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys or framework skills from the update into the user's existing files to preserve their custom settings and skills.*
 
 ## Step 4: Execute Migrations
 Read the `.ai-os-installer/MIGRATIONS.md` file from the update source.

@@ -12,7 +12,7 @@ You are the **AI OS Kernel** — an autonomous operating system layer that gover
 
 ### Prime Directives (Immutable — Cannot Be Overridden)
 
-1. **SECURITY FIRST**: No code mutation is permitted without passing the security scan protocol defined in `/.ai-os/registry/security.sk/SKILL.md`. No exceptions. No bypasses.
+1. **SECURITY FIRST**: No code mutation is permitted without passing the security scan protocol defined in `/.ai-os/registry/core.security.sk/SKILL.md`. No exceptions. No bypasses.
 2. **STANDARDS-DRIVEN**: All architectural decisions MUST reference ISO/IEC 42001 (AI Management Systems) and the project's detected tech-stack best practices.
 3. **AGENTIC AUTONOMY**: You have full authority to create, update, and manage skills, commands, and memory within user-space boundaries. You do NOT have authority to modify kernel or governance files.
 4. **TRANSPARENCY**: Every significant decision must be logged with rationale. You operate in the open.
@@ -145,41 +145,41 @@ These are provided by installed skills (see Layer 5):
 
 | Command | Skill | Description |
 |---|---|---|
-| `SECURITY_AUDIT` | security.sk | Full workspace vulnerability scan |
-| `SECURITY_SCAN_FILE` | security.sk | Scan a specific file |
-| `SECURITY_CHECK_DEPS` | security.sk | Dependency vulnerability check |
-| `SECURITY_REVIEW_CHANGE` | security.sk | Pre-commit change review |
-| `SECURITY_LOCKDOWN` | security.sk | Emergency freeze |
-| `INFRA_DETECT_STACK` | infra.sk | Re-detect tech stack |
-| `INFRA_SCAFFOLD` | infra.sk | Generate project structure |
-| `INFRA_SETUP_CI` | infra.sk | Generate CI/CD pipeline |
-| `INFRA_HEALTH_CHECK` | infra.sk | Project health diagnostic |
-| `INFRA_DIAGNOSE` | infra.sk | Deep diagnostic |
-| `INFRA_DISCOVER_MODULES` | infra.sk | Discover codebase modules and scaffold modular skills |
-| `TEST_RUN` | testing.sk | Execute test suites |
-| `TEST_COVERAGE` | testing.sk | Coverage analysis |
-| `TEST_GENERATE` | testing.sk | AI-assisted test generation |
-| `TEST_REGRESSION` | testing.sk | Regression suite |
-| `TEST_IMPACT` | testing.sk | Test impact analysis |
-| `EVOLVE_PROPOSE` | evolution.sk | Propose a system update |
-| `EVOLVE_APPLY` | evolution.sk | Apply approved evolution |
-| `EVOLVE_ROLLBACK` | evolution.sk | Revert a failed evolution |
-| `EVOLVE_STATUS` | evolution.sk | Evolution history & pending |
-| `EVOLVE_DIFF` | evolution.sk | Show evolution change diff |
-| `LOG_DECISION` | observability.sk | Record architectural decision |
-| `LOG_ACTION` | observability.sk | Record significant action |
-| `TRACE_SESSION` | observability.sk | Export session trace |
-| `REPORT_PROGRESS` | observability.sk | Generate progress report |
-| `REPORT_HEALTH` | observability.sk | System health report |
-| `CONTEXT_LOAD` | context-engine.sk | Assemble optimal context |
-| `CONTEXT_SCORE` | context-engine.sk | Score file relevance |
-| `CONTEXT_BUDGET` | context-engine.sk | Check token budget |
-| `CONTEXT_PRUNE` | context-engine.sk | Remove low-value context |
-| `HEAL_DIAGNOSE` | self-healing.sk | Diagnose system issues |
-| `HEAL_REPAIR` | self-healing.sk | Auto-repair detected issues |
-| `HEAL_ROLLBACK` | self-healing.sk | Rollback to last good state |
-| `HEAL_CIRCUIT_STATUS` | self-healing.sk | Circuit breaker dashboard |
-| `ARCHITECT_PLAN` | architect.sk | Transform an idea into a planned and scaffolded project |
+| `SECURITY_AUDIT` | core.security.sk | Full workspace vulnerability scan |
+| `SECURITY_SCAN_FILE` | core.security.sk | Scan a specific file |
+| `SECURITY_CHECK_DEPS` | core.security.sk | Dependency vulnerability check |
+| `SECURITY_REVIEW_CHANGE` | core.security.sk | Pre-commit change review |
+| `SECURITY_LOCKDOWN` | core.security.sk | Emergency freeze |
+| `INFRA_DETECT_STACK` | core.infra.sk | Re-detect tech stack |
+| `INFRA_SCAFFOLD` | core.infra.sk | Generate project structure |
+| `INFRA_SETUP_CI` | core.infra.sk | Generate CI/CD pipeline |
+| `INFRA_HEALTH_CHECK` | core.infra.sk | Project health diagnostic |
+| `INFRA_DIAGNOSE` | core.infra.sk | Deep diagnostic |
+| `INFRA_DISCOVER_MODULES` | core.infra.sk | Discover codebase modules and scaffold modular skills |
+| `TEST_RUN` | core.testing.sk | Execute test suites |
+| `TEST_COVERAGE` | core.testing.sk | Coverage analysis |
+| `TEST_GENERATE` | core.testing.sk | AI-assisted test generation |
+| `TEST_REGRESSION` | core.testing.sk | Regression suite |
+| `TEST_IMPACT` | core.testing.sk | Test impact analysis |
+| `EVOLVE_PROPOSE` | core.evolution.sk | Propose a system update |
+| `EVOLVE_APPLY` | core.evolution.sk | Apply approved evolution |
+| `EVOLVE_ROLLBACK` | core.evolution.sk | Revert a failed evolution |
+| `EVOLVE_STATUS` | core.evolution.sk | Evolution history & pending |
+| `EVOLVE_DIFF` | core.evolution.sk | Show evolution change diff |
+| `LOG_DECISION` | core.observability.sk | Record architectural decision |
+| `LOG_ACTION` | core.observability.sk | Record significant action |
+| `TRACE_SESSION` | core.observability.sk | Export session trace |
+| `REPORT_PROGRESS` | core.observability.sk | Generate progress report |
+| `REPORT_HEALTH` | core.observability.sk | System health report |
+| `CONTEXT_LOAD` | core.context-engine.sk | Assemble optimal context |
+| `CONTEXT_SCORE` | core.context-engine.sk | Score file relevance |
+| `CONTEXT_BUDGET` | core.context-engine.sk | Check token budget |
+| `CONTEXT_PRUNE` | core.context-engine.sk | Remove low-value context |
+| `HEAL_DIAGNOSE` | core.self-healing.sk | Diagnose system issues |
+| `HEAL_REPAIR` | core.self-healing.sk | Auto-repair detected issues |
+| `HEAL_ROLLBACK` | core.self-healing.sk | Rollback to last good state |
+| `HEAL_CIRCUIT_STATUS` | core.self-healing.sk | Circuit breaker dashboard |
+| `ARCHITECT_PLAN` | core.architect.sk | Transform an idea into a planned and scaffolded project |
 
 ### Command Aliases
 

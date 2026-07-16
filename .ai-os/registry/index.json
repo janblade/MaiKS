@@ -3,12 +3,18 @@
   "last_updated": null,
   "skills": [
     {
-      "id": "security.sk",
+      "id": "core.security.sk",
       "name": "Security Audit & Enforcement",
       "version": "1.0.0",
       "description": "Vulnerability scanning, dependency auditing, pre-commit security gates, and emergency lockdown.",
-      "entrypoint": "registry/security.sk/SKILL.md",
-      "commands": ["SECURITY_AUDIT", "SECURITY_SCAN_FILE", "SECURITY_CHECK_DEPS", "SECURITY_REVIEW_CHANGE", "SECURITY_LOCKDOWN"],
+      "entrypoint": "registry/core.security.sk/SKILL.md",
+      "commands": [
+        "SECURITY_AUDIT",
+        "SECURITY_SCAN_FILE",
+        "SECURITY_CHECK_DEPS",
+        "SECURITY_REVIEW_CHANGE",
+        "SECURITY_LOCKDOWN"
+      ],
       "dependencies": [],
       "protected": true,
       "circuit_breaker": "closed",
@@ -16,12 +22,18 @@
       "last_invoked": null
     },
     {
-      "id": "infra.sk",
+      "id": "core.infra.sk",
       "name": "Infrastructure & Scaffolding",
       "version": "1.0.0",
       "description": "Tech stack detection, project scaffolding, CI/CD generation, and health diagnostics.",
-      "entrypoint": "registry/infra.sk/SKILL.md",
-      "commands": ["INFRA_DETECT_STACK", "INFRA_SCAFFOLD", "INFRA_SETUP_CI", "INFRA_HEALTH_CHECK", "INFRA_DIAGNOSE"],
+      "entrypoint": "registry/core.infra.sk/SKILL.md",
+      "commands": [
+        "INFRA_DETECT_STACK",
+        "INFRA_SCAFFOLD",
+        "INFRA_SETUP_CI",
+        "INFRA_HEALTH_CHECK",
+        "INFRA_DIAGNOSE"
+      ],
       "dependencies": [],
       "protected": false,
       "circuit_breaker": "closed",
@@ -29,12 +41,18 @@
       "last_invoked": null
     },
     {
-      "id": "testing.sk",
+      "id": "core.testing.sk",
       "name": "Testing & Validation",
       "version": "1.0.0",
       "description": "Test execution, coverage analysis, AI-assisted test generation, and impact analysis.",
-      "entrypoint": "registry/testing.sk/SKILL.md",
-      "commands": ["TEST_RUN", "TEST_COVERAGE", "TEST_GENERATE", "TEST_REGRESSION", "TEST_IMPACT"],
+      "entrypoint": "registry/core.testing.sk/SKILL.md",
+      "commands": [
+        "TEST_RUN",
+        "TEST_COVERAGE",
+        "TEST_GENERATE",
+        "TEST_REGRESSION",
+        "TEST_IMPACT"
+      ],
       "dependencies": [],
       "protected": false,
       "circuit_breaker": "closed",
@@ -42,25 +60,39 @@
       "last_invoked": null
     },
     {
-      "id": "evolution.sk",
+      "id": "core.evolution.sk",
       "name": "Self-Evolution Engine",
       "version": "1.0.0",
-      "description": "PDCA-based self-improvement lifecycle — propose, apply, verify, and rollback system evolutions.",
-      "entrypoint": "registry/evolution.sk/SKILL.md",
-      "commands": ["EVOLVE_PROPOSE", "EVOLVE_APPLY", "EVOLVE_ROLLBACK", "EVOLVE_STATUS", "EVOLVE_DIFF"],
-      "dependencies": ["observability.sk"],
+      "description": "PDCA-based self-improvement lifecycle \u00e2\u20ac\u201d propose, apply, verify, and rollback system evolutions.",
+      "entrypoint": "registry/core.evolution.sk/SKILL.md",
+      "commands": [
+        "EVOLVE_PROPOSE",
+        "EVOLVE_APPLY",
+        "EVOLVE_ROLLBACK",
+        "EVOLVE_STATUS",
+        "EVOLVE_DIFF"
+      ],
+      "dependencies": [
+        "core.observability.sk"
+      ],
       "protected": false,
       "circuit_breaker": "closed",
       "failure_count": 0,
       "last_invoked": null
     },
     {
-      "id": "observability.sk",
+      "id": "core.observability.sk",
       "name": "Observability & Audit Trail",
       "version": "1.0.0",
       "description": "Decision logging, action tracing, session export, and health reporting.",
-      "entrypoint": "registry/observability.sk/SKILL.md",
-      "commands": ["LOG_DECISION", "LOG_ACTION", "TRACE_SESSION", "REPORT_PROGRESS", "REPORT_HEALTH"],
+      "entrypoint": "registry/core.observability.sk/SKILL.md",
+      "commands": [
+        "LOG_DECISION",
+        "LOG_ACTION",
+        "TRACE_SESSION",
+        "REPORT_PROGRESS",
+        "REPORT_HEALTH"
+      ],
       "dependencies": [],
       "protected": false,
       "circuit_breaker": "closed",
@@ -68,12 +100,17 @@
       "last_invoked": null
     },
     {
-      "id": "context-engine.sk",
+      "id": "core.context-engine.sk",
       "name": "Context Engineering Engine",
       "version": "1.0.0",
       "description": "Intelligent context assembly, relevance scoring, token budget management, and context pruning.",
-      "entrypoint": "registry/context-engine.sk/SKILL.md",
-      "commands": ["CONTEXT_LOAD", "CONTEXT_SCORE", "CONTEXT_BUDGET", "CONTEXT_PRUNE"],
+      "entrypoint": "registry/core.context-engine.sk/SKILL.md",
+      "commands": [
+        "CONTEXT_LOAD",
+        "CONTEXT_SCORE",
+        "CONTEXT_BUDGET",
+        "CONTEXT_PRUNE"
+      ],
       "dependencies": [],
       "protected": false,
       "circuit_breaker": "closed",
@@ -81,26 +118,39 @@
       "last_invoked": null
     },
     {
-      "id": "self-healing.sk",
+      "id": "core.self-healing.sk",
       "name": "Self-Healing & Resilience",
       "version": "1.0.0",
       "description": "Circuit breakers, loop detection, failure classification, auto-repair, and emergency protocols.",
-      "entrypoint": "registry/self-healing.sk/SKILL.md",
-      "commands": ["HEAL_DIAGNOSE", "HEAL_REPAIR", "HEAL_ROLLBACK", "HEAL_CIRCUIT_STATUS"],
-      "dependencies": ["observability.sk"],
+      "entrypoint": "registry/core.self-healing.sk/SKILL.md",
+      "commands": [
+        "HEAL_DIAGNOSE",
+        "HEAL_REPAIR",
+        "HEAL_ROLLBACK",
+        "HEAL_CIRCUIT_STATUS"
+      ],
+      "dependencies": [
+        "core.observability.sk"
+      ],
       "protected": false,
       "circuit_breaker": "closed",
       "failure_count": 0,
       "last_invoked": null
     },
     {
-      "id": "architect.sk",
-      "name": "Architect — Idea to Project",
+      "id": "core.architect.sk",
+      "name": "Architect \u00e2\u20ac\u201d Idea to Project",
       "version": "1.0.0",
       "description": "Transforms a raw idea into a fully planned and scaffolded project through structured interview, architecture design, and automated scaffolding.",
-      "entrypoint": "registry/architect.sk/SKILL.md",
-      "commands": ["ARCHITECT_PLAN"],
-      "dependencies": ["infra.sk", "security.sk", "observability.sk"],
+      "entrypoint": "registry/core.architect.sk/SKILL.md",
+      "commands": [
+        "ARCHITECT_PLAN"
+      ],
+      "dependencies": [
+        "core.infra.sk",
+        "core.security.sk",
+        "core.observability.sk"
+      ],
       "protected": false,
       "circuit_breaker": "closed",
       "failure_count": 0,
