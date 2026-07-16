@@ -23,7 +23,15 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
 
 **Fallback:** If you do not have the tool capabilities to create or edit files, do not apologize. Simply print the exact text of the template into the chat in a markdown block, and ask the user to paste it into their bridge file.
 
-## Step 3: Verify Integrity & Gitignore
+## Step 3: Purge Framework Meta-Memory
+If the user copied the `.ai-os/` folder directly from the GoliathOS repository, it will contain memory logs from the framework's own development. This will pollute the user's new project.
+Using your file editing tools, reset the following files to prevent context pollution:
+1. **`.ai-os/memory/semantic/project_knowledge.md`**: Overwrite with a blank template: `# Project Knowledge\n\n> Semantic memory and architectural rules for this workspace.\n\n## Architecture\n\n## Known Gotchas`
+2. **`.ai-os/memory/episodic/decisions.jsonl`** & **`sessions.jsonl`**: Empty the contents of these files.
+3. **`.ai-os/progress.md`**: Clear out the 'Recent Decisions' and 'Pending Evolution Proposals' sections.
+4. **`.ai-os/genome/project_genome.json`**: Reset `project_name` to `""` and clear the `tech_stack` object.
+
+## Step 4: Verify Integrity & Gitignore
 1. Check that the `.ai-os/` directory exists in the root of the workspace. If it does not, inform the user they need to copy the `.ai-os/` folder from the downloaded framework package.
 2. Open the user's `.gitignore` file (create it if it doesn't exist) and append the following lines to prevent merge-conflict hell from highly active AI files:
 ```text
@@ -32,5 +40,5 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
 .ai-os/progress.md
 ```
 
-## Step 4: Boot!
+## Step 5: Boot!
 Read `.ai-os/BOOT.md` and begin executing the Initialization Checklist as the newly installed AI OS Kernel. Greet the user with the boot status banner!
