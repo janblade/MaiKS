@@ -2,6 +2,9 @@
 
 GoliathOS is a standards-driven, microkernel-inspired Operating System layer designed to run directly inside your project workspaces. It governs, secures, and enhances AI coding agents (such as Claude Code, Antigravity/Gemini, GitHub Copilot, Cursor, and Windsurf) in any codebase.
 
+> **🌟 The Killer Feature: Deterministic, Git-Native Memory**
+> Unlike other AI frameworks that rely on invisible Vector Databases (RAG) which suffer from silent hallucination and amnesia, GoliathOS uses a **deterministic, human-readable Hub and Spoke memory architecture**. The AI's brain is stored in pure Markdown and JSON files right next to your code. When a new developer clones your repo, their AI instantly inherits the exact same project knowledge, technical history, and custom skills as the rest of your team. No cloud databases required.
+
 ---
 
 ## 🚀 Key Features
