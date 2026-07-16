@@ -10,13 +10,14 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 ## 🚀 Key Features
 
 *   **Microkernel Architecture**: Strict separation between the kernel space (immutable governance, rules, configuration) and user space (evolvable skills, memory, commands).
+*   **PDCA Self-Evolution**: The OS implements a strict Plan-Do-Check-Act lifecycle. If the AI discovers a more efficient pattern, it can propose and apply upgrades to its own workflows and skills, complete with auto-rollback if integrity checks fail.
 *   **Flexible Agent Delegation**: The primary agent acts as a Coordinator that can edit code directly, but can also delegate complex, multi-file architectures to specialized subagents if the host environment supports it.
 *   **Cognitive Security Gates**: No blind regex scanners. The OS enforces a strict pre-mutation cognitive security review, leveraging the LLM's natural reasoning to spot injection flaws, leaked credentials, and unsafe functions before writing to disk.
-*   **Pragmatic Self-Healing**: Instead of pretending to run background daemon scripts, the OS uses cognitive loop detection and troubleshooting checklists to break out of failure cycles and find root causes.
+*   **Pragmatic Self-Healing**: Uses cognitive loop detection to break out of failure cycles. More importantly, when the AI successfully repairs a complex issue, it prompts the user to extract the fix into a permanent playbook so it never hallucinates the same error twice.
 *   **Perception & Stack Discovery**: The OS can actively profile your workspace (via `OS_COMMAND INFRA_DISCOVER`) to detect tech stack drift, map sub-modules, and automatically synthesize new semantic rules or custom skills based on what it finds.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
 *   **Native IDE Absorption**: Bridges natively with your IDE's customization systems (like `.agents/skills.json` and `AGENTS.md`) to guarantee that OS skills and semantic memory are absorbed immediately into the agent's context window.
-*   **Three-Tier Cognitive Memory**: Maintains Episodic (what happened), Semantic (what we know), and Procedural (how we do things) memory across chat sessions via persistent markdown and JSON logs, preventing agent amnesia.
+*   **Four-Tier Cognitive Memory**: Eradicates agent amnesia by maintaining Episodic (decisions), Semantic (global architecture), Task (active branches), and Procedural (executable playbooks) memory across all your chat sessions.
 *   **Hub and Spoke Task Memory**: Integrates seamlessly with Git! When you switch to an ephemeral feature or bugfix branch, the OS automatically isolates your technical working memory into a specialized task file, keeping your global project knowledge clean and lightning fast.
 
 ## 💸 Token Economics & Prompt Caching
