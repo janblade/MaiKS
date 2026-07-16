@@ -33,6 +33,17 @@
 - **Rules Check**: Complies with evolution_policy.md. Enhances ISO 42001 (A.4) knowledge retention.
 - **Status**: APPLIED
 
+### Evolution Proposal: EP-2
+- **Date**: 2026-07-16
+- **Type**: skill_update + command_create
+- **Target**: `registry/core.self-healing.sk/SKILL.md`, `commands/index.json`, `registry/index.json`
+- **What**: Add a new `REVIEW_CREDIBILITY` command to the self-healing skill that performs a structured credibility audit of the entire framework — reviewing all documentation, rules, skills, and README for overclaims, internal inconsistencies, unimplemented features, and language that would undermine professional credibility.
+- **Why**: We just manually performed exactly this review and found 13 issues across the framework (wrong file paths in integrity.md, ISO 42001 overclaims, contradictory security skill, unimplemented archetype system, buzzword overuse, etc.). This type of self-critical review is extremely high-value but is not currently codified anywhere. Making it a repeatable command means users can run it before open-sourcing, presenting to teams, or publishing to package registries — catching embarrassments before they become public.
+- **Risk**: low
+- **Rollback Plan**: Revert added command sections via git.
+- **Rules Check**: Complies with evolution_policy.md. User-space only (skill update + command registration). Does not modify security.sk or kernel space.
+- **Status**: APPLIED
+
 ---
 
 ## Recent Decisions

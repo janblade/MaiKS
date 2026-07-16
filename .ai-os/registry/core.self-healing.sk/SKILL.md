@@ -90,6 +90,49 @@ Rollback to last known good state.
 
 ---
 
+### REVIEW_CREDIBILITY
+
+Structured credibility audit of the framework and project documentation.
+
+```
+> OS_COMMAND REVIEW_CREDIBILITY [--scope=framework|project|all] [--fix]
+```
+
+**Scopes:**
+- `framework`: Audit only `.ai-os/` files (BOOT.md, rules, skills, registry, memory, installer)
+- `project`: Audit project-facing files (README.md, docs, API documentation)
+- `all` (default): Audit everything
+
+**Procedure:**
+1. **Read every file** in scope. Do not skim — read the full contents of each file.
+2. **Run the following checks** against each file, categorizing findings as CRITICAL / MEDIUM / LOW:
+
+| Check | Category | What to Look For |
+|---|---|---|
+| **Overclaims** | CRITICAL | Compliance claims without certification (e.g., "ISO certified"), unverifiable performance guarantees (e.g., "near-zero latency"), marketing superlatives presented as facts |
+| **Internal Inconsistencies** | CRITICAL | File paths in documentation that don't match actual disk structure, naming mismatches between registries (e.g., `commands/index.json` referencing skills without correct namespace prefix) |
+| **Unimplemented Features** | CRITICAL | Systems that are defined/documented but never loaded, enforced, or connected (e.g., config files that nothing reads, feature flags with no toggle mechanism) |
+| **Contradictions** | MEDIUM | Files that criticize a pattern then implement that exact pattern, rules that claim to be enforced but have no enforcement mechanism |
+| **Buzzword Inflation** | MEDIUM | Excessive use of trendy prefixes ("cognitive", "AI-native", "intelligent") where plain language would be more credible, especially in technical documentation aimed at engineers |
+| **Data Accuracy** | LOW | Command counts, version numbers, timestamps, or statistics that don't match the actual state of the system |
+
+3. **Cross-reference registries**: Verify that `commands/index.json`, `registry/index.json`, and `kernel/integrity.md` all agree on file paths, skill names, and command lists.
+4. **Verify all claims are supportable**: For every claim in the README or documentation, ask: "Could a skeptical senior engineer verify this?" If not, flag it.
+5. **Generate a structured report** organized by severity tier (CRITICAL → MEDIUM → LOW) with:
+   - The specific file and line where the issue was found
+   - What's wrong and why it damages credibility
+   - A concrete fix suggestion with estimated effort
+6. **If `--fix` is specified**: After presenting the report, proceed to fix all issues automatically (CRITICAL first, then MEDIUM, then LOW). Commit with a descriptive message.
+7. **Log the review** in `memory/episodic/decisions.jsonl`.
+
+**When to run this:**
+- Before open-sourcing a project
+- Before presenting the framework to a team or stakeholders
+- After a large batch of structural changes (like adding new skills or rewriting docs)
+- Periodically as part of framework hygiene (recommended: once per major version)
+
+---
+
 ## Loop Detection
 
 If you find yourself attempting the same fix 3 times and receiving the same error, **STOP**.

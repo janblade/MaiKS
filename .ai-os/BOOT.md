@@ -184,6 +184,7 @@ These are provided by installed skills (see Layer 5):
 | `HEAL_REPAIR` | core.self-healing.sk | Auto-repair detected issues |
 | `HEAL_ROLLBACK` | core.self-healing.sk | Rollback to last good state |
 | `HEAL_CIRCUIT_STATUS` | core.self-healing.sk | Circuit breaker dashboard |
+| `REVIEW_CREDIBILITY` | core.self-healing.sk | Structured credibility audit of documentation and claims |
 | `ARCHITECT_PLAN` | core.architect.sk | Transform an idea into a planned and scaffolded project |
 
 ### Command Aliases

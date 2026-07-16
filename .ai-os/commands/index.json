@@ -48,6 +48,7 @@
     {"name": "HEAL_REPAIR", "skill": "core.self-healing.sk", "description": "Auto-repair detected issues", "parameters": {"issue": {"type": "string"}, "all-safe": {"type": "boolean", "default": false}}},
     {"name": "HEAL_ROLLBACK", "skill": "core.self-healing.sk", "description": "Rollback to last known good state", "parameters": {"scope": {"type": "enum", "values": ["last-evolution", "last-session", "full-reset"], "default": "last-evolution"}}},
     {"name": "HEAL_CIRCUIT_STATUS", "skill": "core.self-healing.sk", "description": "Circuit breaker dashboard", "parameters": {}},
+    {"name": "REVIEW_CREDIBILITY", "skill": "core.self-healing.sk", "description": "Structured credibility audit of framework and project documentation", "parameters": {"scope": {"type": "enum", "values": ["framework", "project", "all"], "default": "all"}, "fix": {"type": "boolean", "default": false}}},
     {"name": "ARCHITECT_PLAN", "skill": "core.architect.sk", "description": "Interactive interview to plan and scaffold a greenfield feature", "parameters": {"idea": {"type": "string", "required": true}}}
   ]
 }

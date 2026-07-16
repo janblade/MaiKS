@@ -127,7 +127,8 @@
         "HEAL_DIAGNOSE",
         "HEAL_REPAIR",
         "HEAL_ROLLBACK",
-        "HEAL_CIRCUIT_STATUS"
+        "HEAL_CIRCUIT_STATUS",
+        "REVIEW_CREDIBILITY"
       ],
       "dependencies": [
         "core.observability.sk"
