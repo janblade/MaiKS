@@ -383,7 +383,7 @@ Display the complete bootstrap result:
 ║ Project:    {name}                          ║
 ║ Archetype:  {archetype}                     ║
 ║ Stack:      {detected languages/frameworks} ║
-║ Skills:     7 core skills loaded            ║
+║ Skills:     8 core skills loaded            ║
 ║ Commands:   {count} commands available      ║
 ║                                             ║
 ║ Type: > OS_COMMAND HELP for commands        ║

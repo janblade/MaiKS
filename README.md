@@ -14,7 +14,7 @@ GoliathOS is a governance-first, microkernel-inspired Operating System layer des
 *   **Flexible Agent Delegation**: The primary agent acts as a Coordinator that can edit code directly, but can also delegate complex, multi-file architectures to specialized subagents if the host environment supports it.
 *   **Pre-Mutation Security Checklist**: The OS enforces a mandatory pre-mutation security review before any code is written to disk, catching hardcoded credentials, injection patterns, and unsafe functions. For production-grade static analysis, integrate a dedicated SAST tool (like Semgrep or Snyk) into your CI pipeline.
 *   **Pragmatic Self-Healing**: Uses loop detection to break out of failure cycles. More importantly, when the AI successfully repairs a complex issue, it prompts the user to extract the fix into a permanent playbook so it never hallucinates the same error twice.
-*   **Perception & Stack Discovery**: The OS can actively profile your workspace (via `OS_COMMAND INFRA_DISCOVER`) to detect tech stack drift, map sub-modules, and automatically synthesize new semantic rules or custom skills based on what it finds.
+*   **Perception & Stack Discovery**: The OS can actively profile your workspace (via `OS_COMMAND INFRA_DISCOVER_MODULES`) to detect tech stack drift, map sub-modules, and automatically synthesize new semantic rules or custom skills based on what it finds.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
 *   **Native IDE Absorption**: Bridges natively with your IDE's customization systems (like `.agents/skills.json` and `AGENTS.md`) to guarantee that OS skills and semantic memory are absorbed immediately into the agent's context window.
 *   **Four-Tier Memory Model**: Eradicates agent amnesia by maintaining Episodic (decisions), Semantic (global architecture), Task (active branches), and Procedural (executable playbooks) memory across all your chat sessions.
@@ -259,7 +259,7 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 | Command | Alias | Description | Example Prompt |
 |---|---|---|---|
 | `ARCHITECT_PLAN` | `plan` | Interactive interview to plan a feature | *"Let's plan a new user dashboard feature"* |
-| `INFRA_DISCOVER` | `discover` | Profile codebase to detect stack drift | *"Profile the codebase, I just added Next.js"* |
+| `INFRA_DISCOVER_MODULES` | `discover` | Profile codebase to detect stack drift | *"Profile the codebase, I just added Next.js"* |
 | `INFRA_SCAFFOLD` | | Generate boilerplate project structure | *"Scaffold the project structure for me"* |
 
 ### Memory & Evolution

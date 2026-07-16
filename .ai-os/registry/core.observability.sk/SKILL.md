@@ -2,8 +2,8 @@
 name: observability-audit
 description: >-
   Decision logging, action tracing, session export, progress reporting, and
-  system health dashboards. Provides the transparency and audit trail required
-  by ISO 42001 and the AI OS governance framework.
+  system health dashboards. Provides transparency and an audit trail inspired
+  by ISO/IEC 42001 principles and the AI OS governance framework.
 ---
 
 # Observability & Audit Trail

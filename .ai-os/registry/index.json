@@ -32,7 +32,10 @@
         "INFRA_SCAFFOLD",
         "INFRA_SETUP_CI",
         "INFRA_HEALTH_CHECK",
-        "INFRA_DIAGNOSE"
+        "INFRA_DIAGNOSE",
+        "INFRA_DISCOVER_MODULES",
+        "INFRA_SHOW_ENV",
+        "INFRA_SWITCH_ENV"
       ],
       "dependencies": [],
       "protected": false,

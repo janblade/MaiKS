@@ -8,8 +8,12 @@
     "status": "STATUS",
     "test": "TEST_GENERATE",
     "plan": "ARCHITECT_PLAN",
-    "discover": "INFRA_DISCOVER",
+    "discover": "INFRA_DISCOVER_MODULES",
     "wrap": "LOG_DECISION && MEMORY_CONSOLIDATE",
-    "consolidate": "MEMORY_CONSOLIDATE"
+    "consolidate": "MEMORY_CONSOLIDATE",
+    "close": "TASK_CLOSE",
+    "propose": "EVOLVE_PROPOSE",
+    "apply": "EVOLVE_APPLY",
+    "repair": "HEAL_REPAIR"
   }
 }

@@ -14,14 +14,14 @@
   "last_boot": "2026-07-17T06:21:58+08:00",
   "created_at": "2026-07-15T23:20:41+08:00",
   "installed_skills": [
-    "security.sk",
-    "infra.sk",
-    "testing.sk",
-    "evolution.sk",
-    "observability.sk",
-    "context-engine.sk",
-    "self-healing.sk",
-    "architect.sk"
+    "core.security.sk",
+    "core.infra.sk",
+    "core.testing.sk",
+    "core.evolution.sk",
+    "core.observability.sk",
+    "core.context-engine.sk",
+    "core.self-healing.sk",
+    "core.architect.sk"
   ],
   "custom_commands": [],
   "tech_stack": {},
