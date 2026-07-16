@@ -1,6 +1,6 @@
 # GoliathOS
 
-GoliathOS is a standards-driven, microkernel-inspired Operating System layer designed to run directly inside your project workspaces. It governs, secures, and enhances AI coding agents (such as Claude Code, Antigravity/Gemini, GitHub Copilot, Cursor, and Windsurf) in any codebase.
+GoliathOS is a governance-first, microkernel-inspired Operating System layer designed to run directly inside your project workspaces. It governs, secures, and enhances AI coding agents (such as Claude Code, Antigravity/Gemini, GitHub Copilot, Cursor, and Windsurf) in any codebase.
 
 > **🌟 Deterministic, Git-Native Memory**
 > Many AI frameworks rely on opaque Vector Databases (RAG) for memory management. GoliathOS takes a different approach by using a **deterministic, human-readable Hub and Spoke memory architecture**. The AI's context is stored in pure Markdown and JSON files alongside your code. When a new developer clones your repo, their AI instantly inherits the exact same project knowledge, technical history, and custom skills. No external databases required.
@@ -12,24 +12,21 @@ GoliathOS is a standards-driven, microkernel-inspired Operating System layer des
 *   **Microkernel Architecture**: Strict separation between the kernel space (immutable governance, rules, configuration) and user space (evolvable skills, memory, commands).
 *   **PDCA Self-Evolution**: The OS implements a strict Plan-Do-Check-Act lifecycle. If the AI discovers a more efficient pattern, it can propose and apply upgrades to its own workflows and skills, complete with auto-rollback if integrity checks fail.
 *   **Flexible Agent Delegation**: The primary agent acts as a Coordinator that can edit code directly, but can also delegate complex, multi-file architectures to specialized subagents if the host environment supports it.
-*   **Cognitive Security Gates**: No blind regex scanners. The OS enforces a strict pre-mutation cognitive security review, leveraging the LLM's natural reasoning to spot injection flaws, leaked credentials, and unsafe functions before writing to disk.
-*   **Pragmatic Self-Healing**: Uses cognitive loop detection to break out of failure cycles. More importantly, when the AI successfully repairs a complex issue, it prompts the user to extract the fix into a permanent playbook so it never hallucinates the same error twice.
+*   **Pre-Mutation Security Checklist**: The OS enforces a mandatory pre-mutation security review before any code is written to disk, catching hardcoded credentials, injection patterns, and unsafe functions. For production-grade static analysis, integrate a dedicated SAST tool (like Semgrep or Snyk) into your CI pipeline.
+*   **Pragmatic Self-Healing**: Uses loop detection to break out of failure cycles. More importantly, when the AI successfully repairs a complex issue, it prompts the user to extract the fix into a permanent playbook so it never hallucinates the same error twice.
 *   **Perception & Stack Discovery**: The OS can actively profile your workspace (via `OS_COMMAND INFRA_DISCOVER`) to detect tech stack drift, map sub-modules, and automatically synthesize new semantic rules or custom skills based on what it finds.
 *   **Idea-to-Code Scaffolding**: Integrated `Architect` skill that guides greenfield ideas from structured interview to architecture planning, code scaffolding, and environment config.
 *   **Native IDE Absorption**: Bridges natively with your IDE's customization systems (like `.agents/skills.json` and `AGENTS.md`) to guarantee that OS skills and semantic memory are absorbed immediately into the agent's context window.
-*   **Four-Tier Cognitive Memory**: Eradicates agent amnesia by maintaining Episodic (decisions), Semantic (global architecture), Task (active branches), and Procedural (executable playbooks) memory across all your chat sessions.
+*   **Four-Tier Memory Model**: Eradicates agent amnesia by maintaining Episodic (decisions), Semantic (global architecture), Task (active branches), and Procedural (executable playbooks) memory across all your chat sessions.
 *   **Hub and Spoke Task Memory**: Integrates seamlessly with Git! When you switch to an ephemeral feature or bugfix branch, the OS automatically isolates your technical working memory into a specialized task file, keeping your global project knowledge clean and lightning fast.
 
 ## 💸 Token Economics & Prompt Caching
 
 **"Wait, if the agent reads the entire OS framework and memory on boot, won't that cost a fortune in tokens?"**
 
-No! GoliathOS is specifically designed to leverage **Context Caching** (supported natively by Claude 3.5, Gemini 1.5 Pro, and GPT-4o). 
+GoliathOS is designed to benefit from **Context Caching** (supported by Claude, Gemini, GPT-4o, and other major providers). 
 
-Because the core OS files (`BOOT.md`, `project_knowledge.md`, rules, and skills) are largely static between chats, they are cached by the LLM provider. This means:
-1. **Near-Zero Latency**: The agent absorbs the entire OS context in milliseconds.
-2. **Fractional Cost**: Cached input tokens cost ~90% less than raw input tokens (often fractions of a cent per boot).
-You get the power of a deeply context-aware OS without the massive token tax.
+Because the core OS files (`BOOT.md`, `project_knowledge.md`, rules, and skills) are largely static between chats, providers that support context caching can significantly reduce both latency and cost on repeated loads. Actual savings depend on your provider's caching implementation, but the architecture is specifically optimized for this pattern.
 
 ---
 
@@ -62,7 +59,7 @@ graph TB
         INTEGRITY["kernel/integrity.md<br>(Self-Verification Checksums)"]:::kernel
         
         subgraph GovernanceRules ["Governance Rules"]
-            RULES["ultimate_rules.md<br>(ISO 42001 Core Rules)"]:::governance
+            RULES["ultimate_rules.md<br>(Governance Rules)"]:::governance
             SECPOL["security_policy.md<br>(OWASP GenAI Defenses)"]:::governance
             EVOPOL["evolution_policy.md<br>(Self-Update Constraints)"]:::governance
         end
@@ -91,7 +88,7 @@ graph TB
             TST_SK["testing.sk<br>(Validation Run)"]:::userspace
             EVO_SK["evolution.sk<br>(PDCA Lifecycle)"]:::userspace
             OBS_SK["observability.sk<br>(Audit Logs)"]:::userspace
-            HEAL_SK["self-healing.sk<br>(Cognitive Checklists)"]:::userspace
+            HEAL_SK["self-healing.sk<br>(Loop Detection & Repair)"]:::userspace
             ARC_SK["architect.sk<br>(Greenfield Plan)"]:::userspace
         end
 
@@ -253,8 +250,8 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 ### Security & Healing
 | Command | Alias | Description | Example Prompt |
 |---|---|---|---|
-| `SECURITY_AUDIT` | `audit` | Full workspace cognitive vulnerability scan | *"Please audit the workspace before we commit"* |
-| `SECURITY_SCAN_FILE` | `scan` | Cognitive security scan on a specific file | *"Check auth.ts for security flaws"* |
+| `SECURITY_AUDIT` | `audit` | Full workspace security review | *"Please audit the workspace before we commit"* |
+| `SECURITY_SCAN_FILE` | `scan` | Security review on a specific file | *"Check auth.ts for security flaws"* |
 | `HEAL_DIAGNOSE` | `fix` | Run troubleshooting checklist | *"I'm stuck in an error loop, please run a diagnosis"* |
 | `HEAL_REPAIR` | `repair` | Execute an auto-repair sequence | *"Go ahead and repair that issue"* |
 

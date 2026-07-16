@@ -14,7 +14,7 @@
 | **Last Boot** | 2026-07-16T12:48:23+08:00 |
 | **Active Archetype** | auto |
 | **Skills Installed** | 8 |
-| **Commands Available** | 40 (6 built-in + 34 skill-backed) |
+| **Commands Available** | 45 (8 built-in + 37 skill-backed) |
 | **Security Status** | Clean (no scans run yet) |
 | **Memory Status** | Initialized |
 

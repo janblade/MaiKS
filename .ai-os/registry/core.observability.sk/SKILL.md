@@ -12,7 +12,7 @@ description: >-
 
 The observability skill ensures transparency — every significant decision, action,
 and system state change is logged and auditable. This skill is the backbone of
-ISO 42001 Domain 7 (Transparency) compliance.
+the governance framework's transparency requirements, inspired by ISO 42001 principles.
 
 ## Commands
 

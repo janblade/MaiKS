@@ -12,7 +12,7 @@ description: >-
 ## Overview
 
 The security skill is the gatekeeper of the AI OS. No code enters or leaves the
-project without its approval. It implements the security scan gate defined in
+project without a review. It implements the pre-mutation security checklist defined in
 BOOT.md §6 and enforces the security policy from `rules/security_policy.md`.
 
 > [!CAUTION]
@@ -38,10 +38,10 @@ Full workspace vulnerability scan.
 - `--scope` (default: `.`): Limit scan to a specific directory or file
 
 **Procedure:**
-1. Check context engine mode. If Massive Context Strategy is active, load dependency graph and perform full-codebase cross-file taint analysis simultaneously.
-2. Scan all files in scope for secret patterns (see `security_policy.md` LLM02 patterns)
-3. Scan for injection vulnerabilities (command injection, SQL injection, XSS, path traversal). With massive context, track variables across module boundaries to find complex injection vectors.
-4. Scan for unsafe function usage (`eval`, `exec`, `os.system`, `pickle.loads`, etc.)
+1. Read all files in scope
+2. Review for secret patterns: hardcoded API keys, AWS credentials, private keys, tokens, passwords
+3. Review for injection vulnerabilities: command injection, SQL injection, XSS, path traversal
+4. Review for unsafe function usage (`eval`, `exec`, `os.system`, `pickle.loads`, etc.)
 5. If `--depth=all`: Run dependency vulnerability check (SECURITY_CHECK_DEPS)
 6. Generate report: findings count by severity, file locations, recommended fixes
 7. Log scan result in `memory/episodic/decisions.jsonl`
@@ -126,34 +126,25 @@ Emergency freeze — halt all autonomous operations.
 
 ---
 
-## Detection Patterns
+## What This Skill Is (and Isn't)
 
-### Secrets (CRITICAL)
-```
-API keys:        (?i)(api[_-]?key|apikey)\s*[=:]\s*['"]?[A-Za-z0-9_\-]{16,}
-AWS keys:        (AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}
-Private keys:    -----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----
-GitHub tokens:   (ghp_|gho_|ghu_|ghs_|ghr_)[A-Za-z0-9_]{36,}
-Generic secrets: (?i)(secret|password|passwd|pwd)\s*[=:]\s*['"][^'"]{8,}
-JWT tokens:      eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}
-```
+This skill is a **pre-mutation security checklist** — it uses the LLM's reasoning
+to catch common security issues before code is written to disk. It is good at:
+- Catching hardcoded credentials and secrets
+- Spotting obvious injection patterns and unsafe function calls
+- Flagging suspicious dependencies
+- Enforcing a security-conscious workflow
 
-### Injection (HIGH)
-```
-Command:  os\.system\(   subprocess\.call\(.*shell=True   child_process\.exec\(
-SQL:      f"SELECT.*{    f"INSERT.*{    "SELECT " + var
-XSS:      innerHTML\s*=  document\.write\(   v-html=
-Path:     \.\./          \.\.\\
-```
+It is **NOT a substitute for production-grade static analysis tools**. For CI/CD
+pipelines and production security, integrate dedicated SAST tools like:
+- **Secrets**: `gitleaks`, `trufflehog`
+- **SAST**: `semgrep`, `snyk`, `codeql`
+- **Dependency audit**: `npm audit`, `pip-audit`, `cargo audit`
 
-### Unsafe Functions (MEDIUM)
-```
-eval(     exec(     pickle.loads(     yaml.load(.*Loader
-__import__(   compile(.*exec   unserialize(
-```
+The `INFRA_SETUP_CI` command can scaffold these integrations for you.
 
 ## Common Mistakes
 
-1. **Skipping scan for "trivial" changes** — Even a one-line change can introduce a secret leak. The gate is mandatory.
-2. **Ignoring LOW severity findings** — Low-severity issues compound. Review them periodically.
+1. **Skipping review for "trivial" changes** — Even a one-line change can introduce a secret leak. The review is mandatory.
+2. **Relying solely on this skill for production security** — Use dedicated SAST tools in your CI pipeline.
 3. **Assuming dependencies are safe** — Transitive dependencies can introduce vulnerabilities the direct dependency doesn't have.

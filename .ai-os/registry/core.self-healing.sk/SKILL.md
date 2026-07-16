@@ -90,12 +90,12 @@ Rollback to last known good state.
 
 ---
 
-## Cognitive Loop Detection
+## Loop Detection
 
 If you find yourself attempting the same fix 3 times and receiving the same error, **STOP**.
 Do not blindly retry a 4th time. Escalate to the user and ask for guidance or alternative approaches.
 
-## Cognitive Repair Protocol
+## Repair Protocol
 
 When you encounter a persistent failure:
 1. Stop the current action chain.

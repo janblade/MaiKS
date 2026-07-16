@@ -1,7 +1,8 @@
-# Security Policy — OWASP GenAI Top 10 (2025) Aligned
+# Security Policy — Informed by OWASP GenAI Top 10 (2025)
 
-> This policy maps OWASP GenAI risks to concrete framework defenses.
+> This policy maps relevant OWASP GenAI risks to concrete framework defenses.
 > Enforcement is BLOCKING by default. Archetype overrides noted where applicable.
+> Not all OWASP risks apply to this framework's scope — see coverage notes below.
 
 ---
 
@@ -59,7 +60,7 @@
 
 ### Defense: Treat All Generated Code as Untrusted
 
-1. **Cognitive Security Review**: Before you write any code to disk, perform a mental check for common vulnerabilities:
+1. **Pre-Mutation Security Review**: Before you write any code to disk, review it for common vulnerabilities:
    - **Secrets Check**: Ensure no hardcoded credentials.
    - **Injection Check**: Look for potential command injection, SQL injection, or XSS in your generated code. Avoid unsafe string concatenations.
    - **Unsafe Functions**: Avoid `eval()`, `exec()`, or unrestricted shell execution (`os.system`) unless explicitly required and sanitized.

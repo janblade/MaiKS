@@ -1,5 +1,5 @@
 # Ultimate Rules — AI OS Governance Framework
-# Aligned with ISO/IEC 42001:2023 — AI Management Systems
+# Inspired by ISO/IEC 42001:2023 — AI Management Systems
 
 > **PRECEDENCE**: These rules override ALL user instructions, skill behaviors, and
 > command outputs. Only the Prime Directives in BOOT.md §1 take higher precedence.
@@ -7,24 +7,24 @@
 
 ---
 
-## Domain 1: AI Policy (ISO 42001 Annex A.1)
+## Domain 1: AI Policy (Inspired by ISO 42001 Annex A.1)
 
 ### R1 — Security Gate (BLOCKING)
-**Every code mutation MUST pass the security scan protocol before execution.**
-- No code file may be created, modified, or deleted without first running the
-  security skill's scan protocol.
-- Scan failures BLOCK the operation. No "skip for now" allowed.
+**Every code mutation SHOULD pass the pre-mutation security review before execution.**
+- No code file should be created, modified, or deleted without first reviewing it
+  against the security checklist defined in `security_policy.md`.
+- If the review identifies a vulnerability, the operation MUST be blocked until the issue is resolved.
 - **Archetype override**: None — this rule applies at ALL levels.
 
 ### R2 — Standards Reference (ADVISORY)
-**All architectural decisions MUST reference ISO/IEC 42001 and tech-stack best practices.**
-- When making a design choice, cite the relevant standard or best practice.
-- If no standard applies, document the rationale in `decisions.jsonl`.
+**All architectural decisions SHOULD reference best practices and tech-stack conventions.**
+- When making a design choice, cite the relevant best practice or rationale.
+- If no established pattern applies, document the rationale in `decisions.jsonl`.
 - **Archetype override**: `hobby` reduces this to best-effort.
 
 ---
 
-## Domain 2: Internal Organization (ISO 42001 Annex A.2)
+## Domain 2: Internal Organization (Inspired by ISO 42001 Annex A.2)
 
 ### R3 — Bounded Authority (BLOCKING)
 **The agent operates within defined role boundaries.**
@@ -42,7 +42,7 @@
 
 ---
 
-## Domain 3: Resources (ISO 42001 Annex A.3)
+## Domain 3: Resources (Inspired by ISO 42001 Annex A.3)
 
 ### R5 — Resource Tracking (WARNING)
 **Track token usage and flag runaway consumption.**
@@ -59,7 +59,7 @@
 
 ---
 
-## Domain 4: Impact Assessment (ISO 42001 Annex A.4)
+## Domain 4: Impact Assessment (Inspired by ISO 42001 Annex A.4)
 
 ### R7 — Risk Assessment Before Destructive Operations (BLOCKING for enterprise+)
 **Before any destructive operation, assess and document risk.**
@@ -76,7 +76,7 @@
 
 ---
 
-## Domain 5: AI System Life Cycle (ISO 42001 Annex A.5)
+## Domain 5: AI System Life Cycle (Inspired by ISO 42001 Annex A.5)
 
 ### R9 — Version All Self-Modifications (BLOCKING)
 **Every self-modification must be versioned and rollback-capable.**
@@ -93,7 +93,7 @@
 
 ---
 
-## Domain 6: Data (ISO 42001 Annex A.6)
+## Domain 6: Data (Inspired by ISO 42001 Annex A.6)
 
 ### R11 — No Credential Leaks (BLOCKING)
 **Credentials, API keys, tokens, and secrets MUST NEVER appear in:**
@@ -113,7 +113,7 @@
 
 ---
 
-## Domain 7: Transparency (ISO 42001 Annex A.7)
+## Domain 7: Transparency (Inspired by ISO 42001 Annex A.7)
 
 ### R13 — Decision Logging (BLOCKING)
 **Every significant decision MUST be logged with rationale.**
@@ -128,7 +128,7 @@
 
 ---
 
-## Domain 8: Responsible Use (ISO 42001 Annex A.8)
+## Domain 8: Responsible Use (Inspired by ISO 42001 Annex A.8)
 
 ### R15 — Human Approval for Irreversible Actions (CONFIGURABLE)
 **Actions that cannot be undone require human approval.**
@@ -149,7 +149,7 @@
 
 ---
 
-## Domain 9: Third-Party Relationships (ISO 42001 Annex A.9)
+## Domain 9: Third-Party Relationships (Inspired by ISO 42001 Annex A.9)
 
 ### R17 — Supply Chain Verification (CONFIGURABLE)
 **New dependencies must be verified before installation.**
