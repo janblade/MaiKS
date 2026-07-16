@@ -229,41 +229,41 @@ Because GoliathOS stores all of its memory, skills, and governance in plain-text
 
 ## 🛠️ Command Reference
 
-Once booted, you can direct the agent using standard commands or their aliases in your chat window (e.g., `> OS_COMMAND audit`):
+Because GoliathOS is an Agentic OS, you don't need to type strict command syntax. You can invoke any of these commands using **natural language**, and the AI will handle the parameters in the background.
 
 ### Core System
-| Command | Alias | Description | When to use |
+| Command | Alias | Description | Example Prompt |
 |---|---|---|---|
-| `STATUS` | `status` | Show system health and memory stats | To check if the OS is booted and memory is loaded |
-| `HELP` | | View all available pragmatic commands | To explore OS capabilities |
+| `STATUS` | `status` | Show system health and memory stats | *"Can you check the OS status?"* |
+| `HELP` | | View all available pragmatic commands | *"What commands can you run?"* |
 
 ### Security & Healing
-| Command | Alias | Description | When to use |
+| Command | Alias | Description | Example Prompt |
 |---|---|---|---|
-| `SECURITY_AUDIT` | `audit` | Full workspace cognitive vulnerability scan | Before committing major changes |
-| `SECURITY_SCAN_FILE` | `scan` | Cognitive security scan on a specific file | After writing a complex new file |
-| `HEAL_DIAGNOSE` | `fix` | Run troubleshooting checklist | When the agent is stuck in an error loop |
-| `HEAL_REPAIR` | `repair` | Execute an auto-repair sequence | To automatically fix a diagnosed framework or project issue |
+| `SECURITY_AUDIT` | `audit` | Full workspace cognitive vulnerability scan | *"Please audit the workspace before we commit"* |
+| `SECURITY_SCAN_FILE` | `scan` | Cognitive security scan on a specific file | *"Check auth.ts for security flaws"* |
+| `HEAL_DIAGNOSE` | `fix` | Run troubleshooting checklist | *"I'm stuck in an error loop, please run a diagnosis"* |
+| `HEAL_REPAIR` | `repair` | Execute an auto-repair sequence | *"Go ahead and repair that issue"* |
 
 ### Architecture & Infrastructure
-| Command | Alias | Description | When to use |
+| Command | Alias | Description | Example Prompt |
 |---|---|---|---|
-| `ARCHITECT_PLAN` | `plan` | Interactive interview to plan a feature | Starting a massive new feature or greenfield app |
-| `INFRA_DISCOVER` | `discover` | Profile codebase to detect stack drift | When you add a new framework or major dependency |
-| `INFRA_SCAFFOLD` | | Generate boilerplate project structure | When initializing a new module |
+| `ARCHITECT_PLAN` | `plan` | Interactive interview to plan a feature | *"Let's plan a new user dashboard feature"* |
+| `INFRA_DISCOVER` | `discover` | Profile codebase to detect stack drift | *"Profile the codebase, I just added Next.js"* |
+| `INFRA_SCAFFOLD` | | Generate boilerplate project structure | *"Scaffold the project structure for me"* |
 
 ### Memory & Evolution
-| Command | Alias | Description | When to use |
+| Command | Alias | Description | Example Prompt |
 |---|---|---|---|
-| `TASK_CLOSE` | `close` | Execute the Consolidation Protocol | Run this when finishing a feature branch before opening a PR! |
-| `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | To ensure the agent remembers rules tomorrow |
-| `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | When you discover a better workflow or missing capability |
-| `EVOLVE_APPLY` | `apply` | Apply an approved evolution | After reviewing an `EVOLVE_PROPOSE` draft |
+| `TASK_CLOSE` | `close` | Execute the Consolidation Protocol | *"I'm done with this branch, summarize and close the task"* |
+| `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | *"Extract the rules we just learned into memory"* |
+| `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | *"Propose a new command to automate docker builds"* |
+| `EVOLVE_APPLY` | `apply` | Apply an approved evolution | *"That proposal looks good, apply it"* |
 
 ### Testing
-| Command | Alias | Description | When to use |
+| Command | Alias | Description | Example Prompt |
 |---|---|---|---|
-| `TEST_GENERATE` | `test` | AI-assisted test generation | When you need robust unit tests for a specific file |
+| `TEST_GENERATE` | `test` | AI-assisted test generation | *"Write some robust tests for this new utility"* |
 
 ---
 
