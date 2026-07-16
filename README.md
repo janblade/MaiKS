@@ -243,6 +243,7 @@ Once booted, you can direct the agent using standard commands or their aliases i
 | `SECURITY_AUDIT` | `audit` | Full workspace cognitive vulnerability scan | Before committing major changes |
 | `SECURITY_SCAN_FILE` | `scan` | Cognitive security scan on a specific file | After writing a complex new file |
 | `HEAL_DIAGNOSE` | `fix` | Run troubleshooting checklist | When the agent is stuck in an error loop |
+| `HEAL_REPAIR` | `repair` | Execute an auto-repair sequence | To automatically fix a diagnosed framework or project issue |
 
 ### Architecture & Infrastructure
 | Command | Alias | Description | When to use |
@@ -251,12 +252,13 @@ Once booted, you can direct the agent using standard commands or their aliases i
 | `INFRA_DISCOVER` | `discover` | Profile codebase to detect stack drift | When you add a new framework or major dependency |
 | `INFRA_SCAFFOLD` | | Generate boilerplate project structure | When initializing a new module |
 
-### Memory & Observability
+### Memory & Evolution
 | Command | Alias | Description | When to use |
 |---|---|---|---|
-| `LOG_DECISION` | | Record architectural decision to memory | When you make a structural choice (e.g. "Use Redux") |
-| `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | To ensure the agent remembers rules tomorrow |
 | `TASK_CLOSE` | `close` | Execute the Consolidation Protocol | Run this when finishing a feature branch before opening a PR! |
+| `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | To ensure the agent remembers rules tomorrow |
+| `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | When you discover a better workflow or missing capability |
+| `EVOLVE_APPLY` | `apply` | Apply an approved evolution | After reviewing an `EVOLVE_PROPOSE` draft |
 
 ### Testing
 | Command | Alias | Description | When to use |
