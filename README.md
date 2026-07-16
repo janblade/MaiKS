@@ -137,13 +137,25 @@ graph TB
 
 ---
 
-## 📂 Directory Layout
+## 📂 Installation & Upgrade Guide
+
+### First-Time Installation
+If you are installing GoliathOS for the first time:
+1. **Copy** the `.ai-os/` and `.ai-os-installer/` folders from the downloaded package into the root of your project.
+2. Provide the `INSTALL_PROMPT.md` to your AI assistant.
+
+### 🔄 Upgrading (WARNING)
+If you already have GoliathOS installed and are upgrading to a new version, **DO NOT overwrite your existing `.ai-os/` folder manually!** Doing so will wipe out your AI's memory.
+1. Place the newly downloaded GoliathOS folder *somewhere else* in your workspace (e.g., in a temporary folder like `./goliath-update/`).
+2. Provide the `UPDATE_PROMPT.md` to your AI assistant. The Agentic Installer will safely merge the new kernel files without destroying your Episodic, Semantic, or Procedural memory.
+
+---
 
 ### 1. Before Install (The Downloaded Package)
 ```
 goliath-os/
-├── .ai-os/                          # The OS Kernel (Copy this to your project)
-├── .ai-os-installer/                # The Agentic Installer (Copy this to your project)
+├── .ai-os/                          # The OS Kernel
+├── .ai-os-installer/                # The Agentic Installer
 │   ├── INSTALL_PROMPT.md            # The script you feed to your AI for first install
 │   ├── UPDATE_PROMPT.md             # The script you feed to your AI for upgrading
 │   └── templates/                   # Bridge file templates (CLAUDE.md, etc.)
