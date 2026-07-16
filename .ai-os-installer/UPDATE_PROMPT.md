@@ -18,7 +18,7 @@ Using your file manipulation tools, carefully copy the following files and direc
 
 *Note: For `manifest.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys from the update into the user's existing file to preserve their custom settings.*
 
-## Step 4: Verify and Clean Up
+## Step 4: Verify and Finalize
 1. Verify that `.ai-os/memory/` is fully intact and still contains `project_knowledge.md` and `decisions.jsonl`.
-2. Delete the temporary update source folder and the `.ai-os-installer` folder to keep the workspace clean.
+2. Do NOT delete the update source folder. Leave it intact so the user can reference it if needed.
 3. Announce to the user that the upgrade is complete!

@@ -31,6 +31,9 @@ KERNEL SPACE (IMMUTABLE — Human-only modification)
 USER SPACE (Agent-modifiable — Evolution allowed)
 ├── .ai-os/genome/project_genome.json  ← Auto-detected, agent-writable
 ├── .ai-os/memory/              ← Full read/write/forget
+│   ├── semantic/               ← Hub: Global architectural truths
+│   ├── tasks/                  ← Spokes: Active task/branch memory
+│   └── archived_tasks/         ← History: Completed tasks
 ├── .ai-os/registry/            ← Skills (create, update, delete)
 ├── .ai-os/commands/            ← Commands & aliases
 └── .ai-os/progress.md          ← Living dashboard
@@ -62,7 +65,11 @@ On every initialization, quickly orient yourself using these phases:
 1. Context is managed by your host IDE, but you should prioritize referencing:
    - `memory/episodic/sessions.jsonl` (for recent continuity)
    - `memory/semantic/project_knowledge.md` (for persistent project facts)
-2. Use the `CONTEXT_LOAD` skill when you need more historical depth.
+2. **Task Memory Auto-Detection**:
+   - Run `git rev-parse --abbrev-ref HEAD` to detect the active branch.
+   - If the branch is `main`, `master`, `develop`, or starts with `release/`, skip task memory and rely only on `semantic/` memory.
+   - If the branch is anything else (e.g., `feature/*`, `bugfix/*`), look for `.ai-os/memory/tasks/[branch_name].md`. If it does not exist, auto-create it. Use this file as your primary technical working memory.
+3. Use the `CONTEXT_LOAD` skill when you need more historical depth.
 
 ### Phase 5: CAPABILITIES
 1. Your available tools and skills are registered in `registry/index.json`.
@@ -130,6 +137,7 @@ These are always available regardless of installed skills:
 | `RULES [rule_id]` | Show active rules or details of a specific rule |
 | `VERSION` | Show AI OS version and framework state |
 | `MEMORY_CONSOLIDATE` | Analyze episodic memory and extract persistent architectural rules into semantic/procedural memory |
+| `TASK_CLOSE [id]` | Execute Consolidation Protocol and move task memory to `archived_tasks/` |
 
 ### Skill-Backed Commands
 
@@ -308,14 +316,22 @@ Ensure you read these files when tackling complex architectural changes.
 | Tier | Purpose | Storage | Update Frequency | External Sources Absorbed |
 |---|---|---|---|---|
 | **Episodic** | What happened | `memory/episodic/` (JSONL) | Every significant action | IDE chat transcripts, Session logs |
-| **Semantic** | What we know | `memory/semantic/` (MD + JSON) | When new knowledge is confirmed | Workspace memory files, User global rules |
+| **Task (Spoke)** | Working memory | `memory/tasks/` (MD) | Throughout the active task | Jira tickets, user requirements |
+| **Semantic (Hub)**| What we know | `memory/semantic/` (MD + JSON) | When new knowledge is confirmed | Task memory consolidations, user rules |
 | **Procedural** | How we do things | `memory/procedural/` (JSON + MD) | When a workflow succeeds | External `.sk` workflow examples |
 
 ### Read/Write Protocol
 
 - **Episodic**: Use `decisions.jsonl` to append a log of major architectural changes or completed tasks.
+- **Task**: Load the specific task memory (e.g. `tasks/JIRA-123.md`) when working on a ticket or branch. Update it with technical implementation details, debugging steps, and micro-decisions.
 - **Semantic**: Maintain `project_knowledge.md` as a living document. When you learn a new architectural pattern or constraint, write it down here. When starting a complex task, use your `view_file` tool to read it.
 - **Procedural**: Maintain `workflows.json` for complex, multi-step procedures. 
+
+### Consolidation Protocol
+When a task is completed, you MUST perform a consolidation step (via `TASK_CLOSE`):
+1. Review the task's memory file in `tasks/`.
+2. Extract any newly discovered "global truths" (e.g., API constraints, environment specific gotchas) and add them to `semantic/project_knowledge.md`.
+3. Move the raw, technical task memory file to `archived_tasks/` for fast future retrieval.
 
 **Critical Insight**: You do not have background processes. You must explicitly use your file reading and writing tools to interact with these memory stores. Do not attempt to "load" them into a non-existent internal state.
 
@@ -327,7 +343,9 @@ Memory files can become bloated. When you are writing to `project_knowledge.md` 
 
 ## §10 BOOTSTRAP (First Boot Protocol)
 
-If `manifest.json` has an empty `project_name` (e.g., `""`), execute a full bootstrap to initialize the workspace:
+If `manifest.json` has an empty `project_name` (e.g., `""`), check if the `memory/semantic/project_knowledge.md` file contains existing project data.
+- If memory **ALREADY EXISTS**, do NOT run the Bootstrap protocol. Simply ask the user: *"Your manifest is unconfigured, but I see existing project memory. What should I set as the project name?"* and update the manifest.
+- If memory is **EMPTY**, execute a full bootstrap to initialize the workspace:
 
 ### Step 1: Verify Directory Structure
 Ensure the complete `.ai-os/` directory tree exists as defined in this document. Create any missing directories or files using default templates.
@@ -347,7 +365,7 @@ Interactively ask the user:
 Execute Phase 3 of the boot sequence to detect the project genome.
 
 ### Step 4: Initialize Memory
-Create all memory files with empty/default content. Write first session entry.
+Create any missing memory files with empty/default content. **CRITICAL:** Do NOT overwrite any existing memory files. Write first session entry.
 
 ### Step 5: Report
 Display the complete bootstrap result:
