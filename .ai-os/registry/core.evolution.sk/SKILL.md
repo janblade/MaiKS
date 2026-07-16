@@ -84,6 +84,7 @@ Apply an approved evolution.
 6. **If verification passes**:
    - Update proposal status to APPLIED
    - Log in `decisions.jsonl`
+   - If the evolution was structural or architectural, update `memory/semantic/project_knowledge.md` to reflect the new system behavior
    - Increment `manifest.json.evolution_history.total_evolutions`
    - Update `manifest.json.evolution_history.last_evolution`
 7. **If verification fails**:

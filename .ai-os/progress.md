@@ -22,7 +22,16 @@
 
 ## Pending Evolution Proposals
 
-*No proposals yet. The agent will add proposals here as it identifies improvement opportunities.*
+### Evolution Proposal: EP-1
+- **Date**: 2026-07-16
+- **Type**: skill_update
+- **Target**: registry/core.evolution.sk/SKILL.md
+- **What**: Add an explicit instruction to `EVOLVE_APPLY` step 6 to update `project_knowledge.md`.
+- **Why**: The OS currently logs evolutions in episodic memory (`decisions.jsonl`), but forgets to capture structural/architectural rule changes in semantic memory (`project_knowledge.md`). This guarantees the AI will suffer architectural amnesia after major system changes.
+- **Risk**: medium
+- **Rollback Plan**: Revert `registry/core.evolution.sk/SKILL.md` via git.
+- **Rules Check**: Complies with evolution_policy.md. Enhances ISO 42001 (A.4) knowledge retention.
+- **Status**: APPLIED
 
 ---
 
