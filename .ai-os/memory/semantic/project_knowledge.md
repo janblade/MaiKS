@@ -20,6 +20,8 @@ The system avoids background daemon loops or complex external runtime orchestrat
 
 - **Cognitive Security:** We do not use blind regex patterns to scan for vulnerabilities. We rely on the LLM's natural reasoning to perform pre-mutation security checks.
 - **Agentic Installer:** Installation into existing codebases is handled by an Agentic Installer. We do not use shell scripts to merge text files; we feed the installer prompt to the user's AI assistant, allowing it to intelligently merge bridge files (like `CLAUDE.md`) without destroying the user's existing rules.
+- **Agentic Package Manager (Upgrades):** The Agentic Updater cannot "guess" what to delete during an upgrade without risking user data. We use an explicit `.ai-os-installer/MIGRATIONS.md` file to explicitly instruct the updater AI on what obsolete files to prune, ensuring user space (like custom skills) remains safe.
+- **Namespace Protection:** All core OS skills are prefixed with `core.` (e.g. `core.security.sk`). This prevents catastrophic namespace collisions when the OS updates its registry, ensuring the user's custom skills (e.g. `security.sk`) are never overwritten.
 - **Self-Healing:** Instead of background polling, self-healing is achieved via cognitive checklists. If an agent loops on an error, it is instructed to step back and read the `self-healing.sk` checklist.
 - **Semantic Memory Conflicts:** We accept trivial Git merge conflicts in `project_knowledge.md` as a feature. If two agents log conflicting architectural rules on different branches, the human developers are forced to manually reconcile them, which prevents silent architectural drift.
 
@@ -28,7 +30,8 @@ The system avoids background daemon loops or complex external runtime orchestrat
 - **Bridge File Amnesia:** The biggest failure mode in AI coding agents is failing to read the system prompt. We solved this by mapping our custom framework directories (`.ai-os/registry`) into the native `.agents/skills.json` so the IDE forces the agent to read them.
 - **Over-Delegation:** Forcing an agent to delegate *all* code edits (strict Rule R19) breaks many host environments. The primary agent operates as a Flexible Coordinator that *can* edit code itself if necessary.
 - **First-Boot Detection Logic:** The OS Kernel must not rely on the existence of `.ai-os/` to trigger the First-Boot wizard, because agentic installers often copy the entire `.ai-os/` folder into the workspace prior to the first boot. Instead, the trigger checks if `manifest.json` has an empty `project_name`.
+- **Drag-and-Drop Amnesia:** When upgrading the OS, users must not use their host OS file explorer to overwrite the `.ai-os/` directory. Doing so will wipe out their `memory/` folder (Agent Amnesia). The `UPDATE_PROMPT.md` is required to perform a safe merge.
 
 ---
 
-*Last updated: 2026-07-15 (Post-Refactoring Consolidation)*
+*Last updated: 2026-07-16 (Namespace & Migration Refactoring)*
