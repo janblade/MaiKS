@@ -32,7 +32,8 @@ The system avoids background daemon loops or complex external runtime orchestrat
 - **Over-Delegation:** Forcing an agent to delegate *all* code edits (strict Rule R19) breaks many host environments. The primary agent operates as a Flexible Coordinator that *can* edit code itself if necessary.
 - **First-Boot Detection Logic:** The OS Kernel must not rely on the existence of `.ai-os/` to trigger the First-Boot wizard, because agentic installers often copy the entire `.ai-os/` folder into the workspace prior to the first boot. Instead, the trigger checks if `manifest.json` has an empty `project_name`.
 - **Drag-and-Drop Amnesia:** When upgrading the OS, users must not use their host OS file explorer to overwrite the `.ai-os/` directory. Doing so will wipe out their `memory/` folder (Agent Amnesia). The `UPDATE_PROMPT.md` is required to perform a safe merge.
+- **Memory Guard Upgrades:** When changing the memory layout (e.g. adding new directories or moving files), the `UPDATE_PROMPT.md` and `MIGRATIONS.md` must be updated to explicitly guide the update agent through the layout migration (creating directories, moving files) rather than relying on a blanket rule forbidding all modifications to the `.ai-os/memory/` directory.
 
 ---
 
-*Last updated: 2026-07-16 (Namespace & Migration Refactoring)*
+*Last updated: 2026-07-17 (Memory Layout Upgrade Fix)*

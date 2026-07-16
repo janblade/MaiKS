@@ -27,7 +27,7 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
 If the user copied the `.ai-os/` folder directly from the GoliathOS repository, it will contain memory logs from the framework's own development. This will pollute the user's new project.
 Using your file editing tools, reset the following files to prevent context pollution:
 1. **`.ai-os/memory/semantic/project_knowledge.md`**: Overwrite with a blank template: `# Project Knowledge\n\n> Semantic memory and architectural rules for this workspace.\n\n## Architecture\n\n## Known Gotchas`
-2. **`.ai-os/memory/episodic/decisions.jsonl`** & **`sessions.jsonl`**: Empty the contents of these files.
+2. **`.ai-os/memory/episodic/decisions.jsonl`** & **`.ai-os/memory/episodic/sessions.jsonl`**: Empty the contents of these files.
 3. **`.ai-os/progress.md`**: Clear out the 'Recent Decisions' and 'Pending Evolution Proposals' sections.
 4. **`.ai-os/genome/project_genome.json`**: Reset `project_name` to `""` and clear the `tech_stack` object.
 
