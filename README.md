@@ -177,6 +177,7 @@ your-project/
     ├── CLAUDE.md                    # ...if using Claude Code
     ├── .windsurfrules               # ...if using Windsurf
     ├── .cursor/rules/ai-os.md       # ...if using Cursor
+    ├── .github/copilot-instructions.md # ...if using GitHub Copilot
     └── .agents/AGENTS.md            # ...if using Antigravity/Gemini
 ```
 
