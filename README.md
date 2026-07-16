@@ -143,7 +143,8 @@ graph TB
 goliath-os/
 ├── .ai-os/                          # The OS Kernel (Copy this to your project)
 ├── .ai-os-installer/                # The Agentic Installer (Copy this to your project)
-│   ├── INSTALL_PROMPT.md            # The script you feed to your AI
+│   ├── INSTALL_PROMPT.md            # The script you feed to your AI for first install
+│   ├── UPDATE_PROMPT.md             # The script you feed to your AI for upgrading
 │   └── templates/                   # Bridge file templates (CLAUDE.md, etc.)
 └── README.md
 ```
