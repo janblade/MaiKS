@@ -10,13 +10,13 @@
 | Property | Value |
 |---|---|
 | **AI OS Version** | 1.0.0 |
-| **Boot Count** | 0 |
-| **Last Boot** | Never |
-| **Active Archetype** | Not yet determined |
+| **Boot Count** | 3 |
+| **Last Boot** | 2026-07-16T12:48:23+08:00 |
+| **Active Archetype** | auto |
 | **Skills Installed** | 8 |
 | **Commands Available** | 40 (6 built-in + 34 skill-backed) |
 | **Security Status** | Clean (no scans run yet) |
-| **Memory Status** | Initialized (empty) |
+| **Memory Status** | Initialized |
 
 ---
 
@@ -28,7 +28,8 @@
 
 ## Recent Decisions
 
-*No decisions logged yet. Decisions will appear here as the agent operates.*
+- **2026-07-16T12:48:23**: AI OS Framework Boot Sequence Executed.
+- **2026-07-16T12:51:30**: Restored `.ai-os-installer` from git history and pushed to remote.
 
 ---
 
@@ -40,12 +41,10 @@
 
 ## Next Recommended Actions
 
-1. **First Boot**: Initialize the framework with `> OS_COMMAND BOOT`
-2. **Choose Archetype**: Select project governance level during first-boot wizard
-3. **Stack Detection**: Run `> OS_COMMAND INFRA_DETECT_STACK` to map the project
-4. **First Audit**: Run `> OS_COMMAND SECURITY_AUDIT --depth=all` for baseline
-5. **Architect Greenfield**: If starting a new project from scratch, invoke `> OS_COMMAND ARCHITECT_PLAN` or outline your project idea naturally.
+1. **Stack Detection**: Run `> OS_COMMAND INFRA_DETECT_STACK` to map the project if it hasn't been done automatically.
+2. **First Audit**: Run `> OS_COMMAND SECURITY_AUDIT --depth=all` for baseline security metrics.
+3. **Architect Greenfield**: If starting a new project from scratch, invoke `> OS_COMMAND ARCHITECT_PLAN` or outline your project idea naturally.
 
 ---
 
-*Last updated: Framework creation — awaiting first boot.*
+*Last updated: 2026-07-16T12:53:12+08:00 (Session Completed)*
