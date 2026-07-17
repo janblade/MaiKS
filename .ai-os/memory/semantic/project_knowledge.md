@@ -24,7 +24,7 @@ The system avoids background daemon loops or complex external runtime orchestrat
 - **Namespace Protection:** All core OS skills are prefixed with `core.` (e.g. `core.security.sk`). This prevents catastrophic namespace collisions when the OS updates its registry, ensuring the user's custom skills (e.g. `security.sk`) are never overwritten.
 - **Self-Healing:** Instead of background polling, self-healing is achieved via cognitive checklists. If an agent loops on an error, it is instructed to step back and read the `self-healing.sk` checklist.
 - **Semantic Memory Conflicts:** We accept trivial Git merge conflicts in `project_knowledge.md` as a feature. If two agents log conflicting architectural rules on different branches, the human developers are forced to manually reconcile them, which prevents silent architectural drift.
-- **Credibility Review:** The `REVIEW_CREDIBILITY` command (on `core.self-healing.sk`) performs a structured audit of all documentation and claims for overclaims, internal inconsistencies, unimplemented features, buzzword inflation, contradictions, and data accuracy. Run it before open-sourcing or presenting to stakeholders.
+- **Credibility Review:** Credibility assurance operates at two levels: (1) The `REVIEW_CREDIBILITY` command (on `core.self-healing.sk`) performs a structured audit of documentation and claims — run it before open-sourcing or presenting to stakeholders. (2) The **Response Credibility Protocol** (also on `core.self-healing.sk`) is a behavioral gate the agent silently applies to all substantive responses, ensuring claims are verified, overclaims detected, scope is honest, alternatives acknowledged, and confidence language is calibrated. Added via EP-3.
 
 ## Known Gotchas
 

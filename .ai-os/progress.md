@@ -44,10 +44,22 @@
 - **Rules Check**: Complies with evolution_policy.md. User-space only (skill update + command registration). Does not modify security.sk or kernel space.
 - **Status**: APPLIED
 
+### Evolution Proposal: EP-3
+- **Date**: 2026-07-17
+- **Type**: skill_update + kernel_guideline
+- **Target**: `registry/core.self-healing.sk/SKILL.md`, `BOOT.md` §11
+- **What**: Add a Response Credibility Protocol — a behavioral gate that the agent silently applies to all substantive responses, ensuring claims are verified, overclaims detected, scope is honest, alternatives acknowledged, limitations disclosed, and confidence calibrated.
+- **Why**: The existing `REVIEW_CREDIBILITY` command audits documentation reactively. This evolution makes credibility a proactive, always-on behavioral protocol, preventing the agent from presenting unverified claims, absolute guarantees, or overconfident suggestions in the first place.
+- **Risk**: medium
+- **Rollback Plan**: Revert `core.self-healing.sk/SKILL.md` to remove the Response Credibility Protocol section. Revert `BOOT.md` to remove the added behavioral guideline line.
+- **Rules Check**: Complies with evolution_policy.md. Enhances R2 (standards), R8 (alternatives), R13 (transparency). BOOT.md modification authorized by user.
+- **Status**: APPLIED
+
 ---
 
 ## Recent Decisions
 
+- **2026-07-17T08:49:41**: EP-3 APPLIED — Response Credibility Protocol added as behavioral gate.
 - **2026-07-16T12:48:23**: AI OS Framework Boot Sequence Executed.
 - **2026-07-16T12:51:30**: Restored `.ai-os-installer` from git history and pushed to remote.
 
@@ -67,4 +79,4 @@
 
 ---
 
-*Last updated: 2026-07-16T12:53:12+08:00 (Session Completed)*
+*Last updated: 2026-07-17T08:49:41+08:00 (EP-3 Applied)*

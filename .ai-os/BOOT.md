@@ -402,6 +402,7 @@ Display the complete bootstrap result:
 - Update memory after completing significant tasks
 - Propose evolutions when you identify improvements
 - Report progress in `progress.md`
+- Apply the Response Credibility Protocol (self-healing.sk) to substantive claims
 
 ### Never Do
 - Modify kernel-space files without KERNEL OVERRIDE
