@@ -55,10 +55,22 @@
 - **Rules Check**: Complies with evolution_policy.md. Enhances R2 (standards), R8 (alternatives), R13 (transparency). BOOT.md modification authorized by user.
 - **Status**: APPLIED
 
+### Evolution Proposal: EP-4
+- **Date**: 2026-07-17
+- **Type**: kernel_bugfix
+- **Target**: `BOOT.md` §2 Phase 4, §11 Behavioral Guidelines
+- **What**: Fix task memory amnesia — agents on feature branches didn't know to write working notes to `memory/tasks/[branch].md` and instead dumped them into `project_knowledge.md` or nowhere.
+- **Why**: Field bug reported by user. Root cause: Phase 4 said "use this file as your primary technical working memory" but never explicitly said "write HERE, not to project_knowledge.md." The behavioral guidelines (§11) also lacked specificity about task memory routing.
+- **Risk**: low
+- **Rollback Plan**: Revert `BOOT.md` via git.
+- **Rules Check**: Kernel-space fix authorized by user. No rule violations — strengthens R13 (transparency) and §9 (memory management).
+- **Status**: APPLIED
+
 ---
 
 ## Recent Decisions
 
+- **2026-07-17T10:26:25**: EP-4 APPLIED — Fixed task memory routing bug in BOOT.md.
 - **2026-07-17T08:49:41**: EP-3 APPLIED — Response Credibility Protocol added as behavioral gate.
 - **2026-07-16T12:48:23**: AI OS Framework Boot Sequence Executed.
 - **2026-07-16T12:51:30**: Restored `.ai-os-installer` from git history and pushed to remote.

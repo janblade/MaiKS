@@ -33,6 +33,7 @@ The system avoids background daemon loops or complex external runtime orchestrat
 - **First-Boot Detection Logic:** The OS Kernel must not rely on the existence of `.ai-os/` to trigger the First-Boot wizard, because agentic installers often copy the entire `.ai-os/` folder into the workspace prior to the first boot. Instead, the trigger checks if `manifest.json` has an empty `project_name`.
 - **Drag-and-Drop Amnesia:** When upgrading the OS, users must not use their host OS file explorer to overwrite the `.ai-os/` directory. Doing so will wipe out their `memory/` folder (Agent Amnesia). The `UPDATE_PROMPT.md` is required to perform a safe merge.
 - **Memory Guard Upgrades:** When changing the memory layout (e.g. adding new directories or moving files), the `UPDATE_PROMPT.md` and `MIGRATIONS.md` must be updated to explicitly guide the update agent through the layout migration (creating directories, moving files) rather than relying on a blanket rule forbidding all modifications to the `.ai-os/memory/` directory.
+- **Task Memory Routing:** Agents on feature branches must write all working notes (implementation details, debugging steps, micro-decisions) to `memory/tasks/[branch_name].md`, NOT to `project_knowledge.md`. The original Phase 4 wording ("use this file as your primary technical working memory") was too vague — agents would default to writing into `project_knowledge.md` or not writing memory at all. Fixed via EP-4 with explicit "write HERE, not THERE" language in both Phase 4 and §11.
 
 ---
 

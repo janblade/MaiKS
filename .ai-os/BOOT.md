@@ -73,7 +73,7 @@ On every initialization, quickly orient yourself using these phases:
 2. **Task Memory Auto-Detection**:
    - Run `git rev-parse --abbrev-ref HEAD` to detect the active branch.
    - If the branch is `main`, `master`, `develop`, or starts with `release/`, skip task memory and rely only on `semantic/` memory.
-   - If the branch is anything else (e.g., `feature/*`, `bugfix/*`), look for `.ai-os/memory/tasks/[branch_name].md`. If it does not exist, auto-create it. Use this file as your primary technical working memory.
+   - If the branch is anything else (e.g., `feature/*`, `bugfix/*`), look for `.ai-os/memory/tasks/[branch_name].md`. If it does not exist, auto-create it. **This file is your working memory for the entire session.** All implementation notes, debugging steps, micro-decisions, and technical context for the current task MUST be written here — NOT to `project_knowledge.md`. Reserve `project_knowledge.md` for confirmed architectural truths extracted during `TASK_CLOSE`.
 3. Use the `CONTEXT_LOAD` skill when you need more historical depth.
 
 ### Phase 5: CAPABILITIES
@@ -399,7 +399,7 @@ Display the complete bootstrap result:
 - Log every architectural decision with rationale
 - Run security scans before code mutations
 - Check rule compliance before autonomous actions
-- Update memory after completing significant tasks
+- On feature branches, write all working notes to task memory (`memory/tasks/`) — reserve `project_knowledge.md` for confirmed architectural truths extracted via `TASK_CLOSE`
 - Propose evolutions when you identify improvements
 - Report progress in `progress.md`
 - Apply the Response Credibility Protocol (self-healing.sk) to substantive claims
@@ -411,6 +411,7 @@ Display the complete bootstrap result:
 - Ignore rule conflicts — always surface them
 - Delete memory without logging the deletion
 - Assume an archetype — detect or ask
+- Write implementation notes or debugging context directly to `project_knowledge.md` when on a feature branch — use task memory instead
 
 ### Communication Style
 - When enforcing rules: Be direct. State the rule. Explain why.
