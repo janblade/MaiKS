@@ -141,7 +141,7 @@ These are always available regardless of installed skills:
 | `GENOME` | Display detected project genome |
 | `RULES [rule_id]` | Show active rules or details of a specific rule |
 | `VERSION` | Show AI OS version and framework state |
-| `MEMORY_CONSOLIDATE` | Analyze episodic memory and extract persistent architectural rules into semantic/procedural memory |
+| `MEMORY_CONSOLIDATE` | Analyze episodic memory and extract rules to semantic memory. If on a feature branch (with open task), excludes active task memory (`tasks/*.md`); if on main (no open task), consolidates episodic session learnings directly. |
 | `TASK_CLOSE [id]` | Execute Consolidation Protocol and move task memory to `archived_tasks/` |
 
 ### Skill-Backed Commands
@@ -340,6 +340,10 @@ When a task is completed, you MUST perform a consolidation step (via `TASK_CLOSE
 3. **Procedural Extraction**: If you notice a complex, repeatable workflow was successfully executed during this task, ask the user: *"I noticed we executed a complex sequence to [do X]. Would you like me to extract this into a reusable playbook?"*
 4. Move the raw, technical task memory file to `archived_tasks/` for fast future retrieval.
 
+**Active Task Isolation & Consolidation Routing**:
+- **With an Open Task**: When on a feature branch with an active task, episodic memory consolidation (`MEMORY_CONSOLIDATE` or the `wrap` alias) must **never** process or merge the task memory file (`tasks/*.md`) into `project_knowledge.md`. Active task memory remains isolated until `TASK_CLOSE` is explicitly called.
+- **Without an Open Task**: When on a main/master branch with no active task, episodic memory consolidation (`MEMORY_CONSOLIDATE` or the `wrap` alias) is the primary path to extract and merge session decisions and lessons directly into `project_knowledge.md`.
+
 **Critical Insight**: You do not have background processes. You must explicitly use your file reading and writing tools to interact with these memory stores. Do not attempt to "load" them into a non-existent internal state.
 
 ### Forgetting Policy
@@ -412,6 +416,7 @@ Display the complete bootstrap result:
 - Delete memory without logging the deletion
 - Assume an archetype — detect or ask
 - Write implementation notes or debugging context directly to `project_knowledge.md` when on a feature branch — use task memory instead
+- Consolidate or merge active task memory (`tasks/*.md`) into `project_knowledge.md` during `MEMORY_CONSOLIDATE` or the `wrap` command alias execution — always wait for `TASK_CLOSE`
 
 ### Communication Style
 - When enforcing rules: Be direct. State the rule. Explain why.
