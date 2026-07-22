@@ -296,6 +296,13 @@ LLMs can sometimes get stuck in unproductive cycles. To prevent this:
 | `REASONING_COLLAPSE` | Contradictory logic, circular reasoning | Reset context, re-approach from scratch |
 | `EXTERNAL_DEPENDENCY` | Network down, service unavailable | Wait and retry, inform user |
 
+### 7.3 Diff-Driven Debugging (Regression Correlation)
+
+When a bug or test failure is identified:
+1. **Investigate First**: Do NOT immediately start changing code.
+2. **Correlate with Latest Mutations**: Check the `git diff` of the current session. The bug is almost certainly a regression caused by the most recent additions or deletions.
+3. **Targeted Fix**: Focus your diagnostic hypothesis entirely on the newly mutated code blocks before assuming a broader systemic failure.
+
 ---
 
 ## §8 CONTEXT ENGINEERING

@@ -41,3 +41,14 @@
 - **Rollback Plan**: Revert the addition in `.ai-os/BOOT.md §11`.
 - **Rules Check**: KERNEL OVERRIDE AUTHORIZED by user.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-9
+- **Date**: 2026-07-22T09:43:42+08:00
+- **Type**: memory_update
+- **Target**: .ai-os/BOOT.md (KERNEL)
+- **What**: Added "Diff-Driven Debugging" protocol to BOOT.md §7.3.
+- **Why**: Ensures agents inherently correlate newly discovered bugs with their latest `git diff` mutations instead of treating every bug as a deep systemic issue. 
+- **Risk**: High (Kernel space modification affecting baseline debugging behavior).
+- **Rollback Plan**: Revert the addition in `.ai-os/BOOT.md §7.3`.
+- **Rules Check**: KERNEL OVERRIDE explicitly authorized by user.
+- **Status**: APPLIED
