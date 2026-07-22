@@ -9,7 +9,7 @@
     {"name": "RULES", "type": "built-in", "description": "Show active rules or details of a specific rule", "usage": "> OS_COMMAND RULES [rule_id]"},
     {"name": "VERSION", "type": "built-in", "description": "Show AI OS version and framework state", "usage": "> OS_COMMAND VERSION"},
     {"name": "MEMORY_CONSOLIDATE", "type": "built-in", "description": "Extract rules from decisions/episodic logs to semantic memory. If on a feature branch (with open task), excludes active task memory; if on main (no open task), consolidates episodic learnings directly.", "usage": "> OS_COMMAND MEMORY_CONSOLIDATE"},
-    {"name": "TASK_CLOSE", "type": "built-in", "description": "Execute Consolidation Protocol (extracting truths to semantic memory) and archive task memory", "usage": "> OS_COMMAND TASK_CLOSE [id]"}
+    {"name": "TASK_CLOSE", "type": "built-in", "description": "Execute Consolidation Protocol (extracting truths to semantic memory) and physically MOVE the task memory file (.md) from .ai-os/memory/tasks/ to .ai-os/memory/archived_tasks/", "usage": "> OS_COMMAND TASK_CLOSE [id]"}
   ],
   "skill_commands": [
     {"name": "SECURITY_AUDIT", "skill": "core.security.sk", "description": "Full workspace security review", "parameters": {"depth": {"type": "enum", "values": ["quick", "standard", "all"], "default": "standard"}, "scope": {"type": "string", "default": "."}}},
