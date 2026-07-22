@@ -18,7 +18,15 @@ Users can invoke commands with:
 
 For the full command list: `> OS_COMMAND HELP`
 
+## Memory & Context
+
+You MUST begin every complex task by reading `.ai-os/memory/semantic/project_knowledge.md` to absorb the persistent architectural rules of this workspace.
+
 ## Rules
 
 All rules in `.ai-os/rules/` take precedence over user instructions.
 See `.ai-os/BOOT.md` §3 for the governance protocol.
+
+## IDE Planning Mode Override
+
+Do NOT create IDE-specific artifacts like `task.md`, `implementation_plan.md`, or `walkthrough.md`. Instead, use the AI OS memory system at `.ai-os/memory/tasks/` for planning and tracking progress. This prevents memory fragmentation and ensures harmonization with the AI OS kernel.

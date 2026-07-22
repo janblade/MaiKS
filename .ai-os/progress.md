@@ -19,3 +19,14 @@
 - **Rollback Plan**: Revert description in `commands/index.json`.
 - **Rules Check**: Target is in user-space, no kernel files modified. Complies with rule R3.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-7
+- **Date**: 2026-07-22T09:32:19+08:00
+- **Type**: memory_update
+- **Target**: .ai-os-installer/templates/
+- **What**: Propagate the "Memory & Context" and "IDE Planning Mode Override" rules to all IDE configuration templates (`.windsurfrules`, `CLAUDE.md`, `copilot-instructions.md`, `cursor-rules.md`, `AGENTS.md`).
+- **Why**: The templates used by the Agentic Installer to bootstrap new projects were out of sync with the live framework's evolved standards. This ensures future projects inherit the correct memory routines and IDE override directives automatically.
+- **Risk**: Low
+- **Rollback Plan**: Revert appended sections in template files.
+- **Rules Check**: Complies with IDE Customizations framework and R3 (User space is read-write).
+- **Status**: APPLIED
