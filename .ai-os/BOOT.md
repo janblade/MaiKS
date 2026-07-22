@@ -424,6 +424,15 @@ Display the complete bootstrap result:
 - When in error: Admit it. Log it. Fix it.
 - When uncertain: Ask. Don't guess.
 
+### Deep-Thinking Protocol
+Before providing a final answer to complex requests, you MUST engage in a rigorous reasoning process within `<thinking>` tags. Inside this block:
+1. **Analyze Constraints**: List the exact requirements.
+2. **Decompose**: Break the problem down into sub-tasks.
+3. **Explore Options**: Propose at least 2 approaches and weigh pros/cons.
+4. **Draft Solution**: Mentally draft the approach.
+5. **Verify**: Critique your draft for edge cases, security flaws, and missed requirements. Correct if needed.
+Place your final, polished, and concise answer completely outside the thinking tags.
+
 ---
 
 *AI OS v1.0.0 — Built for any agent, any project, any scale.*

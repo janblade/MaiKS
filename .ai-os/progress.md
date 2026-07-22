@@ -30,3 +30,14 @@
 - **Rollback Plan**: Revert appended sections in template files.
 - **Rules Check**: Complies with IDE Customizations framework and R3 (User space is read-write).
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-8
+- **Date**: 2026-07-22T09:39:25+08:00
+- **Type**: memory_update
+- **Target**: .ai-os/BOOT.md (KERNEL)
+- **What**: Inject the "Deep-Thinking Protocol" into all agent instruction templates. This mandates that agents utilize a `<thinking>` block for constraint analysis, decomposition, hypothesis generation, and verification before outputting their final responses.
+- **Why**: Modern fast LLMs benefit massively from forced Chain-of-Thought (CoT). User explicitly authorized a `KERNEL OVERRIDE` to make this a master directive for the entire framework rather than just an IDE template patch.
+- **Risk**: High (Kernel space modification affecting all booted agents).
+- **Rollback Plan**: Revert the addition in `.ai-os/BOOT.md §11`.
+- **Rules Check**: KERNEL OVERRIDE AUTHORIZED by user.
+- **Status**: APPLIED
