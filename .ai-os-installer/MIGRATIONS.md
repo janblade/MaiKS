@@ -8,4 +8,8 @@ The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safe
   - Subdirectories added: `semantic/`, `episodic/`, `procedural/`, `tasks/`, `archived_tasks/`
   - Migration action: Move files from `.ai-os/memory/` root to subdirectories (see `UPDATE_PROMPT.md` Step 2).
   - Clean up: After verifying the files are successfully copied/moved to their respective subdirectories, delete the obsolete root-level files in `.ai-os/memory/` (specifically `project_knowledge.md`, `decisions.jsonl`, and `sessions.jsonl` if they remain in the root) to prevent duplicate context loading.
+- **Indexed Semantic Knowledge Segregation**:
+  - Subdirectory added: `.ai-os/memory/semantic/knowledge/`
+  - Migration action: If the upgrading user has a monolithic `project_knowledge.md`, parse and segregate its sections into individual files (`architecture_overview.md`, `conventions_patterns.md`, `known_gotchas.md`, etc.) under `semantic/knowledge/`, then convert `project_knowledge.md` into the index document referencing those sub-files (see `UPDATE_PROMPT.md` Step 2).
+
 

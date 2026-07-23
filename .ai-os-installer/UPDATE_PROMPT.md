@@ -9,6 +9,7 @@ Ask the user for the path to the newly downloaded GoliathOS update folder (e.g.,
 You **MUST NOT** overwrite, delete, or lose the user's existing memory file contents (such as `project_knowledge.md`, `decisions.jsonl`, `sessions.jsonl`, and custom task logs). However, you **MUST** ensure the memory layout is migrated to the new four-tier directory structure:
 1. Ensure all new memory subdirectories exist in the user's active `.ai-os/memory/`:
    - `semantic/`
+   - `semantic/knowledge/`
    - `episodic/`
    - `procedural/`
    - `tasks/`
@@ -18,7 +19,14 @@ You **MUST NOT** overwrite, delete, or lose the user's existing memory file cont
    - Move `decisions.jsonl` and `sessions.jsonl` to `.ai-os/memory/episodic/`
    - Move `workflows.json` and `playbooks.md` to `.ai-os/memory/procedural/`
    - Move any task files (e.g., `JIRA-*.md`) to `.ai-os/memory/tasks/`
-3. Copy any default templates or placeholder files (like `.keep` files, default `patterns.json`, etc.) from the update source's `memory/` folder ONLY if the user does not already have an existing version of that file.
+3. **Indexed Semantic Knowledge Segregation**:
+   If the user has a monolithic `project_knowledge.md` (without a `.ai-os/memory/semantic/knowledge/` directory):
+   - Create `.ai-os/memory/semantic/knowledge/`.
+   - Read the user's existing `project_knowledge.md` and parse its sections.
+   - Write their section contents into specialized files under `knowledge/` (e.g., `architecture_overview.md`, `conventions_patterns.md`, `known_gotchas.md`, or custom category files based on their headers).
+   - Rewrite their `.ai-os/memory/semantic/project_knowledge.md` as an index document linking to those sub-files so all their existing knowledge is preserved and properly segregated.
+4. Copy any default templates or placeholder files (like `.keep` files, default `patterns.json`, etc.) from the update source's `memory/` folder ONLY if the user does not already have an existing version of that file.
+
 
 
 ## Step 3: Perform the Upgrade
@@ -29,7 +37,7 @@ Using your file manipulation tools, carefully copy the following files and direc
 - `registry/` (Merge `index.json` carefully to preserve custom skills!)
 - `commands/`
 
-*Note: For `manifest.json` and `registry/index.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys or framework skills from the update into the user's existing files to preserve their custom settings and skills.*
+*Note: For `manifest.json`, `registry/index.json`, `commands/index.json`, and `commands/aliases.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys, framework skills, or new core commands/aliases from the update into the user's existing files to preserve their custom settings, custom skills, and custom aliases.*
 
 ## Step 4: Execute Migrations
 Read the `.ai-os-installer/MIGRATIONS.md` file from the update source.

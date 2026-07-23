@@ -14,6 +14,8 @@
     "close": "TASK_CLOSE",
     "propose": "EVOLVE_PROPOSE",
     "apply": "EVOLVE_APPLY",
-    "repair": "HEAL_REPAIR"
+    "repair": "HEAL_REPAIR",
+    "absorb_history": "INFRA_ANALYZE_COMMITS --mode=merges-only --count=10",
+    "absorb": "INFRA_ANALYZE_COMMITS --mode=merges-only --count=10"
   }
 }

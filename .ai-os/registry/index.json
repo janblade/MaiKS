@@ -35,7 +35,8 @@
         "INFRA_DIAGNOSE",
         "INFRA_DISCOVER_MODULES",
         "INFRA_SHOW_ENV",
-        "INFRA_SWITCH_ENV"
+        "INFRA_SWITCH_ENV",
+        "INFRA_ANALYZE_COMMITS"
       ],
       "dependencies": [],
       "protected": false,

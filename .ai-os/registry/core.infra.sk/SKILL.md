@@ -180,6 +180,38 @@ Switch the active workspace configuration or release environment profile.
 
 ---
 
+### INFRA_ANALYZE_COMMITS
+
+Analyze recent Git merge commits or branch history to extract architectural decisions, conventions, and gotchas with temporal reconciliation.
+
+```
+> OS_COMMAND INFRA_ANALYZE_COMMITS [--count=<N>] [--mode=merges-only|all-commits] [--supersede-check]
+```
+
+**Parameters:**
+- `--count` (default: `10`): Number of recent merge commits (or commits) to fetch and analyze.
+- `--mode` (default: `merges-only`): Mode of analysis:
+  - `merges-only` (default): Focus exclusively on merge commits/PRs to main/master (`git log --first-parent main -n <N>`) for maximum signal-to-noise ratio.
+  - `all-commits`: Raw commit history scan fallback.
+- `--supersede-check` (default: `true`): Enable temporal reconciliation to detect when a newer merge commit reverts, updates, or supersedes knowledge introduced by an older merge.
+
+**Procedure:**
+1. Determine active primary branch (`main`/`master`/`develop`).
+2. If `--mode=merges-only`: Execute `git log --first-parent <primary_branch> -n <N> --stat` to retrieve PR/merge descriptions, diff summaries, and merge author dates. If `--mode=all-commits`: Run `git log -n <N> --stat`.
+3. Group merge commits in chronological order (oldest to newest).
+4. **Temporal Reconciliation & Extraction Pass**:
+   - Extract high-level architectural shifts, design decisions, conventions, and gotchas from PR merge messages and diffs.
+   - Cross-reference newer merges against earlier ones: if a newer merge changes or deprecates a pattern established in an older merge, mark the old pattern as **SUPERSEDED** and retain only the active pattern.
+5. **Knowledge Routing**:
+   - Route active architectural facts to `memory/semantic/knowledge/architecture_overview.md`.
+   - Route active conventions to `memory/semantic/knowledge/conventions_patterns.md`.
+   - Route active gotchas or bug fixes to `memory/semantic/knowledge/known_gotchas.md`.
+   - Ensure target sub-files are properly indexed in `project_knowledge.md`.
+6. Log execution in `memory/episodic/decisions.jsonl`.
+
+
+---
+
 ## Stack-Specific Best Practices
 
 The infra skill references these best practices based on detected stack:

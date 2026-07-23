@@ -161,6 +161,7 @@ These are provided by installed skills (see Layer 5):
 | `INFRA_HEALTH_CHECK` | core.infra.sk | Project health diagnostic |
 | `INFRA_DIAGNOSE` | core.infra.sk | Deep diagnostic |
 | `INFRA_DISCOVER_MODULES` | core.infra.sk | Discover codebase modules and scaffold modular skills |
+| `INFRA_ANALYZE_COMMITS` | core.infra.sk | Analyze Git merge history for architectural decisions (`absorb_history`) |
 | `TEST_RUN` | core.testing.sk | Execute test suites |
 | `TEST_COVERAGE` | core.testing.sk | Coverage analysis |
 | `TEST_GENERATE` | core.testing.sk | AI-assisted test generation |
@@ -337,19 +338,20 @@ Ensure you read these files when tackling complex architectural changes.
 
 - **Episodic**: Use `decisions.jsonl` to append a log of major architectural changes or completed tasks.
 - **Task**: Load the specific task memory (e.g. `tasks/JIRA-123.md`) when working on a ticket or branch. Update it with technical implementation details, debugging steps, and micro-decisions.
-- **Semantic**: Maintain `project_knowledge.md` as a living document. When you learn a new architectural pattern or constraint, write it down here. When starting a complex task, use your `view_file` tool to read it.
+- **Semantic**: Maintain `project_knowledge.md` as the primary index document. Institutional knowledge is partitioned into specialized sub-files under `memory/semantic/knowledge/` (`architecture_overview.md`, `conventions_patterns.md`, `known_gotchas.md`, etc.) to eliminate git merge conflicts across branches. When starting a complex task, read `project_knowledge.md` and any relevant sub-files.
 - **Procedural**: Maintain `workflows.json` for complex, multi-step procedures. 
 
 ### Consolidation Protocol
 When a task is completed, you MUST perform a consolidation step (via `TASK_CLOSE`):
 1. Review the task's memory file in `tasks/`.
-2. **Semantic Extraction**: Extract any newly discovered "global truths" (e.g., API constraints, environment specific gotchas) and add them to `semantic/project_knowledge.md`.
+2. **Semantic Extraction**: Extract any newly discovered "global truths" (e.g., API constraints, environment-specific gotchas) and write them to the appropriate domain file under `semantic/knowledge/` (or update `project_knowledge.md`).
 3. **Procedural Extraction**: If you notice a complex, repeatable workflow was successfully executed during this task, ask the user: *"I noticed we executed a complex sequence to [do X]. Would you like me to extract this into a reusable playbook?"*
 4. Move the raw, technical task memory file to `archived_tasks/` for fast future retrieval.
 
 **Active Task Isolation & Consolidation Routing**:
-- **With an Open Task**: When on a feature branch with an active task, episodic memory consolidation (`MEMORY_CONSOLIDATE` or the `wrap` alias) must **never** process or merge the task memory file (`tasks/*.md`) into `project_knowledge.md`. Active task memory remains isolated until `TASK_CLOSE` is explicitly called.
-- **Without an Open Task**: When on a main/master branch with no active task, episodic memory consolidation (`MEMORY_CONSOLIDATE` or the `wrap` alias) is the primary path to extract and merge session decisions and lessons directly into `project_knowledge.md`.
+- **With an Open Task**: When on a feature branch with an active task, episodic memory consolidation (`MEMORY_CONSOLIDATE` or the `wrap` alias) must **never** process or merge the task memory file (`tasks/*.md`) into `project_knowledge.md` or `semantic/knowledge/*.md`. Active task memory remains isolated until `TASK_CLOSE` is explicitly called.
+- **Without an Open Task**: When on a main/master branch with no active task, episodic memory consolidation (`MEMORY_CONSOLIDATE` or the `wrap` alias) is the primary path to extract and merge session decisions and lessons directly into `project_knowledge.md` or its domain sub-files under `semantic/knowledge/`.
+
 
 **Critical Insight**: You do not have background processes. You must explicitly use your file reading and writing tools to interact with these memory stores. Do not attempt to "load" them into a non-existent internal state.
 
