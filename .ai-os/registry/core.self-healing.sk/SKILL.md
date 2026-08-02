@@ -12,8 +12,12 @@ description: >-
 
 Production AI systems fail. The self-healing skill ensures failures are detected,
 classified, and recovered from — automatically when possible, with human escalation
-when necessary. It implements the circuit breaker pattern, loop detection, and
-failure classification from BOOT.md §7.
+when necessary. It implements loop detection and failure classification from BOOT.md §7.
+
+Note: there is no live per-skill circuit-breaker *state* maintained anywhere (an agent
+can't reliably keep persistent counters up to date across sessions). "Circuit status"
+below is computed on demand from the failure/repair pattern visible in `decisions.jsonl`,
+not read from a stored flag.
 
 ## Dependencies
 
@@ -54,7 +58,6 @@ Auto-repair detected issues.
 | Corrupt JSON file | Attempt parse recovery; if impossible, reset to default |
 | Corrupt JSONL file | Remove malformed lines, preserve valid entries |
 | Stale project genome | Re-run perception scan |
-| Circuit breaker stuck OPEN | Reset to CLOSED after probe test |
 | Orphaned evolution proposal | Mark as EXPIRED |
 
 **Safety rules:**
@@ -87,6 +90,25 @@ Rollback to last known good state.
 4. For `full-reset`: Confirm with user, then recreate all user-space files from defaults
 5. Run integrity check after rollback
 6. Log rollback in `decisions.jsonl`
+
+---
+
+### HEAL_CIRCUIT_STATUS
+
+Report which skills look degraded, based on recent logged failures — not a stored flag.
+
+```
+> OS_COMMAND HEAL_CIRCUIT_STATUS
+```
+
+**Procedure:**
+1. Read the recent tail of `decisions.jsonl` (last ~50 entries is plenty).
+2. Group `type: "action"` entries that describe a failed operation or a repair by which
+   skill/command they relate to.
+3. A skill is **degraded** if 3+ of its recent operations failed with no successful repair
+   logged afterward; otherwise **healthy**.
+4. Report a short table: skill, recent failure count, status. This is a heuristic read of
+   the log, not a certified live state — say so if asked.
 
 ---
 

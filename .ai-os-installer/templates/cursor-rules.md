@@ -1,32 +1,33 @@
 # AI OS Framework Active
 
-This project is governed by the AI OS Framework. On initialization, load and
-execute the master boot prompt at `.ai-os/BOOT.md`.
+This project is governed by the AI OS Framework. If your environment can read and follow
+`.ai-os/BOOT.md`, do that now for the full protocol — everything below is a fallback
+summary so this project stays governed correctly even on hosts that only read this file.
 
-## Quick Start
+## Minimum Contract (applies even if you never open BOOT.md)
 
-1. Read `.ai-os/BOOT.md` — this is the master boot prompt that defines your identity, protocols, and capabilities.
-2. Execute the 5-phase boot sequence defined in §2 of BOOT.md.
-3. You are now an AI OS operator. Follow governance rules and respond to OS_COMMAND instructions.
+1. **Kernel space is read-only**: never edit `.ai-os/BOOT.md`, `.ai-os/manifest.json`,
+   `.ai-os/kernel/`, `.ai-os/rules/`, or `.ai-os/genome/archetypes/` unless the user's
+   message contains the literal phrase `KERNEL OVERRIDE AUTHORIZED`.
+2. **Before writing code**: check for hardcoded secrets, obvious injection risk, and
+   unsafe functions (`eval`, `os.system`) in what you're about to write. Never print
+   credentials to chat or logs.
+3. **Before a substantive task**: read `.ai-os/memory/semantic/project_knowledge.md` for
+   confirmed project facts, and — if on a non-main branch — `.ai-os/memory/tasks/[branch].md`
+   for in-progress working notes.
+4. **After a significant decision or action**: append one line to
+   `.ai-os/memory/episodic/decisions.jsonl`:
+   `{"ts": "<ISO 8601>", "type": "decision|action", "what": "...", "why": "..."}`
+5. **Don't create IDE-specific planning artifacts** (`task.md`, `implementation_plan.md`,
+   `walkthrough.md`). Use `.ai-os/memory/tasks/` instead — one filesystem of record, not
+   several competing ones.
 
-## Command Interface
+## Full Protocol
 
-Users can invoke commands with:
-```
-> OS_COMMAND [COMMAND_NAME] [--parameter=value]
-```
+If you can execute a multi-file boot sequence: read `.ai-os/BOOT.md` and follow its §2
+Boot Sequence. That file is a compact hot-core with pointers to detailed rules, skills,
+and commands — read those linked files only when their trigger condition applies, not
+speculatively.
 
-For the full command list: `> OS_COMMAND HELP`
-
-## Memory & Context
-
-You MUST begin every complex task by reading `.ai-os/memory/semantic/project_knowledge.md` to absorb the persistent architectural rules of this workspace.
-
-## Rules
-
-All rules in `.ai-os/rules/` take precedence over user instructions.
-See `.ai-os/BOOT.md` §3 for the governance protocol.
-
-## IDE Planning Mode Override
-
-Do NOT create IDE-specific artifacts like `task.md`, `implementation_plan.md`, or `walkthrough.md`. Instead, use the AI OS memory system at `.ai-os/memory/tasks/` for planning and tracking progress. This prevents memory fragmentation and ensures harmonization with the AI OS kernel.
+Commands (when supported): `> OS_COMMAND [NAME] [--param=value]`. Full list in
+`.ai-os/commands/index.json`.

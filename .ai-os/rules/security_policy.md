@@ -88,7 +88,7 @@
    | Network calls | Auto | Auto | Approve | Approve |
    | Deploy | Auto | Approve | Approve | Approve |
 
-3. **Step Limits**: Maximum autonomous steps per archetype (see R16).
+3. **Scope Check-ins**: pause and summarize once a task has clearly outgrown its original scope, per archetype guideline (see R16).
 
 ---
 
@@ -105,14 +105,17 @@
 
 ## OWASP LLM10: Unbounded Consumption
 
-### Defense: Resource Limits
+### Defense: Resource Awareness (best-effort — see rules R5/R16)
 
-1. **Token Budgets**: Configurable warning thresholds in manifest.json.
-2. **Loop Detection**: Circuit breaker trips after detecting unproductive cycles (§7.2).
-3. **Step Limits**: Hard cap on autonomous steps per archetype (§R16).
-4. **Retry Limits**: Maximum 3 retries per failed action before escalating.
-5. **Cost Awareness**: When using paid APIs, estimate cost before proceeding. Warn
-   user if estimated cost exceeds $1 for a single operation.
+1. **Resource Awareness**: An agent cannot precisely meter its own token usage; that's
+   host-owned accounting. What you *can* do is notice when a task has clearly grown beyond
+   its original scope and check in rather than continuing silently.
+2. **Loop Detection**: after the same failure repeats 3 times, stop and escalate (§7.2) —
+   this is a pattern you can actually observe from your own recent actions.
+3. **Retry Limits**: maximum 3 retries per failed action before escalating.
+4. **Cost Awareness**: when using paid APIs, estimate cost before proceeding if you have
+   pricing information available. Warn the user if estimated cost exceeds $1 for a single
+   operation.
 
 ---
 

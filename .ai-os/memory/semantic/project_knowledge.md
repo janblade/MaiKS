@@ -11,9 +11,9 @@
 
 ## Knowledge Domains
 
-- [Architecture Overview](file:///d:/DEV/AI%20OS%20FRAMEWORK/.ai-os/memory/semantic/knowledge/architecture_overview.md) — GoliathOS microkernel architecture, bridge files, and host integrations.
-- [Conventions & Patterns](file:///d:/DEV/AI%20OS%20FRAMEWORK/.ai-os/memory/semantic/knowledge/conventions_patterns.md) — Standard coding conventions, agentic package/install practices, self-healing checklists, credibility rules.
-- [Known Gotchas](file:///d:/DEV/AI%20OS%20FRAMEWORK/.ai-os/memory/semantic/knowledge/known_gotchas.md) — Failure modes, memory migration warnings, first-boot detection logic, task routing patterns.
+- [Architecture Overview](knowledge/architecture_overview.md) — GoliathOS microkernel architecture, bridge files, and host integrations.
+- [Conventions & Patterns](knowledge/conventions_patterns.md) — Standard coding conventions, agentic package/install practices, self-healing checklists, credibility rules.
+- [Known Gotchas](knowledge/known_gotchas.md) — Failure modes, memory migration warnings, first-boot detection logic, task routing patterns.
 
 ---
 

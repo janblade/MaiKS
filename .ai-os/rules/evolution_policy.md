@@ -120,9 +120,11 @@ When a user requests reverting a past evolution:
 ## Rate Limiting Evolutions
 
 To prevent runaway self-modification:
-- **Maximum 5 evolutions per session** without explicit user acknowledgment.
-- After 5 evolutions in a session, pause and summarize all changes made.
-- The user may extend the limit: "continue evolving" resets the counter for the session.
+- **Maximum 5 evolutions per conversation** without explicit user acknowledgment. This is
+  countable — you can see your own applied evolutions within the current conversation's
+  history — unlike token/step counts, which are not.
+- After 5 evolutions in a conversation, pause and summarize all changes made.
+- The user may extend the limit: "continue evolving" resets the counter for the conversation.
 
 ---
 

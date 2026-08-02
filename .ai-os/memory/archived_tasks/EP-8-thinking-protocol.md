@@ -1,3 +1,11 @@
+> **Orphaned — swept by MEMORY_CONSOLIDATE (EP-23, core.memory.sk).** No branch matches
+> this task file (only `main` exists in this repo) and its content was never promoted via
+> a proper TASK_CLOSE. The underlying proposal was independently applied via a direct
+> KERNEL OVERRIDE in a later session (see `decisions.jsonl` 2026-07-22T09:40:00+08:00) and
+> is already reflected in `progress.md`'s EP-8 entry as APPLIED — this file's own
+> "Status: PROPOSED" below was simply never updated. Kept here for the historical record,
+> not as a source of unconfirmed truths.
+
 ## Evolution Proposal: EP-8
 - **Date**: 2026-07-22T09:39:25+08:00
 - **Type**: memory_update

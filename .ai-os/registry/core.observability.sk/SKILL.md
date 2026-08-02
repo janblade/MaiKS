@@ -16,73 +16,50 @@ the governance framework's transparency requirements, inspired by ISO 42001 prin
 
 ## Commands
 
-### LOG_DECISION
+### LOG_DECISION / LOG_ACTION
 
-Record an architectural or significant decision.
-
-```
-> OS_COMMAND LOG_DECISION --decision=<text> --rationale=<text> [--alternatives=<text>]
-```
-
-**Procedure:**
-1. Construct decision record:
-   ```json
-   {
-     "timestamp": "{ISO 8601}",
-     "type": "decision",
-     "decision": "{what was decided}",
-     "rationale": "{why this was chosen}",
-     "alternatives_considered": ["{alt1}", "{alt2}"],
-     "outcome": "pending",
-     "confidence": 0.0-1.0,
-     "references": ["{rules or standards referenced}"],
-     "session_id": "{current session}"
-   }
-   ```
-2. Append to `memory/episodic/decisions.jsonl`
-3. Confirm: "Decision logged: {summary}"
-
----
-
-### LOG_ACTION
-
-Record a significant action with reasoning trace.
+Record a decision or action to episodic memory. Both use the same minimal schema —
+there is no meaningful distinction worth two record shapes; `type` carries it.
 
 ```
+> OS_COMMAND LOG_DECISION --decision=<text> --rationale=<text>
 > OS_COMMAND LOG_ACTION --action=<text> --reason=<text> [--files=<affected>]
 ```
 
-**Procedure:**
-1. Construct action record:
-   ```json
-   {
-     "timestamp": "{ISO 8601}",
-     "type": "action",
-     "action": "{what was done}",
-     "reason": "{why}",
-     "files_affected": ["{file1}", "{file2}"],
-     "reversible": true|false,
-     "session_id": "{current session}"
-   }
-   ```
-2. Append to `memory/episodic/decisions.jsonl`
+**Schema — the only shape written to `decisions.jsonl`:**
+```json
+{"ts": "2026-08-02T10:00:00+08:00", "type": "decision|action|evolution|conflict", "what": "...", "why": "...", "files": ["..."]}
+```
+
+- `what` = the decision text or the action text.
+- `why` = the rationale or reason.
+- `files` is optional — omit it if nothing was touched.
+- Deliberately **no** `confidence`, `alternatives_considered`, `outcome`, or `session_id`
+  fields. In practice these were never kept current after being written (confidence was
+  always `1.0`, outcome was always `pending`) — they cost tokens on every entry and every
+  future read for no real signal. If you genuinely have 2+ alternatives worth recording
+  for a significant architectural call, fold a one-clause summary into `why` instead of a
+  separate structured field.
+
+Append one line. Confirm briefly: "Logged: {what}".
 
 ---
 
 ### TRACE_SESSION
 
-Export the full session trace for audit.
+Export a session's trace for audit.
 
 ```
-> OS_COMMAND TRACE_SESSION [--session=<id>] [--format=json|markdown]
+> OS_COMMAND TRACE_SESSION [--since=<ISO timestamp>] [--format=json|markdown]
 ```
 
 **Procedure:**
-1. Collect all entries from `decisions.jsonl` matching the session ID
-2. Collect session metadata from `sessions.jsonl`
-3. Format as requested (JSON for machine processing, Markdown for human review)
-4. Include: session duration, decisions made, files modified, evolutions applied, security scans run
-5. Write to file: `.ai-os/memory/episodic/trace_{session_id}.{ext}`
+1. Collect `decisions.jsonl` entries with `ts` at or after `--since` (default: the `started`
+   timestamp of the most recent entry in `sessions.jsonl`) — entries are matched by time
+   range, not a session ID, since decision records don't carry one.
+2. Pair with the matching `sessions.jsonl` entry for duration/summary metadata.
+3. Format as requested (JSON for machine processing, Markdown for human review).
+4. Write to `.ai-os/memory/episodic/trace_{date}.{ext}`.
 
 ---
 
@@ -116,13 +93,13 @@ System-wide health dashboard.
 ```
 
 **Procedure:**
-1. **Boot status**: Last boot time, boot count, integrity result
-2. **Archetype**: Active archetype and governance level
-3. **Skills**: Status of each skill (circuit breaker state, last invoked, failure count)
-4. **Memory**: Size of each memory store, last updated timestamps
-5. **Security**: Last scan time, open findings count
-6. **Evolutions**: Total applied, pending proposals, last evolution
-7. **Project Genome**: Detected stack summary
+1. **Boot status**: last boot time, boot count, integrity result
+2. **Archetype**: active archetype and governance level
+3. **Skills**: derive health from `decisions.jsonl` — count recent `type: "action"` entries per skill that read as failures/repairs (see `HEAL_CIRCUIT_STATUS` in `core.self-healing.sk`); there is no live per-skill state file to read
+4. **Memory**: size of each memory store, last updated timestamps
+5. **Security**: last scan time, open findings count
+6. **Evolutions**: total applied, pending proposals, last evolution
+7. **Project Genome**: detected stack summary
 
 **Output:** Formatted health dashboard.
 
@@ -131,10 +108,11 @@ System-wide health dashboard.
 ## Automatic Logging
 
 The observability skill is invoked automatically by other skills:
-- **Security skill**: Logs scan results after every SECURITY_AUDIT/SCAN_FILE
-- **Evolution skill**: Logs every proposal, application, and rollback
-- **Self-healing skill**: Logs diagnoses, repairs, and circuit breaker state changes
-- **Boot sequence**: Logs session start and integrity results
+- **Security skill**: logs scan results after every SECURITY_AUDIT/SCAN_FILE
+- **Evolution skill**: logs every proposal, application, and rollback
+- **Self-healing skill**: logs diagnoses and repairs
+- **Boot sequence**: does *not* log at boot (nothing has happened yet) — logs once at
+  session wrap via `MEMORY_CONSOLIDATE` or `TASK_CLOSE` (see `BOOT.md` §9)
 
 ## Common Mistakes
 

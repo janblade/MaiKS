@@ -18,6 +18,12 @@ needed, scoring relevance, managing token budgets, and pruning low-value informa
 The core principle: **Minimum Viable Context** — load the minimum set of tokens that
 maximizes the probability of a correct response.
 
+**Scope note**: on most hosts (Claude Code, Cursor, IDE agents), the host — not this
+skill — manages your actual context window and token accounting; you cannot query a
+precise remaining-budget number, and CONTEXT_BUDGET below should be read as a qualitative
+self-check, not a metered readout. What this skill genuinely controls is *what you choose
+to read* — that's real leverage regardless of host.
+
 ## Commands
 
 ### CONTEXT_LOAD
@@ -33,9 +39,11 @@ Assemble optimal context for a task.
 2. Check model tier. If reasoning tier model with massive context (>1M tokens) is active: enable **Massive Context Strategy** and skip aggressive pruning. Load full workspace modules.
 3. Score available context sources by relevance (see CONTEXT_SCORE)
 4. Assemble context in priority order (see priority list below)
-5. Track accumulated token count against budget
-6. Stop adding context when budget is 80% consumed (reserve 20% for reasoning + output)
-7. Report: "Context loaded: {items_count} sources, ~{tokens} tokens, {budget_remaining}% budget remaining"
+5. Keep a rough running sense of how much you've loaded (character count / 4 ≈ tokens);
+   this is an estimate for your own judgment, not a precise budget you're enforcing
+6. Stop adding low-relevance context once you have enough to answer confidently — don't
+   keep loading "just in case"
+7. Report: "Context loaded: {items_count} sources, roughly {tokens} tokens"
 
 **Priority order for context assembly:**
 1. **Task-critical files** — Files directly mentioned or clearly needed for the task
@@ -81,10 +89,12 @@ Check token budget and recommend what to load or prune.
 ```
 
 **Procedure:**
-1. Report current context consumption (estimated tokens loaded)
-2. Report remaining budget based on `manifest.json.agent_config.token_budget_warning`
-3. If `--estimate-file`: Estimate token cost of loading the specified file
-4. Recommend action: "Budget healthy" / "Consider pruning low-relevance items" / "Near limit — prune before loading more"
+1. Give a rough, self-reported estimate of what you've loaded so far (this is an estimate,
+   not a metered figure — say so).
+2. If `--estimate-file`: estimate the token cost of loading the specified file (roughly:
+   file size in characters / 4).
+3. Recommend action qualitatively: "Looks fine" / "Consider pruning low-relevance items
+   before loading more" — don't imply precision you don't have.
 
 ---
 
