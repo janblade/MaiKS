@@ -18,7 +18,9 @@ skill installed — see `BOOT.md` §4), but without this skill their procedure i
 couple of bullet points, which is thin enough to create real gaps: unverified claims
 promoted to permanent memory, silent data loss when two branches touch semantic memory
 concurrently, duplicate entries, and orphaned files nothing ever revisits. This skill is
-where that procedure actually lives.
+where that procedure actually lives. `MEMORY_AMEND` (below) is not a built-in — it only
+exists when this skill is installed — and covers the direction those two don't: correcting
+or retracting an existing entry that turned out to be wrong, rather than adding a new one.
 
 Neither command is this skill's concern when someone just wants to pause — that's `WRAP`
 (session-summary write only, no promotion, not documented here because there's nothing to
@@ -138,6 +140,53 @@ that was rejected, not confirmed; surface it to the user instead if it looks sub
 **Episodic rotation**: after extracting lessons, move the processed `decisions.jsonl` lines
 to `decisions.archive.jsonl` (per `BOOT.md` §9) rather than leaving them to accumulate.
 
+---
+
+### MEMORY_AMEND
+
+```
+> OS_COMMAND MEMORY_AMEND --file=<knowledge/*.md path> [--reason=<why>]
+```
+
+The promotion pipeline (`TASK_CLOSE`/`MEMORY_CONSOLIDATE`) only ever adds to semantic
+memory or deletes something a *new* fact supersedes. Neither one revisits an existing entry
+just because it turned out to be wrong — there is no other trigger that does either, so a
+bad promotion just sits there, permanently trusted, until this command is run against it.
+Two triggers: `BOOT.md` §7's memory-traced debugging (a bug's root cause traced back to a
+knowledge-file entry), or a direct human report ("that convention is wrong," "the docs are
+outdated on this").
+
+**Procedure:**
+1. **Identify the specific claim** being challenged — not the whole file, the specific
+   sentence/bullet that's wrong or that recommended what caused the problem.
+2. **Verify the claim is actually responsible** before touching anything — re-check it
+   against current repo state the same way step 2 of `TASK_CLOSE` verifies a promotion,
+   just in reverse: confirm it's now inaccurate, or confirm the bug/reason genuinely traces
+   to following it. Don't amend on a hunch.
+3. **Pick the outcome** — these are different, don't default to deletion:
+   - **Correct in place**: the claim was accurate once but is now stale (code moved on).
+     Update the entry to reflect current reality. Same dedup rule as promotion — edit the
+     existing entry, don't append a second one.
+   - **Relocate to `known_gotchas.md`**: the claim was *true* and following it still caused
+     the problem — that's not a fact to erase, it's a gotcha to record. Move/rewrite it as
+     an explicit "we used to do X, it caused Y, do Z instead" entry. Deleting this outright
+     throws away the one thing worth keeping — the lesson.
+   - **Remove outright**: the claim was simply wrong from the start and carries no ongoing
+     lesson — delete it, same diff-before-delete discipline as the Forgetting Policy
+     (check `git merge-base` before removing anything another branch may have added since).
+4. **Accept-gate the amendment**, same archetype-scaled confirmation as any other write into
+   semantic memory (R15's table, generalized to any writer — see this skill's Overview):
+   `hobby` applies it directly and logs it; `startup`/`enterprise`/`critical` show the
+   proposed amendment and get explicit confirmation before writing, same as a promotion —
+   correcting a shared fact that other sessions and other developers are relying on is at
+   least as high-stakes as adding one.
+5. **Log distinctly.** Append to `decisions.jsonl` framed as an amendment, not a promotion —
+   include what was wrong, what changed, and the reason (bug reference, or who reported it).
+   This audit trail is what lets a future session understand *why* a "confirmed truth" got
+   walked back, instead of just seeing it silently replaced.
+
+---
+
 ## Why Task Memory Isn't Semantic Memory
 
 Task memory is deliberately unscrutinized — the entire point of routing working notes
@@ -164,3 +213,7 @@ indiscriminately — defeats the reason the two tiers exist.
    explicit `TASK_CLOSE`. Skipping task memory there and writing straight to
    `project_knowledge.md` is exactly the unverified-promotion failure mode this skill exists
    to prevent — it doesn't stop applying just because there's no branch name to point at.
+5. **Fixing the bug but not the memory.** A bug traced back to a `knowledge/*.md` entry
+   isn't fully fixed by patching the code — the entry that recommended the bad pattern is
+   still sitting there as trusted ground truth for the next session and the next developer.
+   Run `MEMORY_AMEND`, don't just quietly edit the file or leave it as-is.

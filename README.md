@@ -281,6 +281,7 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 | `WRAP` | `wrap` | Pause the session — save continuity, promote nothing | *"Let's stop here for today"* |
 | `TASK_CLOSE` | `close` | Execute the Consolidation Protocol | *"I'm done with this branch, summarize and close the task"* |
 | `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | *"Extract the rules we just learned into memory"* |
+| `MEMORY_AMEND` | `amend` | Correct or retract a semantic-memory entry that turned out wrong | *"That convention in the docs is actually what caused this bug"* |
 | `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | *"Propose a new command to automate docker builds"* |
 | `EVOLVE_APPLY` | `apply` | Apply an approved evolution | *"That proposal looks good, apply it"* |
 
@@ -292,4 +293,4 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 
 ---
 
-*GoliathOS v2.2.0 — An operating system for the next generation of AI developers.*
+*GoliathOS v2.3.0 — An operating system for the next generation of AI developers.*

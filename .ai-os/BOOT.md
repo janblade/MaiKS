@@ -102,6 +102,8 @@ The full command list, parameters, and skill mapping live in `commands/index.jso
 
 **"What would this affect" phrasing routes to `INFRA_MAP_DATAFLOW`, even when it's framed as a new feature, not a bug.** "If we add X, what does it touch," "impact of this new requirement," "what breaks if we change this field" — these name a specific input/field/entity/endpoint without ever saying "trace" or "dataflow," so the match is easy to miss in favor of just starting the implementation. Check for it (its cache-check is cheap, step 2 of the command) before scoping a plan for a change with unclear downstream reach. Judgment call like any other routing match, not a mandatory gate on every code change — trivial edits with no ambiguous blast radius don't need it.
 
+**"That doc/convention is wrong" or "this caused the bug" phrasing routes to `MEMORY_AMEND`, not a silent one-off correction.** "The docs say to do X but that's what broke it," "that convention isn't right," "can we fix what project_knowledge says about Y" — these name a semantic-memory entry as the problem without necessarily saying "amend." Route them through `MEMORY_AMEND` (`core.memory.sk`) so the correction goes through the same verify/accept gate and gets logged as a deliberate amendment, not just edited in place and forgotten — an uncorrected shared fact stays wrong for every other session and developer reading it.
+
 ---
 
 ## §5 EVOLUTION
@@ -131,6 +133,7 @@ Full failure taxonomy and repair strategies: `registry/core.self-healing.sk/SKIL
 
 - **Loop detection**: same failure 3 times → stop, don't retry a 4th time, escalate to the user with what was tried.
 - **Diff-driven debugging**: when a bug appears, check `git diff` for the session's own recent mutations before assuming a systemic cause — regressions are usually the most recent change.
+- **Memory-traced debugging**: if a bug's root cause traces back to a `knowledge/*.md` entry (a "confirmed truth" that turned out to be wrong, or was true but following it caused the bug), fixing the code isn't the whole fix — that entry is still sitting there as trusted ground truth for every other session and every other developer reading the same files. Run `MEMORY_AMEND` (`core.memory.sk`) too, not just the code fix.
 
 ---
 

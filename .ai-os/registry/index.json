@@ -113,7 +113,8 @@
       "entrypoint": "registry/core.memory.sk/SKILL.md",
       "commands": [
         "TASK_CLOSE",
-        "MEMORY_CONSOLIDATE"
+        "MEMORY_CONSOLIDATE",
+        "MEMORY_AMEND"
       ],
       "dependencies": [
         "core.observability.sk"

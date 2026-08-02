@@ -328,3 +328,14 @@
 - **Rollback Plan**: Revert `MIGRATIONS.md`, `UPDATE_PROMPT.md`, `manifest.json`, README.md, and the 7 bridge/template files from git history.
 - **Rules Check**: User-space fix, complies with R3/R9. No kernel-space (`BOOT.md`) file touched -- this only changes the *installer's* handling of kernel files during update, not kernel content itself.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-33
+- **Date**: 2026-08-02T00:00:00+08:00
+- **Type**: command_create + kernel_update
+- **Target**: .ai-os/registry/core.memory.sk/SKILL.md, .ai-os/BOOT.md, .ai-os/registry/index.json, .ai-os/commands/index.json, .ai-os/commands/aliases.json, .ai-os-installer/MIGRATIONS.md, .ai-os/manifest.json, README.md
+- **What**: Added `MEMORY_AMEND` to `core.memory.sk` -- the missing direction in the promotion pipeline. `TASK_CLOSE`/`MEMORY_CONSOLIDATE` only ever add to semantic memory or delete something a *new* fact supersedes; neither revisits an existing entry just because it turned out to be wrong, and `REVIEW_CREDIBILITY`/`HEAL_DIAGNOSE`/Diff-Driven Debugging don't cover this either (checked all three before concluding this was a real gap, not an oversight). `MEMORY_AMEND` verifies the challenged claim is actually responsible, then either corrects it in place (stale fact), relocates it to `known_gotchas.md` (true but harmful advice -- keep the lesson, discard the bad recommendation), or removes it outright (diff-before-delete, same as the Forgetting Policy) -- gated by the same archetype-scaled accept gate as any other semantic-memory write. `BOOT.md` §7 gained a "memory-traced debugging" trigger (a bug root-caused to a knowledge-file entry means the entry needs fixing too, not just the code) and §4 gained a matching natural-language routing callout, applying the lesson from EP-31's dataflow-routing gap proactively this time instead of waiting to be caught. Bumped `ai_os_version` to `2.3.0` and added the `MIGRATIONS.md` section in the same pass this time, per the EP-32 lesson.
+- **Why**: User asked, after being walked through the framework's shared-semantic-memory value proposition, whether an entry later discovered to have caused a bug (or found to contribute nothing) actually gets amended. Checking the existing skills confirmed it didn't -- a real, structurally significant gap given a bad promotion in shared memory has a bigger blast radius than a private mistake, which was the exact point being discussed.
+- **Risk**: Low (new command, additive; two small `BOOT.md` additions, no existing behavior changed).
+- **Rollback Plan**: Revert `core.memory.sk/SKILL.md`, `BOOT.md`, `registry/index.json`, `commands/index.json`, `commands/aliases.json`, `MIGRATIONS.md`, `manifest.json`, and README.md from git history.
+- **Rules Check**: Kernel-space `BOOT.md` change explicitly authorized by direct maintainer instruction ("go ahead") after the design was presented and discussed. User-space additions comply with R3/R9/R21.
+- **Status**: APPLIED

@@ -3,6 +3,27 @@
 This file tracks features, files, or skills that have been deprecated or removed in newer versions of GoliathOS.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+## v2.3.0 — Retrospective Memory Amendment
+
+- **New `MEMORY_AMEND` command** on `core.memory.sk`: corrects or retracts an existing
+  `knowledge/*.md` entry that turned out to be wrong, or that was accurate but caused a bug
+  when followed. `TASK_CLOSE`/`MEMORY_CONSOLIDATE` only ever add to semantic memory or
+  delete something a *new* fact supersedes — neither one revisits an existing entry just
+  because it was later found to be wrong, so a bad promotion previously had no path back to
+  being corrected short of someone noticing it during an unrelated pass. Outcomes: correct
+  in place (stale fact), relocate to `known_gotchas.md` (true but harmful advice — keep the
+  lesson, discard the recommendation), or remove outright (diff-before-delete, same as the
+  Forgetting Policy). Same archetype-scaled accept gate as any other semantic-memory write.
+- **`BOOT.md` §7 (Self-Healing)** gained a "memory-traced debugging" bullet: when a bug's
+  root cause traces back to a `knowledge/*.md` entry, run `MEMORY_AMEND` too, not just the
+  code fix — the entry is still trusted ground truth for every other session and developer
+  until it's corrected. `BOOT.md` §4 gained a matching natural-language routing callout
+  ("that doc is wrong," "this caused the bug") so the match isn't missed the way the
+  data-flow impact-analysis phrasing was in v2.2.0.
+- Migration action: none — new command content, covered by the standard `registry/`/
+  `commands/` merge in Step 3. The two `BOOT.md` additions are covered by the standard
+  overwrite, now itself protected by v2.2.0's `KERNEL OVERRIDE` check.
+
 ## v2.2.0 — Task Memory on Every Branch, Lightweight WRAP, Data-Flow Tracing
 
 - **Task memory now created on every branch, no exceptions except detached `HEAD`**:
