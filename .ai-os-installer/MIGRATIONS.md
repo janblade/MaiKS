@@ -3,6 +3,26 @@
 This file tracks features, files, or skills that have been deprecated or removed in newer versions of GoliathOS.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+## v2.4.0 — Blast-Radius and Root-Cause Rules
+
+- **New `R23` (Blast-Radius Assessment for Wide-Reaching Changes)** and **`R24` (Root Cause
+  Before Fix)** added to `rules/ultimate_rules.md` Domain 11. R23 extends R7's "assess risk
+  before destructive ops" concept to non-destructive but widely-reaching changes (a shared
+  utility, a schema field, an API contract) — use `INFRA_MAP_DATAFLOW` when the change traces
+  to a specific field/entity, otherwise enumerate call sites manually, before scoping the
+  implementation. R24 formalizes the debugging discipline already described operationally in
+  `BOOT.md` §7 (diff-driven debugging, memory-traced debugging) as a rule: identify root
+  cause before calling a fix done, log cause + affected scope together, verify against the
+  actual blast radius (`TEST_IMPACT`) rather than guessing test scope.
+- **`BOOT.md` §3's Rules Digest table updated**: R23 folded into the existing R7 digest row
+  (same severity pattern), R24 folded into the existing advisory-rules row.
+- **Project-Specific Addendum note fixed**: was still referencing "R1–R19" as the rules
+  user-defined additions must not conflict with — already stale before this release (R20–22
+  existed), now corrected to "R1–R24."
+- Migration action: none — this is a `rules/ultimate_rules.md` and `BOOT.md` content change,
+  covered by the standard overwrite in Step 3 (itself gated by the v2.2.0 `KERNEL OVERRIDE`
+  check, so a user's own project-specific rule additions in the addendum section are safe).
+
 ## v2.3.0 — Retrospective Memory Amendment
 
 - **New `MEMORY_AMEND` command** on `core.memory.sk`: corrects or retracts an existing

@@ -222,12 +222,35 @@
 - **Archetype override**: `hobby`/`startup` may relax this if the user explicitly asks for
   broader cleanup.
 
+### R23 — Blast-Radius Assessment for Wide-Reaching Changes (CONFIGURABLE)
+**Before changing a widely-shared symbol, data path, or flow — not just a destructive
+operation (R7) — know what else it touches.**
+- Applies to shared utilities, schema/data-model fields, API contracts — not trivial,
+  locally-scoped edits (same proportionality as R22).
+- Use `INFRA_MAP_DATAFLOW` when the change traces to a specific field/entity; otherwise
+  enumerate call sites manually. Do this before scoping the implementation.
+- **Archetype override**: `hobby`/`startup` — WARNING. `enterprise`/`critical` — BLOCKING.
+
+### R24 — Root Cause Before Fix (CONFIGURABLE)
+**Don't call a fix done until the root cause is identified, not just a plausible symptom.**
+- Check `git diff` for recent mutations first; if a `knowledge/*.md` entry is responsible,
+  run `MEMORY_AMEND`, not just a code patch.
+- Log root cause and affected scope together (extends R13) — a bare "fixed X" gives nothing
+  to work from later.
+- Verify against the actual blast radius (`TEST_IMPACT`) instead of the full suite or a guess.
+- **Confidence gate**: rate root-cause confidence per the Response Credibility Protocol
+  (`core.self-healing.sk`) — High (reproduced/read/tested), Medium (inferred), Low (guess).
+  No numeric score — self-reported percentages aren't a real measurement, just a plausible
+  number. Anything short of High needs confirmation before applying.
+- **Archetype override**: `hobby` — apply and flag the uncertainty. `startup`+ — confirm
+  before applying anything below High.
+
 ---
 
 ## Project-Specific Addendum
 
 > User-defined rules are appended below during bootstrap or via KERNEL OVERRIDE.
-> They must NOT conflict with rules R1–R19. Conflicts are resolved in favor of R1–R19.
+> They must NOT conflict with rules R1–R24. Conflicts are resolved in favor of R1–R24.
 
 <!-- PROJECT_RULES_START -->
 <!-- Add project-specific rules here -->

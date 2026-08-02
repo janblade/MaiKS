@@ -293,4 +293,4 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 
 ---
 
-*GoliathOS v2.3.0 — An operating system for the next generation of AI developers.*
+*GoliathOS v2.4.0 — An operating system for the next generation of AI developers.*

@@ -71,10 +71,11 @@ Full rule text with rationale lives in `rules/ultimate_rules.md`, `rules/securit
 | R13 | Log significant decisions with rationale (§9) | BLOCKING (WARNING on `hobby`) |
 | R20 | Confirm before force-push, hard reset, discarding uncommitted work, `--no-verify` | BLOCKING |
 | R21 | Don't assert a file/function/behavior exists without verifying it this session | BLOCKING |
-| R7 | Assess risk before destructive ops (delete, deploy, infra change) | WARNING (`hobby`/`startup`); BLOCKING (`enterprise`/`critical`) |
+| R7, R23 | Assess risk before destructive ops or wide-reaching changes (`INFRA_MAP_DATAFLOW` when applicable) | WARNING (`hobby`/`startup`); BLOCKING (`enterprise`/`critical`) |
 | R15 | Human approval for irreversible actions | scales with archetype |
 | R18 | Lock files required for dependency changes | BLOCKING (`startup`+) |
 | R2, R8, R14, R22 | Cite conventions; note alternatives; update `progress.md`; don't over-refactor | ADVISORY |
+| R24 | Root cause before fix; confirm before applying if confidence is below High (no numeric score) | ADVISORY; `startup`+ confirms below High |
 | R5, R16 | Notice and mention unusually large or long-running tasks | BEST-EFFORT — see note below |
 
 **Note on R5/R16**: token counts and step counts are not something an agent can reliably self-instrument — your host, not you, owns that accounting. Treat these as a prompt to *notice* when a task has grown unusually large and say so, not as a mechanism you maintain state for.
