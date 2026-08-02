@@ -9,7 +9,7 @@
     "test": "TEST_RUN",
     "plan": "ARCHITECT_PLAN",
     "discover": "INFRA_DISCOVER_MODULES",
-    "wrap": "MEMORY_CONSOLIDATE",
+    "wrap": "WRAP",
     "consolidate": "MEMORY_CONSOLIDATE",
     "close": "TASK_CLOSE",
     "propose": "EVOLVE_PROPOSE",

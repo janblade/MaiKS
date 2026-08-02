@@ -295,3 +295,14 @@
 - **Rollback Plan**: Revert `BOOT.md` §2/§9 and `core.memory.sk` from git history.
 - **Rules Check**: Kernel-space change authorized by direct maintainer instruction.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-30
+- **Date**: 2026-08-02T00:00:00+08:00
+- **Type**: command_create + kernel_update
+- **Target**: .ai-os/commands/index.json, .ai-os/commands/aliases.json, .ai-os/BOOT.md, .ai-os/registry/core.memory.sk/SKILL.md, README.md
+- **What**: The `wrap` alias mapped straight to `MEMORY_CONSOLIDATE`, so a user just saying "let's wrap up for now" (intending a pause) would trigger the full verify/accept promotion pass — on `hobby` archetype that promotes directly, no confirmation. Added a new lightweight built-in, `WRAP`: writes only the session summary (`sessions.jsonl` + `last_session.json`), touches nothing else — no task memory, no semantic memory, no promotion gate, no episodic rotation. Repointed the `wrap` alias to it. `BOOT.md` §4 now has explicit natural-language routing guidance distinguishing "pausing" (WRAP) from "finishing" (MEMORY_CONSOLIDATE/TASK_CLOSE), and says to ask rather than guess toward the promoting direction when unsure. §9's Sessions paragraph, `core.memory.sk`, and the README command table updated to match.
+- **Why**: User caught that "wrap" conflated two different user intents — pausing and confirming-as-done — and that the existing design let the more casual, more common one (taking a break) silently trigger the higher-stakes one (promoting to permanent memory). This is exactly the failure mode the whole EP-23/24 verify/accept-gate effort was built to prevent, undermined by an ambiguous trigger word.
+- **Risk**: Low (adds a new command, narrows what one alias does — nothing that previously worked stops working, `consolidate` still does full consolidation).
+- **Rollback Plan**: Revert `commands/index.json`/`aliases.json`, `BOOT.md`, `core.memory.sk`, README.md from git history.
+- **Rules Check**: Kernel-space `BOOT.md` change authorized by direct maintainer instruction; user-space command/skill/doc changes comply with R3/R9.
+- **Status**: APPLIED

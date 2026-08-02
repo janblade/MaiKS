@@ -20,6 +20,12 @@ promoted to permanent memory, silent data loss when two branches touch semantic 
 concurrently, duplicate entries, and orphaned files nothing ever revisits. This skill is
 where that procedure actually lives.
 
+Neither command is this skill's concern when someone just wants to pause — that's `WRAP`
+(session-summary write only, no promotion, not documented here because there's nothing to
+verify or gate). Don't let "wrap up for the day" get routed to `MEMORY_CONSOLIDATE` — that
+was a real bug (fixed) where the `wrap` alias pointed at full consolidation, meaning taking
+a break could silently promote whatever happened to pass the accept gate at that moment.
+
 ## Dependencies
 
 - `observability.sk` — decision logging

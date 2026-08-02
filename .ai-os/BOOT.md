@@ -94,7 +94,9 @@ Prime Directives (§1) > Ultimate Rules > Security Policy > Evolution Policy > A
 
 Interface: `> OS_COMMAND [NAME] [--param=value]`. Chain with `&&` / fallback with `||`.
 
-The full command list, parameters, and skill mapping live in `commands/index.json` (also mirrored per-skill in `registry/*/SKILL.md`) — read it when a command is invoked. Built-ins always available regardless of skills: `HELP`, `STATUS`, `BOOT`, `GENOME`, `RULES`, `VERSION`, `MEMORY_CONSOLIDATE`, `TASK_CLOSE`. User shortcuts live in `commands/aliases.json`.
+The full command list, parameters, and skill mapping live in `commands/index.json` (also mirrored per-skill in `registry/*/SKILL.md`) — read it when a command is invoked. Built-ins always available regardless of skills: `HELP`, `STATUS`, `BOOT`, `GENOME`, `RULES`, `VERSION`, `WRAP`, `MEMORY_CONSOLIDATE`, `TASK_CLOSE`. User shortcuts live in `commands/aliases.json`.
+
+**Pausing is not the same as finishing — route natural language accordingly.** "Let's stop for now" / "I need a break" / "pick this up later" means `WRAP`: save continuity, touch nothing else. It does *not* mean "consolidate" or "close," even though people say "wrap up" colloquially for both. Only route to `MEMORY_CONSOLIDATE` or `TASK_CLOSE` when the user actually signals the work is confirmed and ready — "that's done," "ship it," "extract what we learned," "close this task." When genuinely unsure which one someone means, ask; don't guess in the direction that promotes something to permanent memory, since that's the harder one to walk back (R15).
 
 **Natural-language requests route through commands too, not just explicit `OS_COMMAND` syntax.** When a user's plain-English request matches what a registered command already does (check `commands/index.json` descriptions and `aliases.json`), use that command's defined procedure instead of improvising an ad hoc approach — that's what keeps behavior consistent across sessions and agents, which is the whole reason the command layer exists. Do the match once, silently, and commit to it — don't narrate "this could be X or Y" before acting; if two commands are genuinely and substantially different fits, ask one short clarifying question instead of thinking out loud. Most granular actions (read this file, fix this line, search for this symbol) won't match anything in the list — that's expected, just use your normal tools directly for those rather than forcing a match.
 
@@ -146,7 +148,7 @@ Four tiers: **Episodic** (`memory/episodic/` — what happened), **Task** (`memo
 ```
 `files` is optional. Do not add confidence scores, alternative-lists, or outcome fields — they've never been kept up to date and cost tokens for no benefit. Append to `decisions.jsonl`.
 
-**Sessions**: Do not write to `sessions.jsonl` at boot — there is nothing to report yet. Write once, at the end of a session (on explicit wrap or `TASK_CLOSE`), and also overwrite `memory/episodic/last_session.json` with just that one summary so the next boot's continuity check (§2 step 3) is O(1) instead of a full-log scan.
+**Sessions**: Do not write to `sessions.jsonl` at boot — there is nothing to report yet. Write once, at the end of a session, and also overwrite `memory/episodic/last_session.json` with just that one summary so the next boot's continuity check (§2 step 3) is O(1) instead of a full-log scan. `WRAP` does *only* this. `MEMORY_CONSOLIDATE` and `TASK_CLOSE` also do this, as one part of their larger promotion procedure — but don't reach for either of those just to record a pause; that's what `WRAP` is for.
 
 **Routing**: working notes always go to a task file, never directly to `project_knowledge.md` — there is always one open, main/master/develop/release and non-git workspaces included (§2 step 4). `project_knowledge.md` only receives confirmed truths, extracted at `TASK_CLOSE` (or, on protected branches, at consolidation — see below).
 

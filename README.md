@@ -276,6 +276,7 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 ### Memory & Evolution
 | Command | Alias | Description | Example Prompt |
 |---|---|---|---|
+| `WRAP` | `wrap` | Pause the session — save continuity, promote nothing | *"Let's stop here for today"* |
 | `TASK_CLOSE` | `close` | Execute the Consolidation Protocol | *"I'm done with this branch, summarize and close the task"* |
 | `MEMORY_CONSOLIDATE`| `consolidate`| Extract rules into semantic memory | *"Extract the rules we just learned into memory"* |
 | `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | *"Propose a new command to automate docker builds"* |
