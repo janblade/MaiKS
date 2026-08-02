@@ -29,10 +29,14 @@ You **MUST NOT** overwrite, delete, or lose the user's existing memory file cont
 5. If missing, create `.ai-os/memory/episodic/last_session.json` (seed it from the last entry in the user's existing `sessions.jsonl`, or a null placeholder if empty).
 
 ## Step 3: Perform the Upgrade
-Using your file manipulation tools, carefully copy the following files and directories from the new update source into the user's active `.ai-os/` directory, overwriting the old versions:
-- `BOOT.md`
-- `kernel/`
-- `rules/`
+
+**Before touching `BOOT.md`, `kernel/`, or `rules/` — check for authorized kernel customizations.** These are kernel space: the framework's own rule (`BOOT.md` "BOUNDED AUTONOMY") says an agent may never edit them without the user's literal phrase `KERNEL OVERRIDE AUTHORIZED`, and every such edit is supposed to be logged. That means the user's `memory/episodic/decisions.jsonl` (and `decisions.archive.jsonl` if it exists, and `progress.md`'s Evolution Proposal history) is the one reliable record of what's been customized — BOOT.md itself carries no in-file marker distinguishing a user's authorized addition from stock content, so a blind text diff can't tell "stock content the new version restructured away" from "a customization about to be silently destroyed."
+1. Search those logs for any entry mentioning `KERNEL OVERRIDE` that targets `BOOT.md`, a `kernel/*` file, or a `rules/*` file.
+2. If none exist, there's no known customization at risk — overwrite these three freely with the update source's versions.
+3. If any exist, read the specific section each one describes in the user's current file, and check whether an equivalent exists in the new source's version. If it's missing or would be overwritten, tell the user exactly what customization is about to be lost (quoting the original decision log entry), and ask whether to re-apply it on top of the new version — the same intelligent-merge approach `INSTALL_PROMPT.md` already uses for bridge files, not a mechanical patch — skip it, or proceed with the loss deliberately. Do not silently overwrite once a relevant log entry is found.
+
+Then copy the remaining files and directories from the new update source into the user's active `.ai-os/` directory, overwriting the old versions:
+- `BOOT.md`, `kernel/`, `rules/` (per the check above)
 - `registry/` (Merge `index.json` carefully to preserve custom skills! This also brings in any new core skills the user doesn't have yet — diff the update source's `registry/index.json` skill IDs against the user's, and copy in any folder that's new.)
 - `commands/`
 

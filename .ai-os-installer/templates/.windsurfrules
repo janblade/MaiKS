@@ -13,8 +13,9 @@ summary so this project stays governed correctly even on hosts that only read th
    unsafe functions (`eval`, `os.system`) in what you're about to write. Never print
    credentials to chat or logs.
 3. **Before a substantive task**: read `.ai-os/memory/semantic/project_knowledge.md` for
-   confirmed project facts, and — if on a non-main branch — `.ai-os/memory/tasks/[branch].md`
-   for in-progress working notes.
+   confirmed project facts, and check `.ai-os/memory/tasks/` for an open task file — every
+   branch gets one, including main (ask what to call it if there's no git identity and none
+   exists yet) — for in-progress working notes.
 4. **After a significant decision or action**: append one line to
    `.ai-os/memory/episodic/decisions.jsonl`:
    `{"ts": "<ISO 8601>", "type": "decision|action", "what": "...", "why": "..."}`

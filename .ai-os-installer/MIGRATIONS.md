@@ -3,6 +3,38 @@
 This file tracks features, files, or skills that have been deprecated or removed in newer versions of GoliathOS.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+## v2.2.0 — Task Memory on Every Branch, Lightweight WRAP, Data-Flow Tracing
+
+- **Task memory now created on every branch, no exceptions except detached `HEAD`**:
+  `main`/`master`/`develop`/`release/*` previously skipped task-file creation entirely and
+  implicitly allowed writing straight to `project_knowledge.md` — that contradicted the
+  verify/accept promotion gate enforced everywhere else. Protected branches now get a
+  *rolling* task file, drained by `MEMORY_CONSOLIDATE`'s verify/accept gate instead of
+  archived by `TASK_CLOSE`. A branchless workspace (detached `HEAD`, no git identity) checks
+  for an existing open task first, and **always asks** the user what to call one if none
+  exists — no silent skip, no invented name. Migration action: none for existing task files
+  (they're still valid); going forward, expect a task file to exist even on protected
+  branches, and see the corrected orphan-sweep exception in the v2.1.0 section below — ad-hoc
+  named files are not orphans just because they lack a branch match.
+- **New lightweight `WRAP` built-in**: session-summary write only (no promotion, no task/
+  semantic memory writes) — added because the `wrap` alias previously pointed straight at
+  `MEMORY_CONSOLIDATE`, meaning "let's take a break" could silently trigger full memory
+  promotion. Migration action: `commands/index.json`'s new `WRAP` entry is covered by the
+  standard Step 3 copy. **Force-correct `commands/aliases.json`'s `wrap` key specifically**
+  even though that file is otherwise a preserve-the-user's-customizations merge target: if
+  the user's existing value is `"MEMORY_CONSOLIDATE"` or the older broken
+  `"LOG_DECISION && MEMORY_CONSOLIDATE"` chain, overwrite it to `"WRAP"` — this one key is a
+  bug fix, not a customization worth preserving.
+- **New `INFRA_MAP_DATAFLOW` command** (alias `trace`) on `core.infra.sk`: on-demand data-flow
+  tracing (input field to every DB/API/queue/file/cache/email sink it reaches, or backward
+  from a sink to its inputs) for bug triage and change-impact analysis. Migration action:
+  none — new command content, covered by the standard `registry/`/`commands/` merge in Step 3.
+- Bumped `ai_os_version` to `2.2.0` — the prior three evolutions (EP-28/29/30/31) shipped
+  without a version bump, which meant `UPDATE_PROMPT.md` Step 4's old-vs-new version compare
+  saw no newer sections to walk and skipped all of the above during upgrades. That's the
+  actual root cause of an orphan-sweep bug a user hit testing the updater: without a version
+  bump, the migration walk never reached the ad-hoc-exception fix above at all.
+
 ## v2.1.1 — Verified-Acceptance Gate for Memory Promotion
 
 - **`core.memory.sk` TASK_CLOSE step 2 split into 2 + 2a**: step 2 (unchanged) verifies a
@@ -36,7 +68,14 @@ The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safe
   rename going forward.
 - **One-time orphan sweep recommended**: sweep `tasks/*.md` against `git branch -a` once
   during the upgrade (handled generically by `UPDATE_PROMPT.md` Step 4's migration walk)
-  rather than waiting for the next `MEMORY_CONSOLIDATE`.
+  rather than waiting for the next `MEMORY_CONSOLIDATE`. **A task file with no matching
+  branch is not automatically an orphan** — as of v2.2.0, ad-hoc task files (opened when
+  there's no git identity, named after what the user called the task rather than a branch)
+  are expected to have no branch match by design. Only move a file to `archived_tasks/` if
+  it has no matching branch *and* shows no sign of being an active ad-hoc task (recently
+  modified, or referenced in recent `sessions.jsonl` entries) — when in doubt, leave it for
+  the next `MEMORY_CONSOLIDATE` to judge rather than archiving it during an upgrade on a
+  branch-match check alone.
 - **Installer purge scope widened**: `INSTALL_PROMPT.md` Step 3 now also purges
   `.ai-os/memory/tasks/*.md` and `.ai-os/memory/archived_tasks/*.md` (except `.keep`) on fresh
   installs — a stray framework-development task file was previously shipping into new installs.
