@@ -26,6 +26,14 @@ verify or gate). Don't let "wrap up for the day" get routed to `MEMORY_CONSOLIDA
 was a real bug (fixed) where the `wrap` alias pointed at full consolidation, meaning taking
 a break could silently promote whatever happened to pass the accept gate at that moment.
 
+The verify-before-promote / accept-gate / dedup discipline below isn't exclusive to these
+two commands, either — it's the standard for *any* write into `project_knowledge.md` or
+`knowledge/*.md`, wherever it originates. A skill command that derives a finding straight
+from the codebase (e.g. `core.infra.sk`'s `INFRA_MAP_DATAFLOW`, which can resolve a custom
+sink pattern worth remembering) follows the same steps 2/2a/4 here rather than writing
+directly — a mechanically-derived fact still needs the accept gate, since the *distillation*
+of what's worth keeping is a judgment call even when the underlying data is accurate.
+
 ## Dependencies
 
 - `observability.sk` — decision logging

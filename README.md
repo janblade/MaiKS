@@ -181,6 +181,7 @@ your-project/
 │   │   ├── episodic/                # decisions.jsonl, sessions.jsonl, last_session.json,
 │   │   │                            # decisions.archive.jsonl (rotated on consolidation)
 │   │   ├── semantic/                # project_knowledge.md (index) + knowledge/*.md + patterns.json
+│   │   │                            # + generated/ (regenerable caches, e.g. dataflow_map.json)
 │   │   ├── procedural/              # workflows.json + playbooks.md
 │   │   ├── tasks/                   # Active Jira/feature branch working memory
 │   │   └── archived_tasks/          # History of closed tasks (pruned, not unbounded)
@@ -272,6 +273,7 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 | `INFRA_DISCOVER_MODULES` | `discover` | Profile codebase to detect stack drift | *"Profile the codebase, I just added Next.js"* |
 | `INFRA_SCAFFOLD` | | Generate boilerplate project structure | *"Scaffold the project structure for me"* |
 | `INFRA_ANALYZE_COMMITS` | `absorb_history` | Seed semantic memory from recent PR-merge history | *"Absorb our commit history into project memory"* |
+| `INFRA_MAP_DATAFLOW` | `trace` | Trace a field to every place it's read/stored/emitted, or trace a sink back to its inputs | *"Where does the signup email field end up?"* |
 
 ### Memory & Evolution
 | Command | Alias | Description | Example Prompt |

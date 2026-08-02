@@ -34,7 +34,8 @@
         "INFRA_DISCOVER_MODULES",
         "INFRA_SHOW_ENV",
         "INFRA_SWITCH_ENV",
-        "INFRA_ANALYZE_COMMITS"
+        "INFRA_ANALYZE_COMMITS",
+        "INFRA_MAP_DATAFLOW"
       ],
       "dependencies": [],
       "protected": false

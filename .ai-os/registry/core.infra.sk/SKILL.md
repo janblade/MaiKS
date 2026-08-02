@@ -212,6 +212,48 @@ Analyze recent Git merge commits or branch history to extract architectural deci
 
 ---
 
+### INFRA_MAP_DATAFLOW
+
+Trace where a piece of data comes from and everywhere it ends up (or, run backward: what can write to a given destination) — built for bug triage and change-impact analysis, not as a standing full-project index.
+
+```
+> OS_COMMAND INFRA_MAP_DATAFLOW --field=<name>      # forward: input -> every place it's read, transformed, and emitted
+> OS_COMMAND INFRA_MAP_DATAFLOW --sink=<name>        # backward: DB column / endpoint / file -> every input that can reach it
+> OS_COMMAND INFRA_MAP_DATAFLOW --all [--scope=<module>]  # explicit full-project/full-module pass — see cost guardrail
+```
+
+**Procedure:**
+0. **A bare invocation (no `--field`, `--sink`, or `--all`) is not a full-project trace — it's an incomplete request.** Typing just `trace` doesn't mean "find everything"; ask what field or sink to trace rather than guessing, the same way an ad-hoc task name gets asked for instead of invented (`BOOT.md` §2 step 4). Only treat it as a full-project request if the user actually said something to that effect ("map all the data flows," "trace everything") — that's what `--all` is for, and it still goes through the cost guardrail below.
+1. Resolve the starting symbol at the relevant boundary — form field/route param for `--field`, schema/migration column or outbound call site for `--sink`.
+2. **Check the cache before doing any fresh work.** Look up this exact symbol in `memory/semantic/generated/<project_name>_dataflow_map.json` (`project_name` from `manifest.json`). If an entry exists and its tagged commit SHA matches current `git rev-parse HEAD`, **and** `git status --porcelain` reports a clean tree, report that cached trace directly (noting the commit/timestamp it's from) instead of re-deriving — this is the entire point of caching; skipping this check would make the cache write in step 8 pointless. If the SHA matches but the tree is dirty, still show the cached trace (don't force an expensive re-trace over unrelated local edits) but caveat it plainly: "cached as of `<sha>`, you have uncommitted changes that may not be reflected — re-run if your edits touch this flow." If the entry is stale (different commit) or absent, continue to a fresh trace.
+3. Check `memory/semantic/knowledge/conventions_patterns.md` for any project-specific sink resolutions already learned (e.g. "`Outbox.publish` wraps a Kafka producer, category=queue") before falling back to the generic catalog below — this is what makes fresh traces on the same project sharper over time.
+4. Walk the call chain outward from the symbol, hop by hop (VS Code Call Hierarchy API when the host exposes it, grep-based "who calls this" otherwise), checking each hop against the **Sink Pattern Catalog**. Cap traversal at ~5 hops to bound cost — this traversal is a sub-routine of this command, not a standalone call-graph feature.
+5. Label every finding with its own confidence — do not give the whole trace one blanket rating:
+   - **High**: direct match against a known sink pattern in the catalog or a learned project-specific pattern.
+   - **Low**: chain reaches a call this command can't resolve further (external library with no catalog entry, hop cap reached, or dynamic/reflective dispatch) — report as "unresolved beyond this point, verify manually."
+6. If the project already has a real dataflow/taint tool configured (CodeQL, Semgrep with dataflow rules, etc.), prefer running that for the whole trace instead of steps 4-5, and say so in the output. Otherwise the result is a name/pattern-based approximation — label it that way; never present it at the same confidence as a real tool's output.
+7. Report the trace directly to the user for triage. This step alone does **not** write to semantic memory.
+8. Write/overwrite this symbol's entry in `memory/semantic/generated/<project_name>_dataflow_map.json`, tagged with tool tier used, git commit SHA, and timestamp — this is what step 2 checks on the next call. This file is read only by this command, only when it runs — it is not part of the boot sequence (`BOOT.md` §2 step 3 reads only `last_session.json`) and not in `core.context-engine.sk`'s on-demand load order, so it never adds to boot or routine context cost regardless of how large it grows.
+9. Only if the user confirms a finding is durable (or a custom sink got resolved along the way), promote it through `core.memory.sk`'s existing verify/accept gate: a resolved custom sink pattern goes to `conventions_patterns.md`; a load-bearing data-flow fact about a major entity goes to `architecture_overview.md`, capped to what's actually notable (not the full dictionary), with a pointer back to the cached artifact and an "as of commit `<sha>`" freshness marker.
+10. Log execution in `memory/episodic/decisions.jsonl`.
+
+**Cost guardrail:** `--all` (explicit full-project pass) is only appropriate for small codebases — otherwise require it be paired with `--scope=<module>`, or warn about cost and get confirmation before running one unscoped.
+
+**Sink Pattern Catalog** (default patterns — extend via learned entries in `conventions_patterns.md`, not by editing this table per project):
+
+| Category | Example patterns (by ecosystem) |
+|---|---|
+| **Database** | `INSERT`/`UPDATE`/`SELECT` SQL, `*.save()`/`*.create()`/`*.query()` (ORM: Sequelize, SQLAlchemy, ActiveRecord, GORM, Entity Framework), migration/schema column definitions |
+| **Outbound HTTP/API** | `axios.*`, `fetch(`, `requests.*`, `http.Client`, `HttpClient`, `RestTemplate`, gRPC client stubs |
+| **Message queue** | `producer.send`, `channel.publish`, `sqs.sendMessage`, pub/sub client `.publish(`, Kafka/RabbitMQ/SNS/SQS client calls |
+| **File / blob storage** | `fs.writeFile`, `open(...,'w')`, `s3.putObject`, Blob/GCS client `.upload(`/`.save(` |
+| **Cache** | `redis.set`, `memcached.set`, cache client `.set(`/`.put(` |
+| **Email / notification** | mail client `.send(`, webhook POST calls, push-notification SDK `.send(` |
+
+**Common failure mode this command is explicitly designed around:** custom in-house wrappers around a real sink (an internal `db.write()` helper, an `Outbox` abstraction) won't match the catalog and won't be followed past one hop without help — that's exactly what step 2's learned-pattern lookup and step 4's per-hop confidence labeling exist to surface honestly instead of silently under- or over-claiming coverage.
+
+---
+
 ## Stack-Specific Best Practices
 
 The infra skill references these best practices based on detected stack:

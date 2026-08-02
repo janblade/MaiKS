@@ -100,6 +100,8 @@ The full command list, parameters, and skill mapping live in `commands/index.jso
 
 **Natural-language requests route through commands too, not just explicit `OS_COMMAND` syntax.** When a user's plain-English request matches what a registered command already does (check `commands/index.json` descriptions and `aliases.json`), use that command's defined procedure instead of improvising an ad hoc approach — that's what keeps behavior consistent across sessions and agents, which is the whole reason the command layer exists. Do the match once, silently, and commit to it — don't narrate "this could be X or Y" before acting; if two commands are genuinely and substantially different fits, ask one short clarifying question instead of thinking out loud. Most granular actions (read this file, fix this line, search for this symbol) won't match anything in the list — that's expected, just use your normal tools directly for those rather than forcing a match.
 
+**"What would this affect" phrasing routes to `INFRA_MAP_DATAFLOW`, even when it's framed as a new feature, not a bug.** "If we add X, what does it touch," "impact of this new requirement," "what breaks if we change this field" — these name a specific input/field/entity/endpoint without ever saying "trace" or "dataflow," so the match is easy to miss in favor of just starting the implementation. Check for it (its cache-check is cheap, step 2 of the command) before scoping a plan for a change with unclear downstream reach. Judgment call like any other routing match, not a mandatory gate on every code change — trivial edits with no ambiguous blast radius don't need it.
+
 ---
 
 ## §5 EVOLUTION
