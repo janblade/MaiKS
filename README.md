@@ -109,7 +109,7 @@ graph TB
     %% Initialization Sequence (~4K tokens, 5 small files — see Token Economics)
     BOOT -->|1. Skim Rules Digest, inline| GENOME
     ARCHETYPES -->|Calibrate one archetype| GENOME
-    GENOME -->|2. Read last_session.json only, O(1)| EPISODIC
+    GENOME -->|2. Read last_session.json only - single-file lookup| EPISODIC
     GENOME -->|3. Task branch? load/create tasks/*.md| TASK
     BOOT -.->|On-demand: conflict, security decision, or evolution| GovernanceRules
     BOOT -.->|On-demand: something looks broken| INTEGRITY
@@ -131,7 +131,7 @@ graph TB
     OBS_SK -->|Commit Decision| EPISODIC
     OBS_SK -->|Record Success| PROCEDURAL
     TASK -->|TASK_CLOSE / MEMORY_CONSOLIDATE| MEM_SK
-    MEM_SK -->|Verify facts + Accept-Gate (R15/R21), then promote| SEMANTIC
+    MEM_SK -->|Verify facts + accept-gate R15/R21, then promote| SEMANTIC
     
     %% Resilience
     HEAL_SK -.->|Detect loops & run checklists| TargetSkill
