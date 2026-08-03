@@ -372,3 +372,14 @@
 - **Rollback Plan**: Revert `ultimate_rules.md`, `BOOT.md`, `core.self-healing.sk/SKILL.md`, `manifest.json`, `MIGRATIONS.md`, and README.md from git history.
 - **Rules Check**: Kernel-space change (`BOOT.md`, `ultimate_rules.md`) authorized by direct maintainer instruction, consistent with this session's established pattern.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-37
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: bugfix
+- **Target**: .ai-os-installer/INSTALL_PROMPT.md, .ai-os-installer/UPDATE_PROMPT.md
+- **What**: User asked for an installer/updater staleness check (last full audit was EP-25 at v2.1.1; framework is now v2.6.0) plus whether an update should proactively compact a user's custom rules into the new AI-first style. Found one real bug and one minor staleness gap: (1) INSTALL_PROMPT.md's manifest.json reset (Step 3 item 6) never resets project_archetype -- a fresh install copying this repo's own .ai-os/ folder would silently inherit GoliathOS's own "startup" archetype instead of triggering BOOT.md SS2 step 2's detection (which only runs when the value is "auto"), meaning the new project never gets asked what archetype fits it. Same class of bug EP-23 fixed for evolution_history, missed for this field. Fixed: reset to "auto". (2) UPDATE_PROMPT.md Step 2's directory-creation list predates EP-31 and doesn't include semantic/generated/ -- low severity (self-creates on first write) but added for consistency. For the compaction question: rather than a blanket silent pass over user-authored governance text (which R25 and this session's whole ethos argue against), wired it into the existing EP-32 KERNEL OVERRIDE customization-recovery step in UPDATE_PROMPT.md Step 3 -- when a customization is already being surfaced to the user for confirmation, also offer to compact it into the new AI-first style if it's written in prose, showing a before/after first. Never silent.
+- **Why**: User asked directly whether the installer/updater had drifted since the last audit, and floated proactive rule compaction during update as an idea worth considering.
+- **Risk**: Low (installer-tooling fixes; no `.ai-os/` framework payload changed, no version bump needed per EP-25's precedent).
+- **Rollback Plan**: Revert `INSTALL_PROMPT.md` and `UPDATE_PROMPT.md` from git history.
+- **Rules Check**: `.ai-os-installer/` is not kernel/user space (that split only governs `.ai-os/` internals) -- no KERNEL OVERRIDE ceremony needed, consistent with how these files have been edited all session.
+- **Status**: APPLIED

@@ -10,6 +10,8 @@ You **MUST NOT** overwrite, delete, or lose the user's existing memory file cont
 1. Ensure all new memory subdirectories exist in the user's active `.ai-os/memory/`:
    - `semantic/`
    - `semantic/knowledge/`
+   - `semantic/generated/` (regenerable caches, e.g. `INFRA_MAP_DATAFLOW`'s dataflow map —
+     self-creates on first write either way, but ensure it exists for consistency)
    - `episodic/`
    - `procedural/`
    - `tasks/`
@@ -34,6 +36,7 @@ You **MUST NOT** overwrite, delete, or lose the user's existing memory file cont
 1. Search those logs for any entry mentioning `KERNEL OVERRIDE` that targets `BOOT.md`, a `kernel/*` file, or a `rules/*` file.
 2. If none exist, there's no known customization at risk — overwrite these three freely with the update source's versions.
 3. If any exist, read the specific section each one describes in the user's current file, and check whether an equivalent exists in the new source's version. If it's missing or would be overwritten, tell the user exactly what customization is about to be lost (quoting the original decision log entry), and ask whether to re-apply it on top of the new version — the same intelligent-merge approach `INSTALL_PROMPT.md` already uses for bridge files, not a mechanical patch — skip it, or proceed with the loss deliberately. Do not silently overwrite once a relevant log entry is found.
+4. If the recovered customization (or the `ultimate_rules.md` Project-Specific Addendum) is written in full prose rather than the compact style `rules/evolution_policy.md`'s Authoring Style section now specifies for kernel-space content (v2.5.0+): offer to compact it while re-applying, showing a before/after example first. This is the user's own governance text — never rewrite it without that confirmation, no matter how verbose it looks.
 
 Then copy the remaining files and directories from the new update source into the user's active `.ai-os/` directory, overwriting the old versions:
 - `BOOT.md`, `kernel/`, `rules/` (per the check above)
