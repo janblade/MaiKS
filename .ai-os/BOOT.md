@@ -57,6 +57,10 @@ Every session, cheap by design:
      user what they're working on before creating `memory/tasks/[name].md`. Always ask;
      never invent a name, never silently skip. Skip asking only if user already named it
      this conversation.
+   - Stray host-native plan file present (`task.md`, `implementation_plan.md`,
+     `walkthrough.md`, or similar, outside `.ai-os/`) → some hosts force these via their own
+     planning-mode hook regardless of instruction. Don't ignore or delete silently: ask the
+     user whether to absorb it into the task file just loaded/created (`core.memory.sk`).
 5. CAPABILITIES: `commands/index.json` / `registry/index.json` = source of truth. Read on
    invocation, not at boot.
 

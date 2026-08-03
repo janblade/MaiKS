@@ -187,6 +187,27 @@ outdated on this").
 
 ---
 
+### Absorbing Stray IDE Planning Artifacts
+
+`AGENTS.md`'s Minimum Contract item 5 says don't create IDE-specific planning artifacts
+(`task.md`, `implementation_plan.md`, `walkthrough.md`) — use `.ai-os/memory/tasks/`
+instead. Some hosts create one anyway, forced by their own planning-mode hook rather than
+the agent's choice (the reason EP-1 exists at all). When `BOOT.md` §2 step 4 notices one
+of these sitting outside `.ai-os/` for the branch/task currently being loaded:
+
+1. **Never absorb or delete silently.** It's the host's own artifact, possibly still in
+   active use by the IDE's UI — surface it and ask first, every time.
+2. **Ask whether to absorb it.** If yes, append its content to the current task file under
+   a clearly labeled heading (`## Absorbed from <filename> (<date>)`), not a raw dump — keep
+   concrete plan steps and decisions, drop boilerplate the IDE template added.
+3. **Ask separately whether to delete the original.** Absorbing and deleting are two
+   different confirmations — a user may want the content copied but the file left alone
+   (e.g. the IDE's own panel still displays it).
+4. **Then continue the normal boot sequence** — this doesn't gate task-file creation, it's
+   a side note once the task file is already loaded/created.
+
+---
+
 ## Why Task Memory Isn't Semantic Memory
 
 Task memory is deliberately unscrutinized — the entire point of routing working notes

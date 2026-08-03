@@ -21,7 +21,10 @@ summary so this project stays governed correctly even on hosts that only read th
    `{"ts": "<ISO 8601>", "type": "decision|action", "what": "...", "why": "..."}`
 5. **Don't create IDE-specific planning artifacts** (`task.md`, `implementation_plan.md`,
    `walkthrough.md`). Use `.ai-os/memory/tasks/` instead — one filesystem of record, not
-   several competing ones.
+   several competing ones. If your host creates one anyway (some IDEs force this via their
+   own planning-mode hook, outside your control) — don't leave it orphaned: ask the user
+   whether to absorb its content into the current task file, then ask before deleting the
+   original.
 
 ## Full Protocol
 

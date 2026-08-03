@@ -498,3 +498,14 @@
 - **Rollback Plan**: Revert `INSTALL_PROMPT.md`, `UPDATE_PROMPT.md`, and `README.md` from git history.
 - **Rules Check**: All three targets are outside kernel space (`.ai-os-installer/` and root `README.md`) — no `KERNEL OVERRIDE` needed.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-48
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: kernel_update
+- **Target**: `.ai-os/BOOT.md` (KERNEL) §2 step 4; `AGENTS.md`, `.agents/AGENTS.md`, and all 5 `.ai-os-installer/templates/*` bridge files' Minimum Contract item 5; `.ai-os/registry/core.memory.sk/SKILL.md`
+- **What**: User noted that agentic hosts often force-create their own native planning artifacts (`task.md`, `implementation_plan.md`, `walkthrough.md`) in their own location regardless of instruction — the bridge files already say "don't create these" (EP-1), but had no fallback for when a host does it anyway. Added one: when `BOOT.md` §2 step 4 (or a bridge-file-only host reaching the equivalent Minimum Contract item 5) notices a stray plan file outside `.ai-os/`, ask the user whether to absorb its content into the task file just loaded/created, then ask separately whether to delete the original — never silently absorb or delete either way, since it may still be in active use by the host's own UI. Added the actual procedure (label the absorbed section, keep concrete plan content over boilerplate, two separate confirmations) to `core.memory.sk/SKILL.md`'s new "Absorbing Stray IDE Planning Artifacts" section. Updated the bridge-file wording identically across all 7 copies (root `AGENTS.md`, `.agents/AGENTS.md`, and the 5 installer templates) so hosts that never load full `BOOT.md` still get the fallback behavior. `BOOT.md` itself is kernel space — edited under `KERNEL OVERRIDE AUTHORIZED: .ai-os/BOOT.md`.
+- **Why**: EP-1's "don't create these" instruction is aspirational, not enforceable — some hosts inject the planning-mode artifact via their own hook outside the agent's control (per EP-1's own rationale). Leaving that artifact orphaned defeats the point of the single-task-memory-file design; the fix is to make the framework absorb what it can't prevent, rather than silently ignore it.
+- **Risk**: Medium (touches `BOOT.md`, kernel space) but narrowly scoped — one new bullet in an existing step, no change to existing task-memory creation logic, and the new behavior is gated on explicit user confirmation at every step (never silent).
+- **Rollback Plan**: Revert `BOOT.md`, the 7 bridge files, and `core.memory.sk/SKILL.md` from git history.
+- **Rules Check**: `BOOT.md` is kernel space — authorized via literal `KERNEL OVERRIDE AUTHORIZED: .ai-os/BOOT.md` from the user before the edit was made. The 7 bridge files and `core.memory.sk/SKILL.md` are outside kernel space (bridge files are user/IDE-facing, not part of `.ai-os/BOOT.md`/`manifest.json`/`kernel/`/`rules/`/`genome/archetypes/`) — no override needed for those.
+- **Status**: APPLIED
