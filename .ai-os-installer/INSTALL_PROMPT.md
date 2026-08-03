@@ -37,7 +37,13 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
   ```
   followed by the `cursor-rules.md` template text. (Plain `.cursor/rules/ai-os.md` without frontmatter may not auto-load in current Cursor versions — use `.mdc`.)
 - **Windsurf:** Append to `.windsurfrules`.
-- **Claude Code:** Append to `CLAUDE.md`.
+- **Claude Code:** Append to `CLAUDE.md`. Also merge the hook entry from
+  `.ai-os-installer/templates/claude-code-hooks.json` into the project's `.claude/settings.json`
+  (create it with that content if missing; if it already exists, merge into its
+  `hooks.SessionStart` array — add this entry alongside whatever the user already has, never
+  replace the array). This makes Claude Code re-read `BOOT.md`/`ultimate_rules.md` verbatim
+  right after any `/compact` or auto-compaction — compaction summarizes the conversation and
+  can paraphrase or drop the exact kernel rule text that was read earlier in the session.
 - **GitHub Copilot:** Append to `.github/copilot-instructions.md`.
 - **Gemini / Antigravity:** Append to `.agents/AGENTS.md` and copy `skills.json` to `.agents/skills.json`.
 - **Root `AGENTS.md`:** Also create/append to a root-level `AGENTS.md` regardless of the above — it's the emerging cross-tool convention (Codex, Jules, and others read it directly), and costs nothing extra for hosts that ignore it.

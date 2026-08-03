@@ -96,5 +96,11 @@ automatically, so this file doesn't need editing every release.
 ## Step 5: Verify and Finalize
 1. Verify that the migrated memory files (specifically `.ai-os/memory/semantic/project_knowledge.md` and `.ai-os/memory/episodic/decisions.jsonl`) are intact.
 2. Refresh the user's `.gitignore` "AI OS Ephemeral Memory" block against the current list in `INSTALL_PROMPT.md` Step 5 — if they installed under an older installer version, they may be missing a newer ephemeral file (e.g. `last_session.json`).
-3. Do NOT delete the update source folder. Leave it intact so the user can reference it if needed.
-4. Announce to the user that the upgrade is complete, stating the old and new `ai_os_version`.
+3. If this is a Claude Code host (a root `CLAUDE.md` exists, or `.claude/` does), refresh
+   `.claude/settings.json` against `.ai-os-installer/templates/claude-code-hooks.json` the same
+   way as the gitignore check above — if `hooks.SessionStart` is missing the `compact`-matcher
+   entry from that template (an install predating this hook), merge it in without touching any
+   other hooks the user has configured. This check is unconditional and re-runs every update,
+   not gated by version — it doesn't rely on `MIGRATIONS.md`'s walk.
+4. Do NOT delete the update source folder. Leave it intact so the user can reference it if needed.
+5. Announce to the user that the upgrade is complete, stating the old and new `ai_os_version`.
