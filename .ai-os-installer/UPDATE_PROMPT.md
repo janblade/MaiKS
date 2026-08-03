@@ -32,11 +32,40 @@ You **MUST NOT** overwrite, delete, or lose the user's existing memory file cont
 
 ## Step 3: Perform the Upgrade
 
-**Before touching `BOOT.md`, `kernel/`, or `rules/` — check for authorized kernel customizations.** These are kernel space: the framework's own rule (`BOOT.md` "BOUNDED AUTONOMY") says an agent may never edit them without the user's literal phrase `KERNEL OVERRIDE AUTHORIZED`, and every such edit is supposed to be logged. That means the user's `memory/episodic/decisions.jsonl` (and `decisions.archive.jsonl` if it exists, and `progress.md`'s Evolution Proposal history) is the one reliable record of what's been customized — BOOT.md itself carries no in-file marker distinguishing a user's authorized addition from stock content, so a blind text diff can't tell "stock content the new version restructured away" from "a customization about to be silently destroyed."
-1. Search those logs for any entry mentioning `KERNEL OVERRIDE` that targets `BOOT.md`, a `kernel/*` file, or a `rules/*` file.
-2. If none exist, there's no known customization at risk — overwrite these three freely with the update source's versions.
-3. If any exist, read the specific section each one describes in the user's current file, and check whether an equivalent exists in the new source's version. If it's missing or would be overwritten, tell the user exactly what customization is about to be lost (quoting the original decision log entry), and ask whether to re-apply it on top of the new version — the same intelligent-merge approach `INSTALL_PROMPT.md` already uses for bridge files, not a mechanical patch — skip it, or proceed with the loss deliberately. Do not silently overwrite once a relevant log entry is found.
-4. If the recovered customization (or the `ultimate_rules.md` Project-Specific Addendum) is written in full prose rather than the compact style `rules/evolution_policy.md`'s Authoring Style section now specifies for kernel-space content (v2.5.0+): offer to compact it while re-applying, showing a before/after example first. This is the user's own governance text — never rewrite it without that confirmation, no matter how verbose it looks.
+**Step 3a — Project-Specific Addendum (always, unconditionally, before touching `rules/`).**
+`rules/ultimate_rules.md` has a structurally-marked section for the user's own rules:
+`<!-- PROJECT_RULES_START -->` ... `<!-- PROJECT_RULES_END -->`. This survives on its own
+marker, not on whether a decision-log entry happens to exist — don't gate its preservation
+on the log search in Step 3b. Extract whatever's between those markers in the user's
+current file (empty is fine, nothing to preserve). After copying in the new
+`ultimate_rules.md`, re-insert that content between the new version's own markers before
+anything else touches the file. If it's written in full prose rather than the compact
+style `rules/evolution_policy.md`'s Authoring Style section specifies (v2.5.0+), offer to
+compact it, showing a before/after example first — never rewrite it without that
+confirmation, no matter how verbose it looks.
+
+**Step 3b — everything else in `BOOT.md`, `kernel/`, or `rules/` — check for authorized
+kernel customizations.** These are kernel space: the framework's own rule (`BOOT.md`
+"BOUNDED AUTONOMY") says an agent may never edit them without the user's literal phrase
+`KERNEL OVERRIDE AUTHORIZED`, and every such edit is supposed to be logged. Unlike the
+Addendum, a modification to *existing* rule text or `BOOT.md` content carries no in-file
+marker distinguishing it from stock content — a blind diff can't tell "stock content the
+new version restructured away" from "a customization about to be silently destroyed," so
+log search is the only signal available here (imperfect: it depends on logging having
+actually used a recognizable phrase — treat a miss as "nothing detected," not "confirmed
+nothing to preserve").
+1. Search `decisions.jsonl` (and `decisions.archive.jsonl` if it exists, and `progress.md`'s
+   Evolution Proposal history) for any entry mentioning `KERNEL OVERRIDE` that targets
+   `BOOT.md`, a `kernel/*` file, or a `rules/*` file.
+2. None found → overwrite these freely with the update source's versions (Addendum content
+   from 3a still gets re-inserted regardless).
+3. Found → read the specific section each entry describes in the user's current file, check
+   whether an equivalent exists in the new source's version. Missing or would be overwritten
+   → tell the user exactly what's about to be lost (quoting the original decision log
+   entry), ask whether to re-apply it on top of the new version — the same intelligent-merge
+   approach `INSTALL_PROMPT.md` already uses for bridge files, not a mechanical patch — skip
+   it, or proceed with the loss deliberately. Never silently overwrite once a relevant log
+   entry is found. Same compaction offer as 3a if it's written in prose.
 
 Then copy the remaining files and directories from the new update source into the user's active `.ai-os/` directory, overwriting the old versions:
 - `BOOT.md`, `kernel/`, `rules/` (per the check above)

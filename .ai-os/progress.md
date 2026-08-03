@@ -383,3 +383,14 @@
 - **Rollback Plan**: Revert `INSTALL_PROMPT.md` and `UPDATE_PROMPT.md` from git history.
 - **Rules Check**: `.ai-os-installer/` is not kernel/user space (that split only governs `.ai-os/` internals) -- no KERNEL OVERRIDE ceremony needed, consistent with how these files have been edited all session.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-38
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: bugfix
+- **Target**: .ai-os-installer/UPDATE_PROMPT.md
+- **What**: User asked directly whether ultimate_rules.md integrates properly during update without overwriting the user's own rules. Verified rather than assumed, and found a real gap: Step 3's only preservation mechanism was the EP-32 KERNEL OVERRIDE log-search -- "if none exist, there's no known customization at risk, overwrite freely." That makes the Project-Specific Addendum's survival entirely dependent on a matching decision-log entry being found, but the Addendum is a structurally-marked section (PROJECT_RULES_START/END) that exists specifically to hold user rules regardless of logging completeness. Confirmed this isn't hypothetical: this very session's own progress.md entries mostly logged kernel edits as "authorized by direct maintainer instruction," not the literal string "KERNEL OVERRIDE" -- if even this framework's own carefully-kept history wouldn't reliably match that search, a typical user's project is even less likely to. Split Step 3 into 3a (unconditional structural extract-and-reinsert of the Addendum markers' content, independent of any log search) and 3b (the existing log-search mechanism, now correctly scoped to what it's actually suited for: undetectable modifications to existing rule text or BOOT.md content, which have no structural marker). Noted explicitly that a log-search miss means "nothing detected," not "confirmed nothing to preserve."
+- **Why**: A structurally-marked, always-preserve section being protected only by a fragile log-text-match was a real bug, not adequately covered by EP-32's mechanism which was designed for a different, harder case (unmarked modifications elsewhere in kernel files).
+- **Risk**: Low (installer-tooling fix, more conservative than before -- addendum content now survives unconditionally instead of only when logged).
+- **Rollback Plan**: Revert `UPDATE_PROMPT.md` from git history.
+- **Rules Check**: `.ai-os-installer/` is not kernel/user space -- no KERNEL OVERRIDE ceremony needed.
+- **Status**: APPLIED
