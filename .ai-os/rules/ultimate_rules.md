@@ -226,5 +226,10 @@ User rules appended during bootstrap or via KERNEL OVERRIDE. Must not conflict w
 R1–R25; conflicts resolve in favor of R1–R25.
 
 <!-- PROJECT_RULES_START -->
-<!-- Add project-specific rules here -->
+### Project Rule: Competitive Benchmarking
+On-demand only, via `EVOLVE_BENCHMARK` (`core.evolution.sk`) — never on boot, keeps
+BOOT.md §2's cheap-by-design boot path intact. Compares this framework against leading
+AI agent frameworks/practices; genuine gaps become PROPOSED evolutions in `progress.md`
+(reviewed like any other proposal, never auto-applied). Project-only — excluded from
+other installs by the install-time Addendum purge (EP-42).
 <!-- PROJECT_RULES_END -->

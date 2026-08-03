@@ -438,3 +438,30 @@
 - **Rollback Plan**: Revert `INSTALL_PROMPT.md` from git history.
 - **Rules Check**: `.ai-os-installer/` is not kernel/user space -- no KERNEL OVERRIDE ceremony needed.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-43
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: command_create
+- **Target**: .ai-os/commands/index.json, .ai-os/registry/index.json, .ai-os/registry/core.evolution.sk/SKILL.md
+- **What**: User wants a project-specific rule for GoliathOS's own dev repo: on boot, check what leading AI agent frameworks have that this one doesn't, and add genuine gaps to the TODO backlog. Flagged a real tension before implementing literally: `BOOT.md` SS2's whole design is "cheap by design" every session -- a research-heavy competitive comparison on every boot would contradict that load-bearing principle. User chose on-demand-command-only over every-boot or a periodic gate. Built `EVOLVE_BENCHMARK` on the existing `core.evolution.sk` skill (reused rather than creating a new skill directory, per R22 scope discipline) rather than a boot step: reads the framework's live state fresh (R21), researches via WebSearch/WebFetch when available or flags findings as knowledge-cutoff-bounded when not, filters out gaps already considered and rejected by checking `progress.md`'s past EPs first (R8), and writes survivors as new PROPOSED evolutions -- reusing the existing PROPOSED-status mechanism as the "TODO backlog" rather than inventing a parallel file. Never auto-applies regardless of assessed risk, since it's externally-sourced. This is user space (`commands/index.json`, `registry/index.json`, a skill's own SKILL.md) -- no `KERNEL OVERRIDE` needed for the command itself. A companion Project-Specific Addendum entry documenting this as project policy in `rules/ultimate_rules.md` is still pending a fresh `KERNEL OVERRIDE AUTHORIZED` (the EP-41 grant was scoped to that EP's specific edits and is spent).
+- **Why**: User asked to keep the framework's own capability set honest against the wider AI-agent-framework field, without compromising the boot-cost discipline the rest of the framework is built around.
+- **Risk**: Low (additive new command on an existing skill, no kernel content touched, never auto-applies its own findings).
+- **Rollback Plan**: Revert `commands/index.json`, `registry/index.json`, `registry/core.evolution.sk/SKILL.md` from git history.
+- **Rules Check**: All three targets are user space per `evolution_policy.md`'s Evolution Boundaries table -- no `KERNEL OVERRIDE` needed. The Addendum policy text itself (separate, not yet applied) will need one when written.
+- **Status**: APPLIED. Addendum text now inserted into `rules/ultimate_rules.md`'s
+  `PROJECT_RULES_START`/`END` block under `KERNEL OVERRIDE AUTHORIZED: rules/ultimate_rules.md`.
+  Also corrected `manifest.json.evolution_history`: this EP's first (command) part touched
+  `.ai-os/` payload files but didn't increment the counter at the time -- caught while
+  finishing the Addendum part. Counter now reflects both EP-43 and EP-44 (also `.ai-os/`
+  payload, also missed): `{"total_evolutions": 39, "last_evolution": "EP-44"}`.
+
+## Evolution Proposal: EP-44
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: bugfix
+- **Target**: .ai-os/registry/core.infra.sk/SKILL.md
+- **What**: User asked for an effectiveness review of `INFRA_ANALYZE_COMMITS` (alias `absorb_history`/`absorb`). Initial finding -- zero invocations in the live `decisions.jsonl` despite 78 commits/42 EPs of history to absorb -- was corrected by the user: this repo's solo/direct-to-main workflow isn't the tool's intended audience (it's meant for downstream framework users), so absence of use here isn't itself an effectiveness signal. The finding that survived the correction, and sharpened under it: `--mode=merges-only` (the default) is built around a PR/merge-commit workflow (README's own pitch says "PR-merge history"), but the framework's own `hobby` archetype explicitly targets solo/personal projects, which very often commit straight to `main` with no merge commits at all -- verified concretely on this repo itself as a real instance of that pattern (`git log --merges` -> 0 commits; `git log --first-parent` returns all 78 commits identically to `all-commits`). The procedure never checked for this -- `--mode=merges-only` would silently degrade to an unfiltered linear log while still presenting itself as the filtered, high-signal mode, misrepresenting to the user (and to whatever reads the routed knowledge) that noise filtering happened when it didn't. Added a check at the top of procedure step 2: `git log --merges -n 1` empty -> tell the user, fall back to `all-commits` explicitly labeled or ask, instead of proceeding silently.
+- **Why**: A filtering mode that can silently no-op while still claiming to have filtered is worse than not offering the mode at all -- it produces false confidence in the resulting knowledge-base entries' cleanliness for exactly the hobby/solo-dev audience the framework explicitly targets.
+- **Risk**: Low (additive detection check, `all-commits` fallback already existed as a mode -- this just prevents silently mislabeling one as the other).
+- **Rollback Plan**: Revert `registry/core.infra.sk/SKILL.md` from git history.
+- **Rules Check**: User space (`registry/*`) -- no `KERNEL OVERRIDE` needed.
+- **Status**: APPLIED

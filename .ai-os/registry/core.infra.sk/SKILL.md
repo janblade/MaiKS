@@ -197,7 +197,15 @@ Analyze recent Git merge commits or branch history to extract architectural deci
 
 **Procedure:**
 1. Determine active primary branch (`main`/`master`/`develop`).
-2. If `--mode=merges-only`: Execute `git log --first-parent <primary_branch> -n <N> --stat` to retrieve PR/merge descriptions, diff summaries, and merge author dates. If `--mode=all-commits`: Run `git log -n <N> --stat`.
+2. If `--mode=merges-only`: first check `git log --merges <primary_branch> -n 1` — empty means this
+   repo has no real merge commits (common on `hobby`-archetype/solo projects with no PR workflow;
+   `--first-parent` on a merge-free branch silently returns the same linear log as `all-commits`
+   while still labeling itself "merges-only," which misrepresents that no filtering happened). Empty
+   → tell the user no merge commits were found and either fall back to `all-commits` explicitly
+   (labeled as such in the output, not silently) or ask, rather than proceeding as if the filter
+   engaged. Non-empty → execute `git log --first-parent <primary_branch> -n <N> --stat` to retrieve
+   PR/merge descriptions, diff summaries, and merge author dates. If `--mode=all-commits`: run
+   `git log -n <N> --stat` directly, no merge check needed.
 3. Group merge commits in chronological order (oldest to newest).
 4. **Temporal Reconciliation & Extraction Pass**:
    - Extract high-level architectural shifts, design decisions, conventions, and gotchas from PR merge messages and diffs.

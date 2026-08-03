@@ -144,6 +144,43 @@ Show the diff of a specific evolution.
 
 ---
 
+### EVOLVE_BENCHMARK
+
+Compare this framework against leading AI agent frameworks/practices; write genuine
+capability gaps as new PROPOSED evolutions. On-demand only — invoked explicitly, never
+run as part of `BOOT.md` §2. A boot-time competitive-research step would break the
+"cheap by design" boot path every other step in §2 follows; this command exists precisely
+so that cost is paid only when asked for.
+
+```
+> OS_COMMAND EVOLVE_BENCHMARK [--focus=<area>]
+```
+
+**Procedure:**
+1. Read this framework's actual current state fresh — `registry/index.json`,
+   `commands/index.json`, `rules/ultimate_rules.md`, `BOOT.md` — don't rely on
+   recollection of a past read (R21).
+2. Research comparison frameworks/practices. `WebSearch`/`WebFetch` available → use them,
+   prefer sources with visible dates. Not available → rely on internal knowledge only, and
+   label every finding as knowledge-cutoff-bounded, not verified current state — never
+   present it as fact (R21).
+3. Filter to genuine gaps:
+   - Capability exists elsewhere, doesn't exist here.
+   - Not a deliberate tradeoff this framework already reasoned through — check
+     `progress.md`'s past EPs first; a gap already considered and rejected isn't
+     re-proposed without new information (R8, e.g. don't re-propose "always show
+     chain-of-thought" against `BOOT.md` §11's host-gated reasoning decision).
+4. Each surviving gap → write a new `EP-{n}` to `progress.md` using `EVOLVE_PROPOSE`'s
+   template, Status `PROPOSED`. Never auto-apply regardless of assessed risk level — an
+   externally-sourced proposal always waits for explicit review, unlike an
+   internally-verified low-risk change.
+5. Report to the user: what was checked, what gaps were found (with confidence label per
+   finding), what was excluded as already-considered.
+6. Counts toward the standard 5-evolutions-per-conversation rate limit like any other
+   batch of proposals.
+
+---
+
 ## Stack Drift & Gap Resolution Protocol
 
 When a `stack-drift` event is flagged during Boot Phase 3:

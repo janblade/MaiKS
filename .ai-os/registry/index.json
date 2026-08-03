@@ -67,7 +67,8 @@
         "EVOLVE_APPLY",
         "EVOLVE_ROLLBACK",
         "EVOLVE_STATUS",
-        "EVOLVE_DIFF"
+        "EVOLVE_DIFF",
+        "EVOLVE_BENCHMARK"
       ],
       "dependencies": [
         "core.observability.sk"
