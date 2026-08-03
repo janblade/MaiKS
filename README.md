@@ -9,15 +9,15 @@ MaiKS is a microkernel-inspired governance layer that runs inside your project w
 
 ## Key Features
 
-*   **Microkernel Architecture**: Separation between kernel space (rules, configuration) and user space (skills, memory, commands).
+*   **Microkernel Structure**: Separation between kernel space (rules, configuration) and user space (skills, memory, commands).
 *   **PDCA Self-Evolution**: A Plan-Do-Check-Act lifecycle. If the AI finds a more efficient pattern, it can propose and apply upgrades to its own workflows and skills, with rollback if integrity checks fail.
 *   **Flexible Agent Delegation**: The primary agent acts as a coordinator that can edit code directly, or delegate complex, multi-file work to specialized subagents if the host environment supports it.
 *   **Pre-Mutation Security Checklist**: A security review runs before any code is written to disk, checking for hardcoded credentials, injection patterns, and unsafe functions. This isn't a substitute for a dedicated SAST tool (Semgrep, Snyk, etc.) in CI.
 *   **Self-Healing**: Loop detection breaks out of repeated-failure cycles. When the AI fixes a non-trivial issue, it prompts you to extract the fix into a permanent playbook so the same error doesn't need re-diagnosing next time.
 *   **Perception & Stack Discovery**: Can profile your workspace (via `OS_COMMAND INFRA_DISCOVER_MODULES`) to detect tech stack drift, map sub-modules, and generate new semantic rules or custom skills based on what it finds.
-*   **Idea-to-Code Scaffolding**: An `Architect` skill that walks greenfield ideas through a structured interview to architecture planning, code scaffolding, and environment config.
+*   **Idea-to-Code Scaffolding**: An `Architect` skill that walks greenfield ideas through a structured interview to a project plan, code scaffolding, and environment config.
 *   **IDE Bridge Files**: Hooks into your IDE's customization system (`.agents/skills.json`, a root `AGENTS.md`, plus host-specific files like `CLAUDE.md` and Cursor's `.mdc` rules) so skills and memory are loaded into the agent's context — each bridge file carries a self-sufficient minimum contract even on hosts that never run the full boot sequence.
-*   **Four-Tier Memory Model**: Reduces cross-session context loss by maintaining Episodic (decisions), Semantic (global architecture), Task (active branch), and Procedural (executable playbooks) memory.
+*   **Four-Tier Memory Model**: Reduces cross-session context loss by maintaining Episodic (decisions), Semantic (project structure), Task (active branch), and Procedural (executable playbooks) memory.
 *   **Hub and Spoke Task Memory**: When you switch to a feature or bugfix branch, working memory is isolated into a dedicated task file, keeping the global project knowledge file free of branch-specific noise.
 *   **Verified Memory Promotion**: Task notes are deliberately unscrutinized working memory — half-formed ideas and dead ends are expected. Before anything gets promoted into permanent, cross-session semantic memory, it's checked two ways: is the claim still factually true against the current code, *and* was the underlying change actually accepted (not still buggy, mid-revision, or awaiting your sign-off)? A description of a bug that's still in the code is a true statement and a bad thing to remember as "how it works."
 
@@ -31,7 +31,7 @@ Net effect: boot costs roughly **4,000–4,500 tokens** regardless of how much g
 
 ---
 
-## System Architecture
+## System Structure
 
 ```mermaid
 graph TB
@@ -230,10 +230,9 @@ How to get the most out of MaiKS in your daily development:
 
 1. **The Boot**: While the bridge files naturally instruct the agent to read `.ai-os/BOOT.md` in the background, LLMs don't always act until spoken to. Begin your first chat of the day with: **`> OS_COMMAND BOOT`** to ensure a verified load of your project's memory.
 2. **Branch Auto-Detection (Zero Setup)**: Start a new ticket by checking out a branch (e.g., `git checkout -b feature/JIRA-123`). The OS will automatically detect this branch and create a dedicated, isolated task memory file (`tasks/feature_JIRA-123.md`). It will use this file to log deep technical debugging steps so your main project memory isn't polluted — and it'll do the same even if you work directly on `main`/`release` (solo projects, hotfixes, trunk-based workflows). There's no branch where working notes are allowed to skip straight to permanent project memory unverified; on those protected branches the task file is just *rolling* — periodically drained into `project_knowledge.md` by `MEMORY_CONSOLIDATE` instead of closed all at once by `TASK_CLOSE`. Not in a git repo, or in a detached `HEAD` state with no branch to key off? The OS won't skip task memory or invent a name for you — it checks for an already-open task first, and if it can't find one, it just asks what you're working on before creating the file.
-3. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently as it works.
-4. **Complex Planning**: If you have a massive architectural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
+3. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and design rules govern it silently as it works.
+4. **Complex Planning**: If you have a big structural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
 5. **Task Completion & Consolidation**: When you finish your feature and are ready to open a Pull Request, tell the agent: **`> OS_COMMAND TASK_CLOSE`** (or just say "summarize and close this task"). The AI reads your task memory, checks each candidate fact two ways — is it still factually accurate, and was the underlying change actually accepted rather than still buggy or awaiting your sign-off — before saving anything to the `semantic/` hub, then archives the task file. Nothing gets promoted to permanent memory just because it was written down.
-6. **Staying Current**: Periodically run **`> OS_COMMAND EVOLVE_BENCHMARK`** to compare this framework's own capabilities against leading AI agent frameworks/practices. It's on-demand only, not a boot step — genuine gaps become new `PROPOSED` evolutions in `progress.md` for you to review, never applied automatically.
 
 ---
 
@@ -246,7 +245,7 @@ MaiKS stores all of its memory, skills, and governance as plain-text Markdown an
   - *Append-only Logs (`decisions.jsonl`)*: Git auto-merges append-only logs well.
   - *Semantic Memory (`knowledge/*.md`, indexed by `project_knowledge.md`)*: institutional knowledge is split into topic files to keep concurrent branches from touching the same file. Before deleting something as superseded, it checks Git history first — if another branch added that entry after your branch forked, it flags the conflict instead of silently dropping it on merge. A conflict reaching you is a signal something needs a human look, not intended behavior.
   - *Noisy Files*: The installer adds per-machine files (`sessions.jsonl`, `last_session.json`, and `progress.md`) to your `.gitignore` to reduce merge conflicts — `decisions.jsonl` itself stays tracked, since it's the shared audit trail.
-- **To Restore**: When you clone your repo on a new machine (or a teammate clones it), the host AI agent reads the same episodic memories, architectural rules, and custom skills. No external database to sync.
+- **To Restore**: When you clone your repo on a new machine (or a teammate clones it), the host AI agent reads the same episodic memories, structural rules, and custom skills. No external database to sync.
 
 ---
 
@@ -269,7 +268,7 @@ MaiKS commands can be invoked with **natural language** — you don't need exact
 | `HEAL_REPAIR` | `repair` | Execute an auto-repair sequence | *"Go ahead and repair that issue"* |
 | `REVIEW_CREDIBILITY` | | Audit docs/claims for overclaims and stale info | *"Review this README for anything that's gone stale"* |
 
-### Architecture & Infrastructure
+### Planning & Infrastructure
 | Command | Alias | Description | Example Prompt |
 |---|---|---|---|
 | `ARCHITECT_PLAN` | `plan` | Interactive interview to plan a feature | *"Let's plan a new user dashboard feature"* |
@@ -287,7 +286,6 @@ MaiKS commands can be invoked with **natural language** — you don't need exact
 | `MEMORY_AMEND` | `amend` | Correct or retract a semantic-memory entry that turned out wrong | *"That convention in the docs is actually what caused this bug"* |
 | `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | *"Propose a new command to automate docker builds"* |
 | `EVOLVE_APPLY` | `apply` | Apply an approved evolution | *"That proposal looks good, apply it"* |
-| `EVOLVE_BENCHMARK` | | On-demand comparison against leading AI agent frameworks; writes genuine gaps as PROPOSED evolutions | *"See what other AI frameworks have that we don't"* |
 
 ### Testing
 | Command | Alias | Description | Example Prompt |

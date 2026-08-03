@@ -74,6 +74,8 @@ Then copy the remaining files and directories from the new update source into th
 
 *Note: For `manifest.json`, `registry/index.json`, `commands/index.json`, and `commands/aliases.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys, framework skills, or new core commands/aliases from the update into the user's existing files to preserve their custom settings, custom skills, and custom aliases. Confirm any new skill IDs present in the update's `registry/index.json` are also added to the user's `manifest.json.installed_skills` array — a skill folder copied to disk but missing from that list won't be treated as installed. Once everything else is merged, set `manifest.json.ai_os_version` to the update source's version — this is the one field that's supposed to change wholesale, not merge.*
 
+*Exception: `EVOLVE_BENCHMARK` is a project-only command specific to MaiKS's own dev repo (see `INSTALL_PROMPT.md` Step 4 item 8) — never add its entry to the user's `commands/index.json` or the `"EVOLVE_BENCHMARK"` string to `registry/index.json`'s `core.evolution.sk.commands` array during this merge, even though the update source's copy has both. If the user's own `.ai-os/` already has it (e.g. from before this exclusion existed), leave it as their own customization — don't strip it retroactively.*
+
 ## Step 4: Execute Migrations
 Read `.ai-os-installer/MIGRATIONS.md` from the update source in full — it's a reverse-chronological
 list of version sections. Using the pre-upgrade `ai_os_version` you captured in Step 1:
