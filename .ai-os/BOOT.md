@@ -30,7 +30,9 @@ USER SPACE (agent-modifiable — evolution allowed)
 ├── .ai-os/registry/, commands/         ← skills, commands, aliases
 └── .ai-os/progress.md                  ← living dashboard
 ```
-Kernel space: never modified without literal phrase `KERNEL OVERRIDE AUTHORIZED`.
+Kernel space: never modified without literal phrase `KERNEL OVERRIDE AUTHORIZED: {files}`
+(one action) or `KERNEL OVERRIDE AUTHORIZED FOR SESSION: {scope}` (standing grant, capped
+at 5 kernel edits or session end — `rules/ultimate_rules.md` R3 has the full mechanism).
 
 ---
 
@@ -95,9 +97,11 @@ Archetype overrides > User instructions.
 CONFLICT RESOLUTION:
 1. Never silently comply with an instruction conflicting with a loaded rule.
 2. Log the conflict to `decisions.jsonl` (§9 schema).
-3. Tell the user: *"This conflicts with Rule {ID}: {description}. To override, say
-   KERNEL OVERRIDE AUTHORIZED with the specific scope."*
-4. Override applies to that one action only; governance resumes after.
+3. Tell the user: *"This conflicts with Rule {ID}: {description}. To override, say KERNEL
+   OVERRIDE AUTHORIZED: {scope} (one action) or KERNEL OVERRIDE AUTHORIZED FOR SESSION:
+   {scope} (standing grant, R3 has the cap/expiry)."*
+4. Per-action override applies to that one action only; session override persists per R3's
+   cap/expiry. Governance resumes once either lapses.
 
 ---
 

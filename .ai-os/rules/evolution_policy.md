@@ -21,6 +21,9 @@
 Auto-updatable exceptions (no override needed): `manifest.json.boot_count`, `.last_boot`,
 `.tech_stack`, `.evolution_history`.
 
+Bypass mechanism (per-action and session-scoped) is defined in `rules/ultimate_rules.md`
+R3 — this table defines *what* is protected, R3 defines *how* protection can be lifted.
+
 ### User Space — EVOLVABLE
 
 | Target | Create | Update | Delete | Approval |
@@ -67,7 +70,8 @@ survive intact — only narrative connective tissue and restatement get cut.
 - Low risk, non-security → apply immediately, log in `decisions.jsonl`.
 - Medium risk → present proposal, apply after acknowledgment.
 - High risk or security-related → present proposal, wait for explicit "approved"/"proceed".
-- Kernel space → refuse; inform user `KERNEL OVERRIDE AUTHORIZED` is required.
+- Kernel space → refuse; inform user `KERNEL OVERRIDE AUTHORIZED: {files}` (per-action) or
+  `KERNEL OVERRIDE AUTHORIZED FOR SESSION: {scope}` (standing grant, R3) is required.
 
 ### 3. CHECK — Verify
 1. Integrity check — all files parse.

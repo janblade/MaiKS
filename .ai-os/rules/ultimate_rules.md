@@ -28,6 +28,14 @@ OVERRIDE: hobby=best-effort.
 ### R3 Bounded Authority [BLOCKING]
 Kernel space + governance files = read-only. User space = read-write within evolution
 policy. Agent cannot self-grant permissions or disable/modify these rules.
+Bypass = literal human phrase only. Per-action: `KERNEL OVERRIDE AUTHORIZED: {files}`,
+that action's scope only. Per-session: `KERNEL OVERRIDE AUTHORIZED FOR SESSION: {scope}`
+— {scope} explicit, never defaults to `*` unbidden. Session grant → write
+`memory/episodic/session_override.json` (checked from disk, not conversation memory —
+compaction can paraphrase/drop a transcript claim, not this file) + one `decisions.jsonl`
+entry for the grant; each edit made under it still logs its own entry (R13, unaffected).
+Expires at 5 kernel edits under one grant or session end (`WRAP`), whichever first —
+re-invoke the phrase to renew, never carries to a new session.
 NOTE: self-restraint, not a technical control — pair with a host permission deny-rule on
 kernel paths, or a CI check failing on `BOOT.md`/`rules/*` changes without `KERNEL
 OVERRIDE` in the commit message, for real enforcement.

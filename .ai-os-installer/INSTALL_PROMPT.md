@@ -74,6 +74,7 @@ Using your file editing tools, reset the following files to prevent context poll
 4. **`.ai-os/memory/tasks/` and `.ai-os/memory/archived_tasks/`**: Delete every `.md` file in both directories except `.keep`. GoliathOS's own development task files (e.g. anything not matching a template default) must never leak into a fresh install — this was a real bug (a stray `EP-8-thinking-protocol.md` shipped in the repo before EP-23 fixed it).
 5. **`.ai-os/progress.md`**: Clear out the decisions and evolution proposals sections.
 6. **`.ai-os/manifest.json`**: Reset `project_name` to `""`, reset `project_archetype` to `"auto"`, reset `boot_count` to `0`, reset `last_boot` to `null`, clear the `tech_stack` object (`{}`), and reset `evolution_history` to `{"total_evolutions": 0, "last_evolution": null}` — GoliathOS's own evolution count and archetype must not carry into a new project. A non-`"auto"` archetype (e.g. this repo's own `"startup"`) skips `BOOT.md` §2 step 2's detection entirely and gets used as-is with no chance to ask — that was a real bug: fresh installs copying this repo's own `.ai-os/` folder silently inherited GoliathOS's own archetype instead of ever being asked. Leave `ai_os_version` and `installed_skills` as-is; those describe the framework build being installed, not the project. Also reset `.ai-os/genome/project_genome.json` indicators to baseline defaults so the **First-Boot Wizard** in `BOOT.md` §10 will correctly trigger.
+7. **`.ai-os/rules/ultimate_rules.md`'s Project-Specific Addendum**: Reset the content between `<!-- PROJECT_RULES_START -->` and `<!-- PROJECT_RULES_END -->` back to the single placeholder line `<!-- Add project-specific rules here -->`, discarding whatever GoliathOS's own copy had there. `kernel/bootstrap.md` Step 2.3 writes a new project's own rules into this exact block on first boot — if the block isn't purged here, a fresh install inherits the *distributing* project's rules as if they were its own. This is the install-time counterpart to `UPDATE_PROMPT.md`'s Step 3a, which does the opposite (preserve, never purge) for an *existing* install being upgraded — the two are not interchangeable, don't copy one's logic into the other's context.
 
 
 ## Step 5: Verify Integrity & Gitignore
@@ -83,6 +84,7 @@ Using your file editing tools, reset the following files to prevent context poll
 # AI OS Ephemeral Memory
 .ai-os/memory/episodic/sessions.jsonl
 .ai-os/memory/episodic/last_session.json
+.ai-os/memory/episodic/session_override.json
 .ai-os/progress.md
 ```
 Do **not** add `decisions.jsonl` or `decisions.archive.jsonl` to this list — those are the

@@ -3,6 +3,35 @@
 This file tracks features, files, or skills that have been deprecated or removed in newer versions of GoliathOS.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+## v2.7.0 — Session-Scoped Kernel Override
+
+- **`R3` in `rules/ultimate_rules.md` gained a session-scoped bypass form**: alongside the
+  existing per-action `KERNEL OVERRIDE AUTHORIZED: {files}`, a human can now grant
+  `KERNEL OVERRIDE AUTHORIZED FOR SESSION: {scope}` — a standing grant for the rest of the
+  session instead of re-authorizing every individual kernel edit. `{scope}` must be
+  explicit (a file/glob list, or an explicitly-typed `*`) — never defaults to `*` on a bare
+  invocation. Expires at 5 kernel edits under one grant (mirrors this file's own
+  5-evolutions-per-conversation rate limit) or at session end (`WRAP`), whichever comes
+  first; never carries into a new session.
+- **New ephemeral file `.ai-os/memory/episodic/session_override.json`**: records the
+  active grant (`scope`, `granted_ts`, `session_id`) read from disk, not from conversation
+  memory — a `SessionStart`/compact-triggered re-read (see v2.6.0's Claude Code hook,
+  EP-40 in `progress.md`) can't be relied on to preserve a grant claim made earlier in a
+  paraphrased-away part of the transcript, so the check has to hit durable state instead.
+  The grant itself gets one `decisions.jsonl` entry; every kernel edit made under it still
+  logs its own entry per R13, unaffected.
+- **`BOOT.md` §1 and §3, `rules/evolution_policy.md`'s Kernel Space section and DO step**
+  updated to reference both override forms.
+- **`INSTALL_PROMPT.md` Step 5**: added `session_override.json` to the ephemeral
+  `.gitignore` block (per-machine/per-session state, same tier as `last_session.json`).
+- Migration action: none for existing kernel content — `rules/ultimate_rules.md`,
+  `BOOT.md`, and `evolution_policy.md` changes are covered by the standard overwrite in
+  Step 3 (itself gated by this version's `KERNEL OVERRIDE`); `session_override.json` is
+  created on demand on first use, nothing to seed. Existing installs pick up the
+  `.gitignore` entry via `UPDATE_PROMPT.md` Step 5's existing generic gitignore-refresh
+  check (already re-reads `INSTALL_PROMPT.md` Step 5's current list, no separate migration
+  needed).
+
 ## v2.6.0 — Honesty Over Approval
 
 - **New `R25` in `rules/ultimate_rules.md`** (Domain 11, BLOCKING, no archetype override):
