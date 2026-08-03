@@ -95,6 +95,6 @@ automatically, so this file doesn't need editing every release.
 
 ## Step 5: Verify and Finalize
 1. Verify that the migrated memory files (specifically `.ai-os/memory/semantic/project_knowledge.md` and `.ai-os/memory/episodic/decisions.jsonl`) are intact.
-2. Refresh the user's `.gitignore` "AI OS Ephemeral Memory" block against the current list in `INSTALL_PROMPT.md` Step 4 — if they installed under an older installer version, they may be missing a newer ephemeral file (e.g. `last_session.json`).
+2. Refresh the user's `.gitignore` "AI OS Ephemeral Memory" block against the current list in `INSTALL_PROMPT.md` Step 5 — if they installed under an older installer version, they may be missing a newer ephemeral file (e.g. `last_session.json`).
 3. Do NOT delete the update source folder. Leave it intact so the user can reference it if needed.
 4. Announce to the user that the upgrade is complete, stating the old and new `ai_os_version`.

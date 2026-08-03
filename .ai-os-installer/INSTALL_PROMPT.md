@@ -4,15 +4,29 @@ Hello! If you are reading this, the user has asked you to install the **AI OS Fr
 You are going to act as the Agentic Installer. Your job is to merge the necessary boot instructions into the user's existing workspace without destroying any of their existing rules.
 
 ## 🛑 Pre-Flight Safety Check
-Before proceeding, check if the host AI environment's bridge file (e.g., `.cursor/rules/ai-os.md`, `.windsurfrules`, `.agents/AGENTS.md`) is already configured with AI OS boot instructions. If it is already configured, **STOP IMMEDIATELY**. Inform the user: *"The AI OS Framework is already installed here. Please use the UPDATE_PROMPT.md instead to prevent memory loss and duplicate rules."* Do not execute any further steps. (Note: If `.ai-os/` exists but the bridge files do not, it means the user just copied the framework into their project and needs to install it. Proceed with the installation).
+Before proceeding, check if the host AI environment's bridge file (e.g., `.cursor/rules/ai-os.md`, `.windsurfrules`, `.agents/AGENTS.md`) is already configured with AI OS boot instructions. If it is already configured, **STOP IMMEDIATELY**. Inform the user: *"The AI OS Framework is already installed here. Please use the UPDATE_PROMPT.md instead to prevent memory loss and duplicate rules."* Do not execute any further steps. (Fallback case: if `.ai-os/` already exists in the project but the bridge files do not — e.g. someone copied it in manually before this ran — skip Step 1's copy, it's already done, and proceed from Step 2.)
 
-## Step 1: Detect Host AI Environment
+## Step 1: Locate & Copy the Framework Kernel
+You are being run from wherever the user downloaded/cloned GoliathOS — this file lives
+inside that package's `.ai-os-installer/` folder, a sibling of its `.ai-os/` folder. That
+download location does NOT need to already be inside the project; the user should not have
+copied anything in manually before starting this conversation. You do the copying now.
+1. Determine the downloaded package's root (the parent of the `.ai-os-installer/` folder
+   this file lives in). Ask the user for the path if you can't resolve it from how you were
+   invoked.
+2. Copy that package's `.ai-os/` folder into the root of the CURRENT project — the only
+   folder that needs to land there.
+3. Do NOT copy `.ai-os-installer/` itself into the project. It stays in the downloaded
+   package. Nothing else is needed from it this session, and a future upgrade uses a freshly
+   downloaded package's `UPDATE_PROMPT.md` the same way — not a copy left behind here.
+
+## Step 2: Detect Host AI Environment
 Do not guess your environment. Use your file/directory listing tools to check the workspace root:
 - If a `.cursor` directory exists, you are in **Cursor**.
 - If a `.windsurf` directory or `.windsurfrules` exists, you are in **Windsurf**.
 - If neither exists, ask the user: *"Which AI assistant are you using? (Cursor, Windsurf, Claude Code, GitHub Copilot, Gemini/Antigravity)"*
 
-## Step 2: Merge Bridge Files (Do Not Overwrite!)
+## Step 3: Merge Bridge Files (Do Not Overwrite!)
 Depending on the host environment, find the corresponding template file in `.ai-os-installer/templates/`.
 Read the template. Then, **append** its exact text to the bottom of the user's existing bridge file.
 - **Cursor:** Create `.cursor/rules/ai-os.mdc` with this frontmatter prepended so it auto-attaches:
@@ -30,8 +44,8 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
 
 **Fallback:** If you do not have the tool capabilities to create or edit files, do not apologize. Simply print the exact text of the template into the chat in a markdown block, and ask the user to paste it into their bridge file.
 
-## Step 3: Purge Framework Meta-Memory & Reset Manifest
-If the user copied the `.ai-os/` folder directly from the GoliathOS repository, it will contain memory logs and genome details from the framework's own development. This will pollute the user's new project.
+## Step 4: Purge Framework Meta-Memory & Reset Manifest
+Since Step 1 copied `.ai-os/` directly from the GoliathOS package, it still contains memory logs and genome details from the framework's own development. This will pollute the user's new project.
 Using your file editing tools, reset the following files to prevent context pollution:
 1. **`.ai-os/memory/semantic/project_knowledge.md`**: Overwrite with the default Indexed Knowledge Index template:
    ```markdown
@@ -56,8 +70,8 @@ Using your file editing tools, reset the following files to prevent context poll
 6. **`.ai-os/manifest.json`**: Reset `project_name` to `""`, reset `project_archetype` to `"auto"`, reset `boot_count` to `0`, reset `last_boot` to `null`, clear the `tech_stack` object (`{}`), and reset `evolution_history` to `{"total_evolutions": 0, "last_evolution": null}` — GoliathOS's own evolution count and archetype must not carry into a new project. A non-`"auto"` archetype (e.g. this repo's own `"startup"`) skips `BOOT.md` §2 step 2's detection entirely and gets used as-is with no chance to ask — that was a real bug: fresh installs copying this repo's own `.ai-os/` folder silently inherited GoliathOS's own archetype instead of ever being asked. Leave `ai_os_version` and `installed_skills` as-is; those describe the framework build being installed, not the project. Also reset `.ai-os/genome/project_genome.json` indicators to baseline defaults so the **First-Boot Wizard** in `BOOT.md` §10 will correctly trigger.
 
 
-## Step 4: Verify Integrity & Gitignore
-1. Check that the `.ai-os/` directory exists in the root of the workspace. If it does not, inform the user they need to copy the `.ai-os/` folder from the downloaded framework package.
+## Step 5: Verify Integrity & Gitignore
+1. Check that the `.ai-os/` directory exists in the root of the workspace — confirming Step 1's copy actually landed. If it does not, retry Step 1 rather than asking the user to copy it manually.
 2. Open the user's `.gitignore` file (create it if it doesn't exist) and append the following lines to prevent merge-conflict hell from highly active AI files:
 ```text
 # AI OS Ephemeral Memory
@@ -69,5 +83,5 @@ Do **not** add `decisions.jsonl` or `decisions.archive.jsonl` to this list — t
 permanent audit trail and are meant to be shared/committed, unlike the per-machine session
 log above them.
 
-## Step 5: Boot!
+## Step 6: Boot!
 Read `.ai-os/BOOT.md` and begin executing the Initialization Checklist as the newly installed AI OS Kernel. Greet the user with the boot status banner!

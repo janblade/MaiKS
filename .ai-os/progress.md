@@ -394,3 +394,14 @@
 - **Rollback Plan**: Revert `UPDATE_PROMPT.md` from git history.
 - **Rules Check**: `.ai-os-installer/` is not kernel/user space -- no KERNEL OVERRIDE ceremony needed.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-39
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: bugfix
+- **Target**: .ai-os-installer/INSTALL_PROMPT.md, .ai-os-installer/UPDATE_PROMPT.md, README.md
+- **What**: User pointed out the README's install instructions were wrong: they told the human to manually copy `.ai-os/` and `.ai-os-installer/` into the project root *before* even starting the agent conversation, defeating the point of an "agentic" installer. Best practice per the user: the downloaded package stays wherever it was downloaded (not inside the project at all), and the human just points their agent at that package's `INSTALL_PROMPT.md` directly -- the agent does the copying itself, and only `.ai-os/` needs to land in the project (`.ai-os-installer/` never does). Traced this into `INSTALL_PROMPT.md` itself and found the bug was real, not just a README wording issue: Steps 1-3 (as they were) already assumed `.ai-os/`/`.ai-os-installer/` were pre-copied into the workspace, and the only existence check for `.ai-os/` came in the old Step 4, too late to matter. Added a new Step 1 ("Locate & Copy the Framework Kernel") that resolves the downloaded package's location and copies only `.ai-os/` into the project as the agent's own first action, explicitly never copying `.ai-os-installer/` in. Renumbered the remaining steps (old 1-5 -> new 2-6) and fixed the one live cross-reference this broke: `UPDATE_PROMPT.md`'s Step 5 pointed at "`INSTALL_PROMPT.md` Step 4" for the gitignore block, now Step 5. Checked for other step-number references first (`R23` blast-radius habit) -- found two, both historical descriptions in `progress.md`/`MIGRATIONS.md` of past EPs, correctly left untouched. Updated both README install sections (First-Time Installation, and the duplicate "How to Install & Use" section) plus the "Before Install" package-tree caption to describe the corrected flow.
+- **Why**: The manual-pre-copy step was an unnecessary, error-prone human action the agent should have been doing itself from the start -- exactly the kind of thing an "agentic installer" should not require.
+- **Risk**: Low (installer-tooling fix; strictly reduces the number of manual steps required, no existing successful install path is broken by this since the fallback case -- .ai-os/ already present -- is still explicitly handled).
+- **Rollback Plan**: Revert `INSTALL_PROMPT.md`, `UPDATE_PROMPT.md`, and README.md from git history.
+- **Rules Check**: `.ai-os-installer/` and README.md are not kernel/user space -- no KERNEL OVERRIDE ceremony needed.
+- **Status**: APPLIED

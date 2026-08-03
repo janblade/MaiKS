@@ -145,17 +145,19 @@ graph TB
 
 ### First-Time Installation
 If you are installing GoliathOS for the first time:
-1. **Copy** the `.ai-os/` and `.ai-os-installer/` folders from the downloaded package into the root of your project.
-2. Provide the `INSTALL_PROMPT.md` to your AI assistant.
+1. Download or clone the GoliathOS package anywhere on your machine — it does **not** need to be inside your project. Leave it where it downloaded.
+2. In your project, point your AI assistant at that package's `.ai-os-installer/INSTALL_PROMPT.md` (e.g. *"Install the AI OS using the instructions in `~/Downloads/goliath-os/.ai-os-installer/INSTALL_PROMPT.md`"*). The agent copies just the `.ai-os/` folder in as its first step — you don't copy anything yourself, and `.ai-os-installer/` never ends up in your project at all.
 
 ### 🔄 Upgrading (WARNING)
 If you already have GoliathOS installed and are upgrading to a new version, **DO NOT overwrite your existing `.ai-os/` folder manually!** Doing so will wipe out your AI's memory.
-1. Place the newly downloaded GoliathOS folder *somewhere else* in your workspace (e.g., in a temporary folder like `./goliath-update/`).
-2. Provide the `UPDATE_PROMPT.md` to your AI assistant. The Agentic Installer will safely merge the new kernel files without destroying your Episodic, Semantic, or Procedural memory.
+1. Download the new GoliathOS package anywhere on your machine — same as install, it doesn't need to be inside your project.
+2. Point your AI assistant at that package's `UPDATE_PROMPT.md`. The Agentic Updater will safely merge the new kernel files without destroying your Episodic, Semantic, or Procedural memory.
 
 ---
 
 ### 1. Before Install (The Downloaded Package)
+Lives anywhere on your machine — not inside your project. Point your agent at
+`INSTALL_PROMPT.md` in place; it copies only `.ai-os/` into your project itself.
 ```
 goliath-os/
 ├── .ai-os/                          # The OS Kernel
@@ -204,10 +206,10 @@ your-project/
 
 ## ⚙️ How to Install & Use
 
-1. Copy the `.ai-os/` and `.ai-os-installer/` directories into your project root.
+1. Download or clone GoliathOS anywhere on your machine — leave it there, no need to move it into your project.
 2. Open your project in your AI editor or launch your terminal assistant.
-3. Open your AI chat and type: **"Please install the AI OS using the instructions in `.ai-os-installer/INSTALL_PROMPT.md`"**
-4. The agent will act as an installer. It will safely merge the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, clean up the installer directory, and boot up!
+3. Open your AI chat and type: **"Please install the AI OS using the instructions in `<path-to-downloaded-package>/.ai-os-installer/INSTALL_PROMPT.md`"**
+4. The agent will act as an installer. It copies just the `.ai-os/` folder into your project as its first step, safely merges the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, and boots up! `.ai-os-installer/` is never copied in, so there's nothing to clean up afterward.
 5. Upon its first boot, the OS will notice that your `manifest.json` is unpopulated, which triggers the **First-Boot Wizard**. This wizard will ask for your project name and automatically run a perception scan (`INFRA_DETECT_STACK`) to map your tech stack.
 
 ---
