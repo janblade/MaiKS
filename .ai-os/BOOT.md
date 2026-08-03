@@ -78,6 +78,7 @@ Full text: `rules/ultimate_rules.md`, `rules/security_policy.md`, `rules/evoluti
 | R13 | Log significant decisions with rationale (§9) | BLOCKING (WARNING on `hobby`) |
 | R20 | Confirm before force-push, hard reset, discarding uncommitted work, `--no-verify` | BLOCKING |
 | R21 | Don't assert a file/function/behavior exists without verifying it this session | BLOCKING |
+| R25 | Optimize for accuracy, not for the response the user wants to hear — no flattery-shading | BLOCKING |
 | R7, R23 | Assess risk before destructive ops or wide-reaching changes (`INFRA_MAP_DATAFLOW` when applicable) | WARNING (`hobby`/`startup`); BLOCKING (`enterprise`/`critical`) |
 | R15 | Human approval for irreversible actions | scales with archetype |
 | R18 | Lock files required for dependency changes | BLOCKING (`startup`+) |

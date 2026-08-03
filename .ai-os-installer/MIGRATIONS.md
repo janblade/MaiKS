@@ -3,6 +3,46 @@
 This file tracks features, files, or skills that have been deprecated or removed in newer versions of GoliathOS.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+## v2.6.0 — Honesty Over Approval
+
+- **New `R25` in `rules/ultimate_rules.md`** (Domain 11, BLOCKING, no archetype override):
+  optimize for accuracy, not for the response the user wants to hear. A technically-true
+  answer shaded toward flattery — emphasizing positives, omitting real weaknesses,
+  softening a blunt conclusion, burying disagreement under caveats — violates this even
+  with zero false claims. Extends R21 (claim verification) to emphasis/framing, not just
+  factual accuracy.
+- **`core.self-healing.sk`'s Response Credibility Protocol** gained a 7th checklist item,
+  "Sycophancy Resistance," operationalizing R25 as something actually applied before each
+  substantive response, not just a rule sitting in a reference file.
+- **`BOOT.md` §3 digest table** updated with R25.
+- Migration action: none — `rules/ultimate_rules.md`, `BOOT.md`, and
+  `registry/core.self-healing.sk/SKILL.md` content changes, covered by the standard
+  overwrite/merge in Step 3.
+
+## v2.5.0 — AI-First Kernel Authoring, Evolution-Policy Fixes
+
+- **`BOOT.md` and `rules/ultimate_rules.md` rewritten in dense, AI-first style**: fragments,
+  arrows, pipe-lists instead of full connective prose — these files' actual readers are AI
+  agents, not humans, so the tradeoff shifted from readability to unambiguous parsing +
+  token cost. `ultimate_rules.md` dropped ~45% in word count across two compaction passes,
+  `BOOT.md` ~29%. No rule/section numbering or behavior changed — verified programmatically
+  (all 24 rule IDs, all 11 `BOOT.md` sections, every command/file cross-reference, the exact
+  user-facing quoted conflict message all survived).
+- **New standing rule in `rules/evolution_policy.md`**: future kernel-space content
+  (`BOOT.md`, `rules/*.md`) is authored in this compact style from the start, not written
+  readable-first and compacted in a later pass.
+- **Fixed two real bugs found while adding that rule**: `evolution_policy.md`'s decision-log
+  examples still showed the pre-EP-20 schema (`timestamp`/`id`/`status`/`details`) instead of
+  the unified `{"ts","type","what","why","files"?}` shape — missed when EP-20 unified the
+  schema everywhere else. And its "Forbidden Evolutions" #1 said modifying the file itself is
+  "NEVER permitted, regardless of archetype or context," directly contradicting the same
+  file's own Evolution Boundaries table three sections above, which says kernel files
+  (including this one) CAN be modified with `KERNEL OVERRIDE AUTHORIZED`. Fixed both
+  "modifying rules"/"modifying this file" items to explicitly require the override rather
+  than reading as an absolute, no-exception ban.
+- Migration action: none — `rules/*.md` and `BOOT.md` content changes, covered by the
+  standard overwrite in Step 3 (gated by the v2.2.0 `KERNEL OVERRIDE` check).
+
 ## v2.4.0 — Blast-Radius and Root-Cause Rules
 
 - **New `R23` (Blast-Radius Assessment for Wide-Reaching Changes)** and **`R24` (Root Cause
