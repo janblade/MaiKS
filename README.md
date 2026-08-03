@@ -143,21 +143,8 @@ graph TB
 
 ## Installation & Upgrade Guide
 
-### First-Time Installation
-If you are installing MaiKS for the first time:
-1. Download or clone the MaiKS package anywhere on your machine — it does **not** need to be inside your project. Leave it where it downloaded.
-2. In your project, point your AI assistant at that package's `.ai-os-installer/INSTALL_PROMPT.md` (e.g. *"Install the AI OS using the instructions in `~/Downloads/maiks/.ai-os-installer/INSTALL_PROMPT.md`"*). The agent copies just the `.ai-os/` folder in as its first step — you don't copy anything yourself, and `.ai-os-installer/` never ends up in your project at all.
-
-### Upgrading (WARNING)
-If you already have MaiKS installed and are upgrading to a new version, **DO NOT overwrite your existing `.ai-os/` folder manually!** Doing so will wipe out your AI's memory.
-1. Download the new MaiKS package anywhere on your machine — same as install, it doesn't need to be inside your project.
-2. Point your AI assistant at that package's `UPDATE_PROMPT.md`. The Agentic Updater will safely merge the new kernel files without destroying your Episodic, Semantic, or Procedural memory.
-
----
-
-### 1. Before Install (The Downloaded Package)
-Lives anywhere on your machine — not inside your project. Point your agent at
-`INSTALL_PROMPT.md` in place; it copies only `.ai-os/` into your project itself.
+### Package Layout (Before Install)
+The downloaded/cloned package lives anywhere on your machine — not inside your project.
 ```
 maiks/
 ├── .ai-os/                          # The OS Kernel
@@ -168,7 +155,14 @@ maiks/
 └── README.md
 ```
 
-### 2. After Install (Your Workspace)
+### First-Time Installation
+1. Download or clone MaiKS anywhere on your machine — it does **not** need to be inside your project. Leave it where it downloaded.
+2. Open your project in your AI editor or launch your terminal assistant.
+3. Open your AI chat and type: **"Please install the AI OS using the instructions in `<path-to-downloaded-package>/.ai-os-installer/INSTALL_PROMPT.md`"**
+4. The agent acts as an installer: it copies just the `.ai-os/` folder into your project as its first step, merges the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, and boots up. `.ai-os-installer/` is never copied in, so there's nothing to clean up afterward.
+5. On first boot, the OS notices `manifest.json` is unpopulated and runs the **First-Boot Wizard** — it asks for your project name and runs a perception scan (`INFRA_DETECT_STACK`) to map your tech stack.
+
+Once installed, your workspace looks like this:
 ```
 your-project/
 ├── .ai-os/                          
@@ -202,25 +196,12 @@ your-project/
     └── .agents/AGENTS.md            # ...if using Antigravity/Gemini
 ```
 
----
-
-## How to Install & Use
-
-1. Download or clone MaiKS anywhere on your machine — leave it there, no need to move it into your project.
-2. Open your project in your AI editor or launch your terminal assistant.
-3. Open your AI chat and type: **"Please install the AI OS using the instructions in `<path-to-downloaded-package>/.ai-os-installer/INSTALL_PROMPT.md`"**
-4. The agent will act as an installer. It copies just the `.ai-os/` folder into your project as its first step, merges the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, and boots up. `.ai-os-installer/` is never copied in, so there's nothing to clean up afterward.
-5. Upon its first boot, the OS will notice that your `manifest.json` is unpopulated, which triggers the **First-Boot Wizard**. This wizard will ask for your project name and run a perception scan (`INFRA_DETECT_STACK`) to map your tech stack.
-
----
-
-## How to Update
-
-To update an existing workspace to the latest version of MaiKS while preserving your agent's learned memory and custom configurations, use the **Agentic Updater**:
+### Upgrading
+**WARNING**: Do **not** overwrite your existing `.ai-os/` folder manually — doing so will wipe out your AI's memory.
 
 1. Download the new version of MaiKS and place the unzipped folder in your workspace (e.g., `./maiks-update`).
 2. Open your AI chat and type: **"Please update my AI OS using the instructions in `./maiks-update/.ai-os-installer/UPDATE_PROMPT.md`"**
-3. The agent will act as a safe updater. It copies the new kernel, rules, and skills, while guarding your `memory/` folder so it isn't overwritten. It also merges any new settings into your `manifest.json`.
+3. The agent acts as a safe updater: it copies the new kernel, rules, and skills, while guarding your `memory/` folder so it isn't overwritten, and merges any new settings into your `manifest.json`.
 
 ---
 
