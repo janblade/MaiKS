@@ -233,6 +233,7 @@ How to get the most out of GoliathOS in your daily development:
 3. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and architecture rules govern it silently as it works.
 4. **Complex Planning**: If you have a massive architectural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
 5. **Task Completion & Consolidation**: When you finish your feature and are ready to open a Pull Request, tell the agent: **`> OS_COMMAND TASK_CLOSE`** (or just say "summarize and close this task"). The AI reads your task memory, checks each candidate fact two ways — is it still factually accurate, and was the underlying change actually accepted rather than still buggy or awaiting your sign-off — before saving anything to the `semantic/` hub, then archives the task file. Nothing gets promoted to permanent memory just because it was written down.
+6. **Staying Current**: Periodically run **`> OS_COMMAND EVOLVE_BENCHMARK`** to compare this framework's own capabilities against leading AI agent frameworks/practices. It's on-demand only, not a boot step — genuine gaps become new `PROPOSED` evolutions in `progress.md` for you to review, never applied automatically.
 
 ---
 
@@ -286,6 +287,7 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 | `MEMORY_AMEND` | `amend` | Correct or retract a semantic-memory entry that turned out wrong | *"That convention in the docs is actually what caused this bug"* |
 | `EVOLVE_PROPOSE` | `propose` | Draft a PDCA system upgrade | *"Propose a new command to automate docker builds"* |
 | `EVOLVE_APPLY` | `apply` | Apply an approved evolution | *"That proposal looks good, apply it"* |
+| `EVOLVE_BENCHMARK` | | On-demand comparison against leading AI agent frameworks; writes genuine gaps as PROPOSED evolutions | *"See what other AI frameworks have that we don't"* |
 
 ### Testing
 | Command | Alias | Description | Example Prompt |
@@ -295,4 +297,4 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 
 ---
 
-*GoliathOS v2.6.0 — An operating system for the next generation of AI developers.*
+*GoliathOS v2.7.0 — An operating system for the next generation of AI developers.*

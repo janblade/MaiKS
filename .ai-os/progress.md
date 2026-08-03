@@ -465,3 +465,14 @@
 - **Rollback Plan**: Revert `registry/core.infra.sk/SKILL.md` from git history.
 - **Rules Check**: User space (`registry/*`) -- no `KERNEL OVERRIDE` needed.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-45
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: memory_update
+- **Target**: README.md
+- **What**: User asked to check the "Efficient Workflow" section for staleness. Found two real gaps: (1) the version footer still read `v2.6.0`, one bump behind `manifest.json`'s actual `2.7.0` (EP-41); (2) `EVOLVE_BENCHMARK` (EP-43) was completely absent from both the workflow guide and the Command Reference table -- a real, user-facing capability with no documentation trail at all. Added a new workflow step 6 ("Staying Current") describing `EVOLVE_BENCHMARK` as on-demand, not a boot step, findings routed to `progress.md` as `PROPOSED` for review. Added its row to the Memory & Evolution command table. Bumped the footer to `v2.7.0`. Left the rest of the Command Reference table as-is -- it's a curated subset already (most skill commands like `EVOLVE_ROLLBACK`/`EVOLVE_STATUS`/`EVOLVE_DIFF`, `INFRA_DIAGNOSE`, `CONTEXT_*`, etc. were never listed either), so this wasn't a blanket sync pass, just closing the two concrete gaps found.
+- **Why**: A brand-new command with zero mention in the framework's own onboarding doc defeats the point of adding it -- users would have no way to discover `EVOLVE_BENCHMARK` exists without reading `commands/index.json` directly.
+- **Risk**: Low (documentation only, no runtime behavior change).
+- **Rollback Plan**: Revert `README.md` from git history.
+- **Rules Check**: README.md is outside `.ai-os/` and `.ai-os-installer/` entirely -- no kernel/user-space or `KERNEL OVERRIDE` concern.
+- **Status**: APPLIED
