@@ -1,6 +1,6 @@
 {
   "ai_os_version": "2.7.0",
-  "project_name": "GoliathOS",
+  "project_name": "MaiKS",
   "project_archetype": "startup",
   "security_level": "standard",
   "evolution_mode": "human-review-critical",

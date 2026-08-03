@@ -1,9 +1,9 @@
 # 🔄 AI OS Agentic Updater
 
-**ATTENTION AI AGENT**: You are currently acting as the GoliathOS System Updater. The user has downloaded a new version of the OS framework. Your job is to upgrade their existing `.ai-os` installation **without destroying their memory**.
+**ATTENTION AI AGENT**: You are currently acting as the MaiKS System Updater. The user has downloaded a new version of the OS framework. Your job is to upgrade their existing `.ai-os` installation **without destroying their memory**.
 
 ## Step 1: Identify the Source
-Ask the user for the path to the newly downloaded GoliathOS update folder (e.g., `./goliath-update`). Wait for their confirmation before proceeding. Before touching anything, read the user's *current* `.ai-os/manifest.json.ai_os_version` and hold onto it — Step 4 needs it to know which migrations actually apply.
+Ask the user for the path to the newly downloaded MaiKS update folder (e.g., `./maiks-update`). Wait for their confirmation before proceeding. Before touching anything, read the user's *current* `.ai-os/manifest.json.ai_os_version` and hold onto it — Step 4 needs it to know which migrations actually apply.
 
 ## Step 2: The Memory Guard & Layout Migration (CRITICAL)
 You **MUST NOT** overwrite, delete, or lose the user's existing memory file contents (such as `project_knowledge.md`, `decisions.jsonl`, `sessions.jsonl`, and custom task logs). However, you **MUST** ensure the memory layout is migrated to the new four-tier directory structure:

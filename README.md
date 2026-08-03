@@ -1,9 +1,9 @@
-# GoliathOS
+# MaiKS
 
-GoliathOS is a governance-first, microkernel-inspired Operating System layer designed to run directly inside your project workspaces. It governs, secures, and enhances AI coding agents (such as Claude Code, Antigravity/Gemini, GitHub Copilot, Cursor, and Windsurf) in any codebase.
+MaiKS is a governance-first, microkernel-inspired Operating System layer designed to run directly inside your project workspaces. It governs, secures, and enhances AI coding agents (such as Claude Code, Antigravity/Gemini, GitHub Copilot, Cursor, and Windsurf) in any codebase.
 
 > **🌟 Deterministic, Git-Native Memory**
-> Many AI frameworks rely on opaque Vector Databases (RAG) for memory management. GoliathOS takes a different approach by using a **deterministic, human-readable Hub and Spoke memory architecture**. The AI's context is stored in pure Markdown and JSON files alongside your code. When a new developer clones your repo, their AI instantly inherits the exact same project knowledge, technical history, and custom skills. No external databases required.
+> Many AI frameworks rely on opaque Vector Databases (RAG) for memory management. MaiKS takes a different approach by using a **deterministic, human-readable Hub and Spoke memory architecture**. The AI's context is stored in pure Markdown and JSON files alongside your code. When a new developer clones your repo, their AI instantly inherits the exact same project knowledge, technical history, and custom skills. No external databases required.
 
 ---
 
@@ -144,13 +144,13 @@ graph TB
 ## 📂 Installation & Upgrade Guide
 
 ### First-Time Installation
-If you are installing GoliathOS for the first time:
-1. Download or clone the GoliathOS package anywhere on your machine — it does **not** need to be inside your project. Leave it where it downloaded.
-2. In your project, point your AI assistant at that package's `.ai-os-installer/INSTALL_PROMPT.md` (e.g. *"Install the AI OS using the instructions in `~/Downloads/goliath-os/.ai-os-installer/INSTALL_PROMPT.md`"*). The agent copies just the `.ai-os/` folder in as its first step — you don't copy anything yourself, and `.ai-os-installer/` never ends up in your project at all.
+If you are installing MaiKS for the first time:
+1. Download or clone the MaiKS package anywhere on your machine — it does **not** need to be inside your project. Leave it where it downloaded.
+2. In your project, point your AI assistant at that package's `.ai-os-installer/INSTALL_PROMPT.md` (e.g. *"Install the AI OS using the instructions in `~/Downloads/maiks/.ai-os-installer/INSTALL_PROMPT.md`"*). The agent copies just the `.ai-os/` folder in as its first step — you don't copy anything yourself, and `.ai-os-installer/` never ends up in your project at all.
 
 ### 🔄 Upgrading (WARNING)
-If you already have GoliathOS installed and are upgrading to a new version, **DO NOT overwrite your existing `.ai-os/` folder manually!** Doing so will wipe out your AI's memory.
-1. Download the new GoliathOS package anywhere on your machine — same as install, it doesn't need to be inside your project.
+If you already have MaiKS installed and are upgrading to a new version, **DO NOT overwrite your existing `.ai-os/` folder manually!** Doing so will wipe out your AI's memory.
+1. Download the new MaiKS package anywhere on your machine — same as install, it doesn't need to be inside your project.
 2. Point your AI assistant at that package's `UPDATE_PROMPT.md`. The Agentic Updater will safely merge the new kernel files without destroying your Episodic, Semantic, or Procedural memory.
 
 ---
@@ -159,7 +159,7 @@ If you already have GoliathOS installed and are upgrading to a new version, **DO
 Lives anywhere on your machine — not inside your project. Point your agent at
 `INSTALL_PROMPT.md` in place; it copies only `.ai-os/` into your project itself.
 ```
-goliath-os/
+maiks/
 ├── .ai-os/                          # The OS Kernel
 ├── .ai-os-installer/                # The Agentic Installer
 │   ├── INSTALL_PROMPT.md            # The script you feed to your AI for first install
@@ -206,7 +206,7 @@ your-project/
 
 ## ⚙️ How to Install & Use
 
-1. Download or clone GoliathOS anywhere on your machine — leave it there, no need to move it into your project.
+1. Download or clone MaiKS anywhere on your machine — leave it there, no need to move it into your project.
 2. Open your project in your AI editor or launch your terminal assistant.
 3. Open your AI chat and type: **"Please install the AI OS using the instructions in `<path-to-downloaded-package>/.ai-os-installer/INSTALL_PROMPT.md`"**
 4. The agent will act as an installer. It copies just the `.ai-os/` folder into your project as its first step, safely merges the necessary bridge instructions into your existing rules (e.g., `.windsurfrules`, `CLAUDE.md`) without destroying them, and boots up! `.ai-os-installer/` is never copied in, so there's nothing to clean up afterward.
@@ -216,17 +216,17 @@ your-project/
 
 ## 🔄 How to Update
 
-To update an existing workspace to the latest version of GoliathOS while preserving your agent's learned memory and custom configurations, we use the **Agentic Updater**:
+To update an existing workspace to the latest version of MaiKS while preserving your agent's learned memory and custom configurations, we use the **Agentic Updater**:
 
-1. Download the new version of GoliathOS and place the unzipped folder in your workspace (e.g., `./goliath-update`).
-2. Open your AI chat and type: **"Please update my AI OS using the instructions in `./goliath-update/.ai-os-installer/UPDATE_PROMPT.md`"**
+1. Download the new version of MaiKS and place the unzipped folder in your workspace (e.g., `./maiks-update`).
+2. Open your AI chat and type: **"Please update my AI OS using the instructions in `./maiks-update/.ai-os-installer/UPDATE_PROMPT.md`"**
 3. The agent will act as a safe updater. It will intelligently copy the new Kernel, Rules, and Skills, while explicitly **guarding your `memory/` folder** to ensure it never suffers amnesia. It will also carefully merge any new settings into your `manifest.json`.
 
 ---
 
 ## 🏎️ Efficient Workflow
 
-How to get the most out of GoliathOS in your daily development:
+How to get the most out of MaiKS in your daily development:
 
 1. **The Boot**: While the bridge files naturally instruct the agent to read `.ai-os/BOOT.md` in the background, LLMs don't always act until spoken to. Begin your first chat of the day with: **`> OS_COMMAND BOOT`** to guarantee a verified load of your project's memory.
 2. **Branch Auto-Detection (Zero Setup)**: Start a new ticket by checking out a branch (e.g., `git checkout -b feature/JIRA-123`). The OS will automatically detect this branch and create a dedicated, isolated task memory file (`tasks/feature_JIRA-123.md`). It will use this file to log deep technical debugging steps so your main project memory isn't polluted — and it'll do the same even if you work directly on `main`/`release` (solo projects, hotfixes, trunk-based workflows). There's no branch where working notes are allowed to skip straight to permanent project memory unverified; on those protected branches the task file is just *rolling* — periodically drained into `project_knowledge.md` by `MEMORY_CONSOLIDATE` instead of closed all at once by `TASK_CLOSE`. Not in a git repo, or in a detached `HEAD` state with no branch to key off? The OS won't skip task memory or invent a name for you — it checks for an already-open task first, and if it can't find one, it just asks what you're working on before creating the file.
@@ -239,7 +239,7 @@ How to get the most out of GoliathOS in your daily development:
 
 ## 💾 Backup & Restore (Portability)
 
-Because GoliathOS stores all of its memory, skills, and governance in plain-text markdown and JSON files within your workspace, **the OS state travels with your code**.
+Because MaiKS stores all of its memory, skills, and governance in plain-text markdown and JSON files within your workspace, **the OS state travels with your code**.
 
 - **To Backup**: Simply commit the `.ai-os/` directory to your project's Git repository.
 - **Merge Conflicts?**: 
@@ -252,7 +252,7 @@ Because GoliathOS stores all of its memory, skills, and governance in plain-text
 
 ## 🛠️ Command Reference
 
-Because GoliathOS is an Agentic OS, you don't need to type strict command syntax. You can invoke any of these commands using **natural language**, and the AI will handle the parameters in the background.
+Because MaiKS is an Agentic OS, you don't need to type strict command syntax. You can invoke any of these commands using **natural language**, and the AI will handle the parameters in the background.
 
 ### Core System
 | Command | Alias | Description | Example Prompt |
@@ -297,4 +297,4 @@ Because GoliathOS is an Agentic OS, you don't need to type strict command syntax
 
 ---
 
-*GoliathOS v2.7.0 — An operating system for the next generation of AI developers.*
+*MaiKS v2.7.0 — An operating system for the next generation of AI developers.*

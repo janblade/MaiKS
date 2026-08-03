@@ -476,3 +476,14 @@
 - **Rollback Plan**: Revert `README.md` from git history.
 - **Rules Check**: README.md is outside `.ai-os/` and `.ai-os-installer/` entirely -- no kernel/user-space or `KERNEL OVERRIDE` concern.
 - **Status**: APPLIED
+
+## Evolution Proposal: EP-46
+- **Date**: 2026-08-03T00:00:00+08:00
+- **Type**: memory_update / kernel_update
+- **Target**: README.md, `.ai-os-installer/INSTALL_PROMPT.md`, `UPDATE_PROMPT.md`, `MIGRATIONS.md`, `.ai-os/manifest.json` (KERNEL), `.ai-os/genome/project_genome.json`, `.ai-os/memory/semantic/project_knowledge.md`, `.ai-os/memory/semantic/knowledge/architecture_overview.md`, `.ai-os/memory/semantic/knowledge/conventions_patterns.md`
+- **What**: User asked to rename the framework from GoliathOS to MaiKS. Renamed all forward-facing branding: README.md (title, body, install/update/backup sections, footer, including illustrative folder-name examples `goliath-os/` -> `maiks/` and `./goliath-update` -> `./maiks-update`), the three installer docs, and the semantic knowledge files that stated the name as a current fact. `.ai-os/manifest.json.project_name` is kernel space per `BOOT.md` SS1 -- held that edit until the user supplied the literal phrase, then changed `"GoliathOS"` -> `"MaiKS"` under `KERNEL OVERRIDE AUTHORIZED: .ai-os/manifest.json`. Deliberately left the historical audit trail untouched: `decisions.jsonl`, `decisions.archive.jsonl`, and this file's own past EP entries (EP-1 through EP-45) still say "GoliathOS" where that was factually the name in effect at the time -- rewriting those would misrepresent history, not just rebrand it. User confirmed this scope (kept the old-name history as-is) by not objecting when it was proposed.
+- **Why**: Direct user request; user is a gamer whose name is Mikes, so "MaiKS" doubles as a nod to getting "KS'd" (kill-stealed) by the framework.
+- **Risk**: Low (branding/documentation only, plus one single-field kernel edit under explicit override; no behavioral/logic changes).
+- **Rollback Plan**: Revert README.md, the three installer docs, `manifest.json`, `project_genome.json`, and the three semantic knowledge files from git history.
+- **Rules Check**: All targets except `manifest.json` are user space -- no override needed. `manifest.json` is kernel space; authorized via literal `KERNEL OVERRIDE AUTHORIZED: .ai-os/manifest.json` from the user before the edit was made. Complies with R9 (git-rollback-capable) and R13 (logged here and in `decisions.jsonl`).
+- **Status**: APPLIED

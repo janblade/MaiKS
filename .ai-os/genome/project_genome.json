@@ -3,7 +3,7 @@
   "scan_version": "1.0.0",
   "languages": ["Markdown", "JSON"],
   "primary_language": "Markdown",
-  "frameworks": ["GoliathOS"],
+  "frameworks": ["MaiKS"],
   "package_managers": [],
   "build_tools": [],
   "ci_cd": [],

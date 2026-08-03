@@ -11,7 +11,7 @@
 
 ## Knowledge Domains
 
-- [Architecture Overview](knowledge/architecture_overview.md) — GoliathOS microkernel architecture, bridge files, and host integrations.
+- [Architecture Overview](knowledge/architecture_overview.md) — MaiKS microkernel architecture, bridge files, and host integrations.
 - [Conventions & Patterns](knowledge/conventions_patterns.md) — Standard coding conventions, agentic package/install practices, self-healing checklists, credibility rules.
 - [Known Gotchas](knowledge/known_gotchas.md) — Failure modes, memory migration warnings, first-boot detection logic, task routing patterns.
 

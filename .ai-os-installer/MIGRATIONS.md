@@ -1,6 +1,6 @@
 # 🔄 AI OS Migrations & Deprecations
 
-This file tracks features, files, or skills that have been deprecated or removed in newer versions of GoliathOS.
+This file tracks features, files, or skills that have been deprecated or removed in newer versions of MaiKS.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
 ## v2.7.0 — Session-Scoped Kernel Override
