@@ -1,14 +1,42 @@
 # Conventions & Patterns
 
-- **Cognitive Security:** We do not use blind regex patterns to scan for vulnerabilities. We rely on the LLM's natural reasoning to perform pre-mutation security checks.
-- **Agentic Installer:** Installation into existing codebases is handled by an Agentic Installer. We do not use shell scripts to merge text files; we feed the installer prompt to the user's AI assistant, allowing it to intelligently merge bridge files (like `CLAUDE.md`) without destroying the user's existing rules.
-- **Agentic Package Manager (Upgrades):** The Agentic Updater cannot "guess" what to delete during an upgrade without risking user data. We use an explicit `.ai-os-installer/MIGRATIONS.md` file to explicitly instruct the updater AI on what obsolete files to prune, ensuring user space (like custom skills) remains safe.
-- **Namespace Protection:** All core OS skills are prefixed with `core.` (e.g. `core.security.sk`). This prevents catastrophic namespace collisions when the OS updates its registry, ensuring the user's custom skills (e.g. `security.sk`) are never overwritten.
-- **Self-Healing:** Instead of background polling, self-healing is achieved via cognitive checklists. If an agent loops on an error, it is instructed to step back and read the `self-healing.sk` checklist.
-- **Semantic Memory Conflicts (superseded by EP-10 + EP-23):** An earlier version of this convention treated Git merge conflicts in a monolithic `project_knowledge.md` as an intentional forcing function for human reconciliation. EP-10 split that file into `knowledge/*.md` sub-files specifically to reduce that conflict surface, which this note contradicted until now. The actual current mechanism (EP-23, `core.memory.sk`): before deleting anything under the Forgetting Policy, check `git merge-base` — if another branch added the entry after your fork point, flag it instead of silently dropping it on merge. Conflicts that do reach a human are a bug being caught late, not a designed-in feature.
-- **Credibility Review:** Credibility assurance operates at two levels: (1) The `REVIEW_CREDIBILITY` command (on `core.self-healing.sk`) performs a structured audit of documentation and claims — run it before open-sourcing or presenting to stakeholders. (2) The **Response Credibility Protocol** (also on `core.self-healing.sk`) is a behavioral gate the agent silently applies to all substantive responses, ensuring claims are verified, overclaims detected, scope is honest, alternatives acknowledged, and confidence language is calibrated. Added via EP-3.
-- **Installer & Updater Synchronization Gate:** Whenever consolidating memory or wrapping a session (`wrap` / `MEMORY_CONSOLIDATE`), if any structural evolutions were applied to skills, memory layouts, or commands during the session, verify whether `.ai-os-installer/INSTALL_PROMPT.md`, `UPDATE_PROMPT.md`, or `MIGRATIONS.md` need to be updated to prevent installer rot. Added via EP-17.
-- **Self-Hosting Gitignore Exception:** `INSTALL_PROMPT.md` tells every *installed* project to gitignore `sessions.jsonl`/`last_session.json`/`progress.md` as ephemeral, per-machine noise. This repo (MaiKS's own dev repo) deliberately does **not** follow that advice on itself — its `progress.md` and `decisions.jsonl` double as the framework's own changelog and are meant to be committed and read by other contributors. Don't "fix" this repo's `.gitignore` to match the installer's advice; the exception is intentional. Added via EP-25.
-
-
-
+- **Cognitive Security**: no blind regex vuln scanning — LLM reasoning does pre-mutation
+  security checks instead.
+- **Agentic Installer**: existing-codebase installs use an Agentic Installer, not shell
+  scripts — install prompt fed to the user's AI assistant, which merges bridge files
+  (`CLAUDE.md` etc.) intelligently without destroying existing user rules.
+- **Agentic Updater**: never guesses what to delete on upgrade (risks user data) —
+  `.ai-os-installer/MIGRATIONS.md` explicitly lists obsolete files to prune, keeping user
+  space (custom skills etc.) safe.
+- **Namespace Protection**: core skills prefixed `core.*` (`core.security.sk`) → registry
+  updates never collide with/overwrite a user's own `security.sk`-style custom skill.
+- **Self-Healing**: no background polling — error loop → agent steps back, reads
+  `self-healing.sk` checklist.
+- **Semantic Memory Conflicts** (superseded EP-10+EP-23): old view treated
+  `project_knowledge.md` merge conflicts as an intentional human-reconciliation forcing
+  function. EP-10 split it into `knowledge/*.md` specifically to reduce that surface.
+  Current mechanism (EP-23, `core.memory.sk`): Forgetting Policy deletions check
+  `git merge-base` first — entry added after your fork point by another branch → flag,
+  don't drop. A conflict reaching a human is a bug caught late, not a design goal.
+- **Credibility Review** (`core.self-healing.sk`, EP-3): two levels — `REVIEW_CREDIBILITY`
+  command = structured audit of docs/claims, run before open-sourcing/stakeholder
+  presentation. Response Credibility Protocol = silent behavioral gate on every
+  substantive response (claim verification, overclaim detection, honest scope,
+  alternatives acknowledged, calibrated confidence language).
+- **Installer/Updater Sync Gate** (EP-17): `MEMORY_CONSOLIDATE`/`wrap` → if the session
+  applied structural evolutions to skills/memory-layout/commands, check whether
+  `INSTALL_PROMPT.md`/`UPDATE_PROMPT.md`/`MIGRATIONS.md` need updating too, else installer
+  rot.
+- **Self-Hosting Gitignore Exception** (EP-25): `INSTALL_PROMPT.md` tells installed
+  projects to gitignore `sessions.jsonl`/`last_session.json`/`progress.md` as ephemeral
+  noise. This repo (MaiKS's own dev repo) intentionally does NOT — its
+  `progress.md`/`decisions.jsonl` are the framework's own changelog, meant to be committed
+  and read by contributors. Don't "fix" this repo's `.gitignore` to match; the exception
+  is deliberate.
+- **Standing vs Per-Action Kernel Override** (EP-41): R3 was originally per-action-only
+  (`KERNEL OVERRIDE AUTHORIZED: {files}`) → forced re-prompting on every edit even with
+  unchanged human intent. Added session-scoped form
+  `KERNEL OVERRIDE AUTHORIZED FOR SESSION: {scope}` (scope explicit, never `*`) →
+  recorded in `memory/episodic/session_override.json`, disk-checked not
+  conversation-memory (so `/compact` can't resurrect/erase it) → capped 5 kernel edits per
+  grant or session end, whichever first.
