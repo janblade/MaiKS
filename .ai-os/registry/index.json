@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "last_updated": null,
-  "note": "Skill health (failures, degraded state) is derived on demand from decisions.jsonl by HEAL_CIRCUIT_STATUS, not tracked as live state here — an agent cannot reliably keep persistent counters up to date across sessions.",
+  "last_updated": "2026-08-04",
+  "note": "Skill health (failures, degraded state) is derived on demand from decisions.jsonl by HEAL_CIRCUIT_STATUS, not tracked as live state here — an agent cannot reliably keep persistent counters up to date across sessions. 'version' here is this file's own schema/catalog-format version (bump on structural changes to how skills are described), not the framework's ai_os_version in manifest.json — commands/index.json's 'version' field is the same kind of catalog-schema version, tracked independently per file since the two catalogs' shapes can and do change on different schedules.",
   "skills": [
     {
       "id": "core.security.sk",
@@ -115,10 +115,13 @@
       "description": "Backs TASK_CLOSE and MEMORY_CONSOLIDATE: verify-before-promote, diff-before-delete, dedup, branch-name sanitization, orphan sweep, and archive pruning for the task -> archived -> semantic pipeline.",
       "entrypoint": "registry/core.memory.sk/SKILL.md",
       "commands": [
-        "TASK_CLOSE",
-        "MEMORY_CONSOLIDATE",
         "MEMORY_AMEND"
       ],
+      "backs_builtin_commands": [
+        "TASK_CLOSE",
+        "MEMORY_CONSOLIDATE"
+      ],
+      "note": "commands lists this skill's own skill_commands; backs_builtin_commands lists built-ins (see commands/index.json's system_commands) whose procedure this skill defines but doesn't own the entry for — kept separate so registry/commands consistency checks don't flag them as drift.",
       "dependencies": [
         "core.observability.sk"
       ],

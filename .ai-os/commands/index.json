@@ -1,6 +1,7 @@
 {
   "version": "1.0.0",
   "last_updated": "2026-07-16",
+  "note": "'version' is this file's own catalog-schema version, tracked independently from registry/index.json's schema version and from manifest.json's ai_os_version — see registry/index.json's note for why they diverge.",
   "system_commands": [
     {"name": "HELP", "type": "built-in", "description": "Show all commands or detailed help for a specific command", "usage": "> OS_COMMAND HELP [command_name]"},
     {"name": "STATUS", "type": "built-in", "description": "System health and memory dashboard", "usage": "> OS_COMMAND STATUS"},

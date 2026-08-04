@@ -1,9 +1,9 @@
 ---
 name: context-engine
 description: >-
-  Intelligent context assembly, relevance scoring, token budget management, and
-  context pruning. Solves the #1 production AI failure mode: loading the wrong
-  context, not reasoning incorrectly. Ensures the agent always has the right
+  Context assembly, relevance scoring, token budget management, and context
+  pruning. Addresses a common failure mode in agentic coding — loading the wrong
+  context, not reasoning incorrectly — by helping the agent have the right
   information at the right time within token budget constraints.
 ---
 
@@ -11,9 +11,10 @@ description: >-
 
 ## Overview
 
-Context engineering has replaced prompt engineering as the highest-leverage skill for
-production AI. This skill ensures optimal context assembly — loading exactly what's
-needed, scoring relevance, managing token budgets, and pruning low-value information.
+What context gets loaded is often as consequential as how the prompt is worded — a
+correct-sounding answer built on stale or irrelevant context is still wrong. This skill
+governs context assembly directly: loading exactly what's needed, scoring relevance,
+managing token budgets, and pruning low-value information.
 
 The core principle: **Minimum Viable Context** — load the minimum set of tokens that
 maximizes the probability of a correct response.

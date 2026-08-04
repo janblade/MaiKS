@@ -32,12 +32,12 @@ Create missing memory files with empty/default content. Never overwrite existing
 
 ```
 ╔══════════════════════════════════════════════╗
-║          AI OS v2.0.0 — First Boot          ║
+║          AI OS v2.7.0 — First Boot          ║
 ╠══════════════════════════════════════════════╣
 ║ Project:    {name}                          ║
 ║ Archetype:  {archetype}                     ║
 ║ Stack:      {detected languages/frameworks} ║
-║ Skills:     8 core skills loaded            ║
+║ Skills:     {count} core skills loaded      ║
 ║ Commands:   {count} commands available      ║
 ║                                             ║
 ║ Type: > OS_COMMAND HELP for commands        ║

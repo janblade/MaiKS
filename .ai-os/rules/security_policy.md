@@ -112,10 +112,32 @@
    its original scope and check in rather than continuing silently.
 2. **Loop Detection**: after the same failure repeats 3 times, stop and escalate (§7.2) —
    this is a pattern you can actually observe from your own recent actions.
-3. **Retry Limits**: maximum 3 retries per failed action before escalating.
+3. **Retry Limits**: maximum 3 retries per failed action before escalating. (Independent of
+   `manifest.json.agent_config.max_retries_per_action` — that field isn't wired to any
+   enforcement yet; this hardcoded value is the one actually followed. Keep both in sync
+   manually if either changes.)
 4. **Cost Awareness**: when using paid APIs, estimate cost before proceeding if you have
    pricing information available. Warn the user if estimated cost exceeds $1 for a single
    operation.
+
+---
+
+## Coverage Notes
+
+This policy covers LLM01-03, 05-07, and 10 of the OWASP GenAI Top 10 (2025). Three
+categories are deliberately out of scope, not overlooked:
+
+- **LLM04 (Data & Model Poisoning)** — applies to training/fine-tuning pipelines. This
+  framework doesn't train or fine-tune a model; it governs an agent's use of a pre-trained
+  one at inference time. No defense to write here.
+- **LLM08 (Vector & Embedding Weaknesses)** — applies to RAG/vector-retrieval systems. Per
+  this project's own design (see root `README.md`'s "Deterministic, Git-Native Memory"
+  section), memory is plain Markdown/JSON files, not a vector database — there's no
+  embedding-retrieval attack surface to defend.
+- **LLM09 (Misinformation)** — substantially covered already by `rules/ultimate_rules.md`
+  R21 (claim verification) and R25 (honesty over approval), which govern the agent's own
+  output accuracy directly; not duplicated here to avoid two sources of truth for the same
+  requirement.
 
 ---
 

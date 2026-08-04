@@ -88,6 +88,13 @@ Pass:
   ```
 - Update `progress.md` with outcome.
 - Increment `manifest.json.evolution_history.total_evolutions`.
+  Note: `total_evolutions` and the highest EP-ID in `progress.md` can legitimately diverge
+  — EP-IDs are assigned sequentially to every proposal written, but the counter only
+  increments for proposals that actually reached APPLIED and touched `.ai-os/` payload
+  content. A proposal that stayed PROPOSED, was rolled back, or only touched files outside
+  `.ai-os/` (e.g. `README.md`/installer-docs-only changes) consumes an ID without bumping
+  the counter. A growing gap isn't itself a bug — verify against `progress.md`'s actual
+  Status fields before assuming the counter is stale.
 
 Fail:
 - Restore the previous version of affected file(s).

@@ -25,9 +25,9 @@ MaiKS is a microkernel-inspired governance layer that runs inside your project w
 
 **"Won't reading the entire framework on every boot cost a fortune in tokens?"**
 
-It would — so the OS doesn't do that. `BOOT.md` is a small hot core (~4,000 tokens as measured) that carries a condensed rules digest and *pointers* to the full rules, skill procedures, and command catalog, rather than inlining them. Boot reads exactly five small files — `BOOT.md`, `manifest.json`, `project_genome.json`, your active archetype file, and a single-entry session-continuity summary — and stops there. The full text of `rules/*.md`, `registry/*/SKILL.md`, and `commands/index.json` (tens of KB combined) loads only when a specific situation actually calls for it: a rule conflict, a security-sensitive change, or a command being invoked.
+It would — so the OS doesn't do that. `BOOT.md` is a small hot core (~4,000 tokens as measured) that carries a condensed rules digest and *pointers* to the full rules, skill procedures, and command catalog, rather than inlining them. Boot reads six small files — `BOOT.md`, `manifest.json`, `project_genome.json`, your active archetype file, a single-entry session-continuity summary, and the currently-open task memory file (`memory/tasks/*.md` — `BOOT.md` §2 step 4 requires one every session, including on `main`) — and stops there. The full text of `rules/*.md`, `registry/*/SKILL.md`, and `commands/index.json` (tens of KB combined) loads only when a specific situation actually calls for it: a rule conflict, a security-sensitive change, or a command being invoked.
 
-Net effect: boot costs roughly **4,000–4,500 tokens** regardless of how much governance content the framework has accumulated, since new rules and skills live in files that are opt-in by trigger, not opt-out by size. Provider-side context caching (Claude, Gemini, GPT-4o, etc.) still helps on top of this for the parts that are read repeatedly, but it's a bonus, not the mechanism the design relies on.
+Net effect: boot costs roughly **4,500–5,000 tokens** (the task file's size is the one variable component) regardless of how much governance content the framework has accumulated, since new rules and skills live in files that are opt-in by trigger, not opt-out by size. Provider-side context caching (Claude, Gemini, GPT-4o, etc.) still helps on top of this for the parts that are read repeatedly, but it's a bonus, not the mechanism the design relies on.
 
 ---
 
@@ -54,7 +54,7 @@ graph TB
     end
 
     %% Kernel Space
-    subgraph KernelSpace ["KERNEL SPACE - Immutable"]
+    subgraph KernelSpace ["KERNEL SPACE - Immutable by convention (R3; self-restraint, not a technical control)"]
         BOOT["BOOT.md<br>(Hot-core Boot Prompt, ~4K tokens)"]:::kernel
         MANIFEST["manifest.json<br>(System Configurations)"]:::kernel
         INTEGRITY["kernel/integrity.md<br>(Structural Self-Checks, no checksum)"]:::kernel
@@ -77,7 +77,7 @@ graph TB
     subgraph UserSpace ["USER SPACE - Agent-Evolvable"]
         direction TB
         
-        subgraph MemorySystem ["Memory System - Cognitive Model"]
+        subgraph MemorySystem ["Memory System - Structured Files"]
             EPISODIC["Episodic Memory<br>(decisions.jsonl + sessions.jsonl<br>+ last_session.json, decisions.archive.jsonl)"]:::database
             SEMANTIC["Semantic (Hub)<br>(project_knowledge.md index<br>+ knowledge/*.md sub-files)"]:::database
             TASK["Task (Spokes)<br>(tasks/ + archived_tasks/,<br>orphan-swept & pruned)"]:::database
@@ -94,6 +94,8 @@ graph TB
             MEM_SK["memory.sk<br>(Verify + Accept-Gate Promotion)"]:::userspace
             HEAL_SK["self-healing.sk<br>(Loop Detection & Repair)"]:::userspace
             ARC_SK["architect.sk<br>(Greenfield Plan)"]:::userspace
+            PLAN_SK["planning.sk<br>(In-Project Brainstorm/Plan/Execute)"]:::userspace
+            DEVLOOP_SK["dev-loop.sk<br>(Implement + Peer Review)"]:::userspace
         end
 
         subgraph Interface ["Interface"]
@@ -106,7 +108,7 @@ graph TB
     %% Boot Redirection Flow
     AG & CL & CO & CU & WI -->|Redirect / Load| BOOT
 
-    %% Initialization Sequence (~4K tokens, 5 small files — see Token Economics)
+    %% Initialization Sequence (~4.5-5K tokens, 6 small files — see Token Economics)
     BOOT -->|1. Skim Rules Digest, inline| GENOME
     ARCHETYPES -->|Calibrate one archetype| GENOME
     GENOME -->|2. Read last_session.json only - single-file lookup| EPISODIC
@@ -212,7 +214,7 @@ How to get the most out of MaiKS in your daily development:
 1. **The Boot**: While the bridge files naturally instruct the agent to read `.ai-os/BOOT.md` in the background, LLMs don't always act until spoken to. Begin your first chat of the day with: **`> OS_COMMAND BOOT`** to ensure a verified load of your project's memory.
 2. **Branch Auto-Detection (Zero Setup)**: Start a new ticket by checking out a branch (e.g., `git checkout -b feature/JIRA-123`). The OS will automatically detect this branch and create a dedicated, isolated task memory file (`tasks/feature_JIRA-123.md`). It will use this file to log deep technical debugging steps so your main project memory isn't polluted — and it'll do the same even if you work directly on `main`/`release` (solo projects, hotfixes, trunk-based workflows). There's no branch where working notes are allowed to skip straight to permanent project memory unverified; on those protected branches the task file is just *rolling* — periodically drained into `project_knowledge.md` by `MEMORY_CONSOLIDATE` instead of closed all at once by `TASK_CLOSE`. Not in a git repo, or in a detached `HEAD` state with no branch to key off? The OS won't skip task memory or invent a name for you — it checks for an already-open task first, and if it can't find one, it just asks what you're working on before creating the file.
 3. **Daily Development**: Code normally! You don't need to micromanage the OS. Just ask your agent to build features, fix bugs, or write tests. The OS's security and design rules govern it silently as it works.
-4. **Complex Planning**: If you have a big structural change, don't just tell the agent to code. Type `> OS_COMMAND plan`. The `Architect` skill will engage in a structured interview with you to design the feature safely.
+4. **Complex Planning**: If you have a big structural change, don't just tell the agent to code. Which command depends on where you're starting from — the two don't overlap. Starting a whole new idea with no project yet? Type `> OS_COMMAND plan`; the `Architect` skill runs a structured interview through project scaffolding. Already inside this project and planning a feature or fix? Type `> OS_COMMAND feature` (`PLAN_BRAINSTORM`) instead; it clarifies scope through a few rounds of questions, writes a concrete step-by-step plan, then executes it with verification at each step.
 5. **Task Completion & Consolidation**: When you finish your feature and are ready to open a Pull Request, tell the agent: **`> OS_COMMAND TASK_CLOSE`** (or just say "summarize and close this task"). The AI reads your task memory, checks each candidate fact two ways — is it still factually accurate, and was the underlying change actually accepted rather than still buggy or awaiting your sign-off — before saving anything to the `semantic/` hub, then archives the task file. Nothing gets promoted to permanent memory just because it was written down.
 
 ---

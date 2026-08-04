@@ -8,7 +8,8 @@
     "approval_mode": "high-risk-only",
     "verbosity": "normal",
     "max_autonomous_steps": 25,
-    "max_retries_per_action": 3
+    "max_retries_per_action": 3,
+    "_status": "max_autonomous_steps is the one field with real backing (rules/ultimate_rules.md R16, sourced from genome/archetypes/*.json — this copy is a secondary, unenforced mirror). approval_mode, verbosity, and max_retries_per_action are declared intent, not currently read by any rule or skill procedure — treat as reserved/aspirational until something is wired to consult them. security_policy.md's '3 retries' is an independent hardcoded value, not sourced from max_retries_per_action; keep them in sync manually until that changes."
   },
   "boot_count": 6,
   "last_boot": "2026-07-23T06:52:18+08:00",
@@ -33,7 +34,7 @@
     "frameworks": ["MaiKS"]
   },
   "evolution_history": {
-    "total_evolutions": 48,
-    "last_evolution": "EP-56"
+    "total_evolutions": 49,
+    "last_evolution": "EP-57"
   }
 }

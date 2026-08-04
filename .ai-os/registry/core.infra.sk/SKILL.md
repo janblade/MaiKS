@@ -139,12 +139,11 @@ Discover distinct codebase modules and trigger auto-generation of modular worksp
    - Check if a corresponding skill folder (e.g., `/.ai-os/registry/moonlight-web.sk/`) and custom agent profile (e.g., `/.ai-os/agents/moonlight-web.json`) exist.
    - If missing and `--auto-scaffold` is enabled: Trigger `EVOLVE_PROPOSE` to auto-scaffold:
      1. A customized skill containing commands (like `DEV`, `BUILD`, `TEST`) scoped to that folder.
-     2. A synthesized agent profile. If a template matches, use it; otherwise, **synthesize a new profile dynamically**:
+     2. A synthesized agent profile. If a template matches, use it; otherwise, synthesize a new profile:
         - Analyze module packages (e.g. `pytorch` in python → synthesize "Data Scientist/ML Specialist").
         - Generate a custom specialized `system_prompt_extension` describing the language features and best practices for the detected libraries.
-        - Bound execution strictly to the discovered module directory path.
-        - Determine and assign the appropriate default model tier (e.g. `reasoning` for smart contract Solidity dirs or complex ML logic; `balanced` for standard app modules).
-4. Report list of discovered modules, skill status, and agent profile synthesis status.
+        - **Capability check first** (same principle `core.dev-loop.sk`'s `DEV_IMPLEMENT_REVIEWED` applies to subagent dispatch): directory-bounded sandboxed execution and per-agent model-tier pinning are host tool capabilities, not something every agentic AI can enforce. Confirm the host actually exposes a mechanism for either before writing them into the profile as if they'll be enforced. Host supports it → configure it for real. Host doesn't → record the *intent* (preferred model tier, intended directory scope) as advisory text in `system_prompt_extension` instead, and say so plainly in the report — never claim a sandboxing or tier-assignment guarantee the host can't actually back.
+4. Report list of discovered modules, skill status, and agent profile synthesis status — including, per synthesized profile, whether directory-scoping/model-tier were host-enforced or only recorded as advisory.
 
 ---
 

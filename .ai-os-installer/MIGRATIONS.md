@@ -1,7 +1,34 @@
 # 🔄 AI OS Migrations & Deprecations
 
-This file tracks features, files, or skills that have been deprecated or removed in newer versions of MaiKS.
+This file tracks feature, file, and skill changes — additions, deprecations, and removals —
+across MaiKS versions, in reverse-chronological order.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
+
+## v2.7.0 (cont'd) — Planning & Dev-Loop Skills, Direct Boot-State Injection
+
+- **New skill `core.planning.sk`** (`PLAN_BRAINSTORM`/`PLAN_WRITE`/`PLAN_EXECUTE`, EP-49):
+  per-feature brainstorm → write-plan → execute cycle for work inside an existing project,
+  distinct from `core.architect.sk`'s greenfield-only scope. Migration action: copy the
+  skill folder in (covered by the `registry/` copy in `UPDATE_PROMPT.md` Step 3), register
+  in `registry/index.json`/`manifest.json.installed_skills`/`kernel/integrity.md`.
+- **New skill `core.dev-loop.sk`** (`DEV_IMPLEMENT_REVIEWED`, EP-53): implementation with a
+  review pass — independent subagent review when the host genuinely supports subagent
+  dispatch, an honestly-labeled same-agent structured fallback when it doesn't. Same
+  migration action as above.
+- **TDD Discipline section added to `core.testing.sk`** (EP-50), **Verification-Before-
+  Completion Protocol added to `core.self-healing.sk`** (EP-51), **`INFRA_WORKTREE_START`/
+  `INFRA_WORKTREE_FINISH` added to `core.infra.sk`** (EP-52) — additive content/commands on
+  existing skills, no new files. Migration action: none beyond the standard `registry/`/
+  `commands/` overwrite-merge in Step 3.
+- **New `.ai-os/scripts/session-start-hook.sh`** (EP-56): the Claude Code `SessionStart`
+  hook now injects `BOOT.md`/`ultimate_rules.md` content directly into context via
+  `hookSpecificOutput.additionalContext` on `startup|clear|compact`, replacing the older
+  `compact`-only echo-reminder version. Migration action: `UPDATE_PROMPT.md` Step 5's
+  unconditional Claude Code hook check picks up both the new script (via the standard
+  `.ai-os/` copy) and the widened `.claude/settings.json` matcher on any upgrade.
+- None of the above bumped `ai_os_version` — additive skill/command/script content, no
+  kernel-content or compatibility change, consistent with the v2.1.0/EP-43 precedent for
+  pure additions.
 
 ## v2.7.0 — Session-Scoped Kernel Override
 
