@@ -35,7 +35,9 @@
         "INFRA_SHOW_ENV",
         "INFRA_SWITCH_ENV",
         "INFRA_ANALYZE_COMMITS",
-        "INFRA_MAP_DATAFLOW"
+        "INFRA_MAP_DATAFLOW",
+        "INFRA_WORKTREE_START",
+        "INFRA_WORKTREE_FINISH"
       ],
       "dependencies": [],
       "protected": false
@@ -152,6 +154,40 @@
       "dependencies": [
         "core.infra.sk",
         "core.security.sk",
+        "core.observability.sk"
+      ],
+      "protected": false
+    },
+    {
+      "id": "core.planning.sk",
+      "name": "Planning - Brainstorm, Write, Execute",
+      "version": "1.0.0",
+      "description": "Per-feature brainstorm -> write-plan -> execute cycle for work inside an existing project, distinct from architect.sk's greenfield-only scope.",
+      "entrypoint": "registry/core.planning.sk/SKILL.md",
+      "commands": [
+        "PLAN_BRAINSTORM",
+        "PLAN_WRITE",
+        "PLAN_EXECUTE"
+      ],
+      "dependencies": [
+        "core.observability.sk",
+        "core.testing.sk",
+        "core.self-healing.sk"
+      ],
+      "protected": false
+    },
+    {
+      "id": "core.dev-loop.sk",
+      "name": "Dev Loop - Implementation with Peer Review",
+      "version": "1.0.0",
+      "description": "Implementation with independent peer review when the host supports subagent dispatch; honestly-labeled same-agent fallback when it doesn't.",
+      "entrypoint": "registry/core.dev-loop.sk/SKILL.md",
+      "commands": [
+        "DEV_IMPLEMENT_REVIEWED"
+      ],
+      "dependencies": [
+        "core.security.sk",
+        "core.self-healing.sk",
         "core.observability.sk"
       ],
       "protected": false

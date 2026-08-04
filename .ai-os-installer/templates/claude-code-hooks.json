@@ -2,11 +2,11 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "compact",
+        "matcher": "startup|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "echo Re-read .ai-os/BOOT.md and .ai-os/rules/ultimate_rules.md in full now, before continuing - compaction summarizes the conversation and may have paraphrased or dropped their exact rule text."
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.ai-os/scripts/session-start-hook.sh\""
           }
         ]
       }

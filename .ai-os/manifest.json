@@ -22,16 +22,18 @@
     "core.context-engine.sk",
     "core.self-healing.sk",
     "core.architect.sk",
-    "core.memory.sk"
+    "core.memory.sk",
+    "core.planning.sk",
+    "core.dev-loop.sk"
   ],
   "custom_commands": [],
   "tech_stack": {
     "languages": ["Markdown", "JSON"],
     "primary_language": "Markdown",
-    "frameworks": ["GoliathOS"]
+    "frameworks": ["MaiKS"]
   },
   "evolution_history": {
-    "total_evolutions": 39,
-    "last_evolution": "EP-44"
+    "total_evolutions": 48,
+    "last_evolution": "EP-56"
   }
 }

@@ -208,6 +208,36 @@ mental checklist. This is NOT a command — it is a behavioral protocol.
 
 ---
 
+## Verification-Before-Completion Protocol
+
+The Response Credibility Protocol above governs how a claim is *worded*. This protocol
+governs whether the claim was *earned* — the action taken immediately before reporting any
+task, feature, or fix as complete. A well-hedged but unverified "this should work" still
+fails this gate even though it would pass the credibility checklist.
+
+### Before reporting anything done
+
+1. **Run what can be run.** Existing test suite, build, lint/typecheck for the changed
+   area — via `TEST_RUN`/`TEST_IMPACT` (`core.testing.sk`) or the project's own build
+   command. "I read the diff and it looks right" is not verification.
+2. **Exercise the golden path for user-facing changes.** UI/CLI/API-surface changes need
+   to actually be invoked once with realistic input, not just type-checked.
+3. **Check for leftovers.** No stray debug output, no TODO/stub left where a real
+   implementation was expected, no commented-out old version of the code.
+4. **Nothing to run** (pure documentation, config comment, non-executable content) → say
+   so explicitly ("no automated check applies here — verified by reading") rather than
+   silently skipping the gate. The absence of a check is itself something to disclose,
+   not something to leave implicit.
+
+### Failure handling
+
+If verification fails or can't be completed (no test framework detected, build tool
+unavailable, etc.), report the task as **not yet verified**, not as done — and say what
+specifically wasn't checked. Don't downgrade this to a caveat buried after a "completed"
+headline.
+
+---
+
 ## Loop Detection
 
 If you find yourself attempting the same fix 3 times and receiving the same error, **STOP**.

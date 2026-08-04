@@ -41,9 +41,11 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
   `.ai-os-installer/templates/claude-code-hooks.json` into the project's `.claude/settings.json`
   (create it with that content if missing; if it already exists, merge into its
   `hooks.SessionStart` array — add this entry alongside whatever the user already has, never
-  replace the array). This makes Claude Code re-read `BOOT.md`/`ultimate_rules.md` verbatim
-  right after any `/compact` or auto-compaction — compaction summarizes the conversation and
-  can paraphrase or drop the exact kernel rule text that was read earlier in the session.
+  replace the array). This runs `.ai-os/scripts/session-start-hook.sh` on session `startup`,
+  `clear`, and `compact`, which injects the verbatim content of `BOOT.md` and
+  `ultimate_rules.md` directly into context via `hookSpecificOutput.additionalContext` —
+  stronger than a re-read reminder, since it doesn't depend on the agent choosing to act on
+  the reminder afterward, and it also covers fresh session starts, not just compaction.
 - **GitHub Copilot:** Append to `.github/copilot-instructions.md`.
 - **Gemini / Antigravity:** Append to `.agents/AGENTS.md` and copy `skills.json` to `.agents/skills.json`.
 - **Root `AGENTS.md`:** Also create/append to a root-level `AGENTS.md` regardless of the above — it's the emerging cross-tool convention (Codex, Jules, and others read it directly), and costs nothing extra for hosts that ignore it.

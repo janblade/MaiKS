@@ -262,6 +262,54 @@ Trace where a piece of data comes from and everywhere it ends up (or, run backwa
 
 ---
 
+### INFRA_WORKTREE_START
+
+Create a physically isolated working directory for a branch, instead of relying on
+branch-name-sanitized task files alone for isolation.
+
+```
+> OS_COMMAND INFRA_WORKTREE_START --branch=<name> [--base=<ref>]
+```
+
+**Procedure:**
+1. Confirm the workspace is a git repo (`git rev-parse --is-inside-work-tree`) — if not,
+   report that worktrees aren't applicable here rather than failing silently.
+2. Determine the sibling directory path: `../<repo-name>-<sanitized-branch>` (same branch
+   sanitization rule as `BOOT.md` §2 step 4 — `/` and path-unsafe chars → `_`).
+3. If `--branch` doesn't exist yet, create it from `--base` (default: current branch) as
+   part of the `git worktree add` invocation; if it already exists, attach to it.
+4. Run `git worktree add <path> <branch>` (or `git worktree add -b <branch> <path> <base>`
+   for a new branch).
+5. Report the new path to the user. From here, normal task-memory flow applies unchanged:
+   `BOOT.md` §2 step 4 loads/creates `memory/tasks/[sanitized_branch].md` — worktrees add
+   filesystem isolation on top of that, they don't replace it.
+
+**Note:** this is a plain `git worktree` invocation — no host-specific capability assumed,
+any host with shell access can run it (contrast `core.dev-loop.sk`'s `DEV_IMPLEMENT_REVIEWED`,
+which does depend on host subagent support).
+
+---
+
+### INFRA_WORKTREE_FINISH
+
+Remove a worktree once its branch is merged or abandoned.
+
+```
+> OS_COMMAND INFRA_WORKTREE_FINISH --branch=<name> [--force]
+```
+
+**Procedure:**
+1. Locate the worktree path for `--branch` via `git worktree list`.
+2. Check for uncommitted changes in that worktree (`git -C <path> status --porcelain`) —
+   non-empty and `--force` not given → stop, tell the user what's uncommitted (R20:
+   confirm before discarding uncommitted work).
+3. Run `git worktree remove <path>` (`--force` only if the user explicitly passed it, per
+   step 2's gate).
+4. Does **not** delete the branch itself or the task file — that's `TASK_CLOSE`'s job, not
+   this command's. Removing the worktree only cleans up the filesystem-level isolation.
+
+---
+
 ## Stack-Specific Best Practices
 
 The infra skill references these best practices based on detected stack:

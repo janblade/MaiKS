@@ -114,6 +114,38 @@ Test impact analysis — determine which tests need to run.
 
 ---
 
+## Test-Driven Development Discipline
+
+When implementing a new feature or fixing a bug, follow RED → GREEN → REFACTOR rather than
+writing the implementation first and backfilling tests afterward:
+
+1. **RED** — Write a test for the behavior that doesn't exist yet. Run it
+   (`TEST_RUN --filter=<new_test>`) and confirm it fails *for the expected reason*
+   (missing implementation, not a typo or setup error). A test that passes before the
+   code exists is testing nothing.
+2. **GREEN** — Write the minimum code needed to make the test pass. Resist adding
+   unrelated functionality at this step.
+3. **REFACTOR** — With the passing test as a safety net, clean up the implementation
+   (naming, duplication, structure). Re-run the test after each change; it must stay green.
+
+Not every change needs a formal RED phase — trivial edits (typo fixes, config value
+changes, doc updates) have no meaningful "failing test" to write first. Apply this to new
+behavior and bugfixes, where skipping RED is how regressions get reintroduced silently.
+
+### Anti-Patterns
+
+1. **Test-after, labeled as TDD** — Writing the implementation first, then a test that
+   exercises the code path you already know works. This verifies the code does what you
+   wrote, not what was actually required — it can't catch "wrote the wrong thing."
+2. **Asserting on implementation details** — Testing internal call order, private state, or
+   mock-call counts instead of observable behavior/output. Breaks on refactors that don't
+   change behavior, which trains people to ignore test failures.
+3. **Disabling instead of fixing** — Skip-marking or deleting a failing test to unblock a
+   commit, rather than fixing the regression or updating the test if the requirement
+   genuinely changed. A silently skipped test is a false "all green."
+
+---
+
 ## Common Mistakes
 
 1. **Running all tests when only a few files changed** — Use TEST_IMPACT to scope test runs.
