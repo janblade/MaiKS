@@ -4,6 +4,36 @@ This file tracks feature, file, and skill changes — additions, deprecations, a
 across MaiKS versions, in reverse-chronological order.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+## v2.7.0 (cont'd 2) — Simplicity Skill, Subagent Boot-State Injection
+
+- **New skill `core.simplicity.sk`** (`SIMPLIFY_REVIEW`/`SIMPLIFY_AUDIT`/`DEBT_LEDGER`,
+  EP-58): pre-mutation simplicity ladder, the `AIOS-DEBT:` deliberate-shortcut marker
+  convention, and review/audit passes scoped strictly to over-engineering. Adapted from
+  `DietrichGebert/ponytail` (MIT). Migration action: copy the skill folder in (covered by the
+  `registry/` copy in `UPDATE_PROMPT.md` Step 3), register in
+  `registry/index.json`/`manifest.json.installed_skills`/`kernel/integrity.md`, and merge the
+  four new `commands/aliases.json` shortcuts (`simplify`, `bloat`, `overengineered`, `debt`)
+  without dropping any the user added themselves.
+- **`AIOS-DEBT:` marker convention introduced** (EP-58). No migration action — an upgrading
+  project simply has zero markers until someone writes one. `DEBT_LEDGER` on a fresh upgrade
+  correctly reports `No AIOS-DEBT markers.`
+- **Subagent governance** (EP-59/EP-60): `core.dev-loop.sk` Path A now requires dispatch
+  prompts to carry governance context inline, and `.ai-os/scripts/session-start-hook.sh` gained
+  an optional first argument (the hook event name, default `SessionStart`) so one script serves
+  both `SessionStart` and the new `SubagentStart` entry in
+  `templates/claude-code-hooks.json`. Session context does not propagate to dispatched agents —
+  they are separate hook events for that reason.
+  **Migration action:** every pre-v2.7.0(cont'd 2) install is missing the `SubagentStart` hook
+  entry; `UPDATE_PROMPT.md` Step 5's unconditional Claude Code hook check adds it. The script's
+  argument is optional and defaults to the old behavior, so an existing `SessionStart` entry
+  keeps working unchanged and **must not be rewritten**. If the user narrowed their own
+  `SubagentStart` matcher, leave their value alone.
+- **Cost note for upgraders:** the `SubagentStart` hook injects ~26 KB (~6.5K tokens) on every
+  subagent spawn. Narrow the matcher (it filters on agent type) rather than dropping the entry
+  if that's too much for a given project.
+- None of the above bumped `ai_os_version` — additive skill/command/script content, no
+  kernel-content or compatibility change, consistent with the v2.1.0/EP-43 precedent.
+
 ## v2.7.0 (cont'd) — Planning & Dev-Loop Skills, Direct Boot-State Injection
 
 - **New skill `core.planning.sk`** (`PLAN_BRAINSTORM`/`PLAN_WRITE`/`PLAN_EXECUTE`, EP-49):

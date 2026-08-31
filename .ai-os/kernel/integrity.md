@@ -51,6 +51,7 @@
 .ai-os/registry/core.memory.sk/SKILL.md
 .ai-os/registry/core.planning.sk/SKILL.md
 .ai-os/registry/core.dev-loop.sk/SKILL.md
+.ai-os/registry/core.simplicity.sk/SKILL.md
 .ai-os/scripts/session-start-hook.sh
 .ai-os/agents/index.json
 .ai-os/agents/supervisor.json

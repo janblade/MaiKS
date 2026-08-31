@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "last_updated": "2026-08-04",
+  "last_updated": "2026-08-31",
   "note": "Skill health (failures, degraded state) is derived on demand from decisions.jsonl by HEAL_CIRCUIT_STATUS, not tracked as live state here — an agent cannot reliably keep persistent counters up to date across sessions. 'version' here is this file's own schema/catalog-format version (bump on structural changes to how skills are described), not the framework's ai_os_version in manifest.json — commands/index.json's 'version' field is the same kind of catalog-schema version, tracked independently per file since the two catalogs' shapes can and do change on different schedules.",
   "skills": [
     {
@@ -176,6 +176,25 @@
         "core.observability.sk",
         "core.testing.sk",
         "core.self-healing.sk"
+      ],
+      "protected": false
+    },
+    {
+      "id": "core.simplicity.sk",
+      "name": "Simplicity - Complexity Governance",
+      "version": "1.0.0",
+      "description": "Pre-mutation simplicity ladder, deliberate-shortcut marker convention (AIOS-DEBT:), and over-engineering-scoped review/audit passes. Covers the gap R22 leaves: R22 forbids bundling unrequested refactors, nothing gates the requested work itself on necessity.",
+      "entrypoint": "registry/core.simplicity.sk/SKILL.md",
+      "commands": [
+        "SIMPLIFY_REVIEW",
+        "SIMPLIFY_AUDIT",
+        "DEBT_LEDGER"
+      ],
+      "dependencies": [
+        "core.security.sk",
+        "core.testing.sk",
+        "core.self-healing.sk",
+        "core.observability.sk"
       ],
       "protected": false
     },

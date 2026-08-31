@@ -37,15 +37,27 @@ Read the template. Then, **append** its exact text to the bottom of the user's e
   ```
   followed by the `cursor-rules.md` template text. (Plain `.cursor/rules/ai-os.md` without frontmatter may not auto-load in current Cursor versions — use `.mdc`.)
 - **Windsurf:** Append to `.windsurfrules`.
-- **Claude Code:** Append to `CLAUDE.md`. Also merge the hook entry from
+- **Claude Code:** Append to `CLAUDE.md`. Also merge **both** hook entries from
   `.ai-os-installer/templates/claude-code-hooks.json` into the project's `.claude/settings.json`
   (create it with that content if missing; if it already exists, merge into its
-  `hooks.SessionStart` array — add this entry alongside whatever the user already has, never
-  replace the array). This runs `.ai-os/scripts/session-start-hook.sh` on session `startup`,
-  `clear`, and `compact`, which injects the verbatim content of `BOOT.md` and
-  `ultimate_rules.md` directly into context via `hookSpecificOutput.additionalContext` —
-  stronger than a re-read reminder, since it doesn't depend on the agent choosing to act on
-  the reminder afterward, and it also covers fresh session starts, not just compaction.
+  `hooks.SessionStart` and `hooks.SubagentStart` arrays — add each entry alongside whatever the
+  user already has, never replace an array). Both run `.ai-os/scripts/session-start-hook.sh`,
+  which injects the verbatim content of `BOOT.md` and `ultimate_rules.md` into context via
+  `hookSpecificOutput.additionalContext` — stronger than a re-read reminder, since it doesn't
+  depend on the agent choosing to act on the reminder afterward.
+  - `SessionStart` (`startup|clear|compact`) covers the main thread, including fresh session
+    starts, not just compaction.
+  - `SubagentStart` (matcher `.*`) covers dispatched agents, passing the event name as the
+    script's first argument. They are separate hook events precisely because session context
+    does **not** propagate to subagents: without this, an agent dispatched by
+    `DEV_IMPLEMENT_REVIEWED` or any other flow runs with no R1 security review, no R21 claim
+    verification and no R13 logging, and returns work that looks governed in the parent thread.
+  - **Cost, stated plainly:** the injected payload is ~26 KB (roughly 6.5K tokens) and is paid
+    on *every* subagent spawn. If that's too much for a given project, narrow the
+    `SubagentStart` matcher instead of dropping the entry — it filters on agent type, so e.g.
+    `general-purpose|Plan` injects into agents that write or design and skips read-only search
+    agents. Removing it entirely is a governance decision, not a tuning one; say so to the user
+    if they ask for that.
 - **GitHub Copilot:** Append to `.github/copilot-instructions.md`.
 - **Gemini / Antigravity:** Append to `.agents/AGENTS.md` and copy `skills.json` to `.agents/skills.json`.
 - **Root `AGENTS.md`:** Also create/append to a root-level `AGENTS.md` regardless of the above — it's the emerging cross-tool convention (Codex, Jules, and others read it directly), and costs nothing extra for hosts that ignore it.

@@ -96,6 +96,7 @@ graph TB
             ARC_SK["architect.sk<br>(Greenfield Plan)"]:::userspace
             PLAN_SK["planning.sk<br>(In-Project Brainstorm/Plan/Execute)"]:::userspace
             DEVLOOP_SK["dev-loop.sk<br>(Implement + Peer Review)"]:::userspace
+            SIMP_SK["simplicity.sk<br>(Ladder + Over-Engineering Review)"]:::userspace
         end
 
         subgraph Interface ["Interface"]

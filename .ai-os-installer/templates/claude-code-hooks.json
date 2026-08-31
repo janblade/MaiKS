@@ -10,6 +10,17 @@
           }
         ]
       }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR}/.ai-os/scripts/session-start-hook.sh\" SubagentStart"
+          }
+        ]
+      }
     ]
   }
 }

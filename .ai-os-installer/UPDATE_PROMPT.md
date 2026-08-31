@@ -101,12 +101,20 @@ automatically, so this file doesn't need editing every release.
 3. If this is a Claude Code host (a root `CLAUDE.md` exists, or `.claude/` does), refresh
    `.claude/settings.json` against `.ai-os-installer/templates/claude-code-hooks.json` the same
    way as the gitignore check above — if `hooks.SessionStart` is missing the current
-   `startup|clear|compact`-matcher entry from that template, merge it in without touching any
-   other hooks the user has configured. This also covers upgrading an older install that only
-   has the earlier `compact`-only echo-reminder version of this hook — replace that entry with
-   the current one rather than leaving both, since `.ai-os/scripts/session-start-hook.sh` (the
-   script it now calls) lands automatically as part of the normal `.ai-os/` payload copy. This
-   check is unconditional and re-runs every update, not gated by version — it doesn't rely on
+   `startup|clear|compact`-matcher entry, **or `hooks.SubagentStart` is missing entirely**,
+   merge the missing entry in without touching any other hooks the user has configured. This
+   also covers upgrading an older install that only has the earlier `compact`-only
+   echo-reminder version of this hook — replace that entry with the current one rather than
+   leaving both, since `.ai-os/scripts/session-start-hook.sh` (the script both entries call)
+   lands automatically as part of the normal `.ai-os/` payload copy. This check is
+   unconditional and re-runs every update, not gated by version — it doesn't rely on
    `MIGRATIONS.md`'s walk.
+   - The `SubagentStart` entry is new in v2.7.0 (EP-60), so every pre-existing install is
+     missing it. It passes the event name as the script's first argument; the script defaults
+     to `SessionStart` when called with none, so an existing `SessionStart` entry keeps working
+     unchanged and must not be rewritten.
+   - If the user already narrowed their own `SubagentStart` matcher (it filters on agent type),
+     leave their value alone — do not widen it back to `.*`. See `INSTALL_PROMPT.md` Step 3 for
+     the token cost that motivates narrowing it.
 4. Do NOT delete the update source folder. Leave it intact so the user can reference it if needed.
 5. Announce to the user that the upgrade is complete, stating the old and new `ai_os_version`.

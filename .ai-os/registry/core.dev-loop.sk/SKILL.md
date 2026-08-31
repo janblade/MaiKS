@@ -52,6 +52,25 @@ Implement a task with a review pass — independent when possible, self-review w
    a. Dispatch an implementer subagent with the task description, the approved plan from
       `PLAN_WRITE` if one exists for this task, and relevant conventions from
       `memory/semantic/knowledge/conventions_patterns.md`.
+
+      **A subagent does not inherit this session's boot state.** Session-start context is
+      parent-thread only — on Claude Code, `SessionStart` and `SubagentStart` are separate
+      hook events, so `scripts/session-start-hook.sh` (EP-56) injects BOOT.md into this
+      thread and into no dispatched agent. A subagent spawned without governance context is
+      an ungoverned writer: no R1 pre-mutation security review, no R21 claim verification,
+      no `AIOS-DEBT:` marker convention, no decision logging — and its output arrives here
+      looking exactly like governed work. Every dispatch prompt therefore carries, inline:
+      the Rules Digest (BOOT.md §3), the decision-log schema (§9), and the conventions
+      above. Cost is real (repeated per dispatch) and is the price of the check being worth
+      anything.
+
+      On Claude Code specifically, EP-60 automates this: a `SubagentStart` hook entry runs
+      `scripts/session-start-hook.sh SubagentStart`, injecting BOOT.md and `ultimate_rules.md`
+      into every dispatched agent. **Verify it before relying on it** — the hook lives in the
+      user's `.claude/settings.json`, not in this repo's payload, so it may be absent,
+      matcher-narrowed to exclude the agent type being dispatched, or the host may not be
+      Claude Code at all. Not confirmed present and in scope for this dispatch → carry the
+      context inline as above. Never assume the hook fired.
    b. Once implementation returns, dispatch a **second, independent** reviewer subagent —
       give it only the diff/changed files and the original task description, **not** the
       implementer's own reasoning or self-assessment (feeding the reviewer the
@@ -85,3 +104,6 @@ Implement a task with a review pass — independent when possible, self-review w
    review toward rubber-stamping instead of judging the diff on its own merits.
 3. **Auto-resolving reviewer disagreements** — surface them to the user; don't have the
    orchestrating agent unilaterally decide who was right.
+4. **Dispatching a subagent without governance context** — it inherits none of this
+   session's boot state (step 2a). Work comes back looking governed while having skipped
+   R1, R21, and R13 entirely.
