@@ -67,10 +67,33 @@ nothing to preserve").
    it, or proceed with the loss deliberately. Never silently overwrite once a relevant log
    entry is found. Same compaction offer as 3a if it's written in prose.
 
-Then copy the remaining files and directories from the new update source into the user's active `.ai-os/` directory, overwriting the old versions:
+Then copy the remaining files and directories from the new update source into the user's
+active `.ai-os/` directory, overwriting the old versions. **This list is exhaustive on both
+sides — copy everything named under "Copy", touch nothing named under "Never copy."** A
+directory absent from both lists is a bug in this file, not a licence to guess: name it to
+the user and ask.
+
+**Copy:**
 - `BOOT.md`, `kernel/`, `rules/` (per the check above)
 - `registry/` (Merge `index.json` carefully to preserve custom skills! This also brings in any new core skills the user doesn't have yet — diff the update source's `registry/index.json` skill IDs against the user's, and copy in any folder that's new.)
 - `commands/`
+- `scripts/` — framework-owned tooling, no user content, straight overwrite. **Do not skip
+  this.** Step 5's hook check assumes the current `session-start-hook.sh` is on disk; leaving
+  a stale copy while adding the new `SubagentStart` settings entry produces a hook that fires
+  on a subagent event and reports `hookEventName: "SessionStart"` — the injection is wrong or
+  silently dropped, which is the exact failure that entry exists to prevent (v2.7.0/EP-60
+  gave the script an optional first argument; older copies ignore it).
+- `genome/archetypes/` only — the pre-defined governance profiles, framework-owned.
+- `agents/supervisor.json` and `agents/templates/` — framework-owned. Merge
+  `agents/index.json` the same way as `registry/index.json`: it carries user-defined external
+  agents auto-registered by Local Agent Absorption, so preserve their `active_profiles`
+  entries and add only genuinely new framework ones.
+
+**Never copy** (project-owned — overwriting these destroys the user's work):
+- `memory/` — Step 2 owns this entirely.
+- `genome/project_genome.json` — the user's own detected genome.
+- `progress.md` — the user's own evolution history.
+- `manifest.json` — merge-only, per the note below.
 
 *Note: For `manifest.json`, `registry/index.json`, `commands/index.json`, and `commands/aliases.json`, do not blindly overwrite. Read both the old and new versions, and carefully merge any new configuration keys, framework skills, or new core commands/aliases from the update into the user's existing files to preserve their custom settings, custom skills, and custom aliases. Confirm any new skill IDs present in the update's `registry/index.json` are also added to the user's `manifest.json.installed_skills` array — a skill folder copied to disk but missing from that list won't be treated as installed. Once everything else is merged, set `manifest.json.ai_os_version` to the update source's version — this is the one field that's supposed to change wholesale, not merge.*
 
@@ -79,17 +102,30 @@ Then copy the remaining files and directories from the new update source into th
 ## Step 4: Execute Migrations
 Read `.ai-os-installer/MIGRATIONS.md` from the update source in full — it's a reverse-chronological
 list of version sections. Using the pre-upgrade `ai_os_version` you captured in Step 1:
-1. Walk every version section **newer** than the user's old version, oldest-of-those-first
-   (i.e. if upgrading from v1.0.0 to v2.1.1, apply v2.0.0's actions, then v2.1.0's, then
-   v2.1.1's, in that order — later migrations can assume earlier ones already ran).
+1. Walk every version section **newer than or equal to** the user's old version,
+   oldest-of-those-first (i.e. if upgrading from v1.0.0 to v2.1.1, apply v2.0.0's actions,
+   then v2.1.0's, then v2.1.1's, in that order — later migrations can assume earlier ones
+   already ran).
+   **Why "or equal to" and not just "newer":** a release can add content under a version
+   number that already shipped — the `v2.7.0 (cont'd)` and `v2.7.0 (cont'd 2)` sections are
+   exactly that, additive skill/script changes that by precedent don't bump `ai_os_version`.
+   A strict "newer than" walk skips them for every user already on that version, which is
+   precisely the population they were written for. Re-running the current version's section
+   is the cost of catching those, and it is safe because of the rule in step 2.
 2. For each: review deprecations/obsoleted files and delete ONLY files explicitly listed as
    obsolete (never other files in the user's `registry/` or `commands/` — those may be
-   custom). Then perform whatever one-time action that version's entry describes (e.g. a
-   one-time orphan sweep, a schema note, a file that needs seeding) — treat every
-   `Migration action:` line in each section as a step to actually execute, not background
-   reading.
-3. If the user was already on the latest version, there's nothing to do here — confirm that
-   and move on rather than silently skipping the check.
+   custom). Then perform whatever action that version's entry describes (e.g. an orphan
+   sweep, a schema note, a file that needs seeding) — treat every `Migration action:` line
+   in each section as a step to actually execute, not background reading.
+   **Every migration action is idempotent and must stay that way** — written as "ensure X
+   exists," "merge Y if missing," "move Z if still in the old location," never as a blind
+   append or an unconditional overwrite of user content. Step 1 re-runs the current
+   version's section on every update, so a non-idempotent action would corrupt a little more
+   each time. Writing a new section? Satisfy this or the section is wrong.
+3. The user already being on the latest version does **not** make this a no-op — their
+   version's own section still gets walked, per step 1. Nothing to do only when that
+   section's actions are all already satisfied; confirm that explicitly rather than
+   skipping the check on the version number alone.
 
 This replaces having a separate hardcoded step per version (e.g. an old "v2.1.0-only" step)
 — new versions just add a new MIGRATIONS.md section and this loop picks them up

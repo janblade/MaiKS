@@ -4,6 +4,15 @@ This file tracks feature, file, and skill changes — additions, deprecations, a
 across MaiKS versions, in reverse-chronological order.
 The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safely prune obsolete framework files without destroying the user's custom skills.
 
+**Rule for anyone writing a new section:** every `Migration action:` must be idempotent —
+"ensure X exists," "merge Y if missing," "move Z if still in the old location," never a blind
+append or an unconditional overwrite of user content. `UPDATE_PROMPT.md` Step 4 walks every
+section **newer than or equal to** the user's current version, so the current version's
+section re-runs on every update. That walk is what lets a `(cont'd)` section — additive
+content shipped under a version number that already exists, which by precedent doesn't bump
+`ai_os_version` — actually reach the users already on that version. A non-idempotent action
+would corrupt a little more on each pass.
+
 ## v2.7.0 (cont'd 2) — Simplicity Skill, Subagent Boot-State Injection
 
 - **New skill `core.simplicity.sk`** (`SIMPLIFY_REVIEW`/`SIMPLIFY_AUDIT`/`DEBT_LEDGER`,
@@ -233,9 +242,10 @@ The Agentic Updater (`UPDATE_PROMPT.md`) reads this file during upgrades to safe
   Migration action: if the user has existing task files with unsanitized names (nested dirs
   under `tasks/`, or a `tasks/HEAD.md`), leave them — they're still valid working files, just
   rename going forward.
-- **One-time orphan sweep recommended**: sweep `tasks/*.md` against `git branch -a` once
-  during the upgrade (handled generically by `UPDATE_PROMPT.md` Step 4's migration walk)
-  rather than waiting for the next `MEMORY_CONSOLIDATE`. **A task file with no matching
+- **Orphan sweep recommended**: sweep `tasks/*.md` against `git branch -a` during the upgrade
+  (handled generically by `UPDATE_PROMPT.md` Step 4's migration walk) rather than waiting for
+  the next `MEMORY_CONSOLIDATE`. Safe to re-run — the sweep is conditional on the checks
+  below, so a repeat pass re-evaluates and moves nothing new. **A task file with no matching
   branch is not automatically an orphan** — as of v2.2.0, ad-hoc task files (opened when
   there's no git identity, named after what the user called the task rather than a branch)
   are expected to have no branch match by design. Only move a file to `archived_tasks/` if
