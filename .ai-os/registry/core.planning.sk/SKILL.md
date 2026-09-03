@@ -4,7 +4,10 @@ description: >-
   Per-feature brainstorm -> write-plan -> execute cycle for work inside an
   existing project. Clarifies scope through small rounds of questions, writes
   an implementation plan concrete enough to execute without re-deriving
-  intent, then works it step by step with verification at each step.
+  intent, then works it step by step with verification at each step. A large
+  multi-piece initiative is written as an epic (one plan file, story sections
+  with their own acceptance criteria); PLAN_RETRO closes an epic with a
+  structured lessons pass.
 ---
 
 # Planning — Brainstorm, Write, Execute
@@ -24,12 +27,21 @@ already states for command matching in general. This skill is for units of work 
 enough that skipping straight to code risks building the wrong thing or losing track of
 steps partway through.
 
+Most work is one flat plan. A large initiative that splits into several independently
+shippable pieces gets an **epic** instead — one plan file with `## Story` sections, each
+carrying its own acceptance criteria and steps (`PLAN_WRITE` step 2 decides which). This is
+`core.architect.sk` Phase 3's feature/story/acceptance-criteria decomposition applied to
+in-project work instead of greenfield — same shape, same discipline, per task. `PLAN_RETRO`
+closes an epic with a structured lessons pass.
+
 ## Dependencies
 
 - `core.observability.sk` — decision logging for plan approval and step completion
 - `core.testing.sk` — TDD discipline governs how each execution step gets verified
-- `core.self-healing.sk` — Verification-Before-Completion Protocol gates each step and the
-  final report
+- `core.self-healing.sk` — Verification-Before-Completion Protocol gates each step, each
+  story's acceptance criteria, and the final report
+- `core.memory.sk` — `PLAN_RETRO`'s lesson candidates route through its verify-before-promote
+  gate (steps 2/2a/4); `TASK_CLOSE`/`MEMORY_CONSOLIDATE` prune closed plan files
 
 ## Commands
 
@@ -66,18 +78,34 @@ Turn a clarified feature into a concrete, ordered implementation plan.
 **Procedure:**
 1. If the request is non-trivial and `PLAN_BRAINSTORM` hasn't run this task yet, run it
    first (or ask the user if they'd rather skip straight to planning).
-2. Break the work into discrete, ordered steps. Each step must be concrete enough that a
-   literal-minded executor doesn't need to re-derive intent — name specific files/functions
-   where already known, not just "update the backend."
-3. For each step that changes behavior, note how it gets verified (which test, which
+2. **Decide the form — flat plan or epic.** Epic only when **all** hold: the work splits
+   into 2–5 pieces that each deliver independently shippable, separately-verifiable value
+   (each could ship alone against its own acceptance criteria); the pieces run in an
+   independent or explicitly-stated dependency order; and a single flat step list would
+   exceed ~15 steps or mix unrelated verification surfaces. Otherwise flat. Unsure → ask
+   the user "one plan, or an epic with N stories?" State the decision and the story list in
+   one line — same match-once discipline as `BOOT.md` §4.
+3. Break the work into discrete, ordered steps (flat plan), or per story into acceptance
+   criteria + steps (epic). Each step must be concrete enough that a literal-minded
+   executor doesn't need to re-derive intent — name specific files/functions where already
+   known, not just "update the backend."
+4. For each step that changes behavior, note how it gets verified (which test, which
    manual check) — ties directly into `core.testing.sk`'s TDD discipline: a step that adds
-   behavior should name the test that proves it, written before the implementation.
-4. Present the full plan to the user. Wait for approval before `PLAN_EXECUTE` starts —
-   same "present, wait for approval" pattern as `core.architect.sk`'s Phase 2/3.
-5. Write the approved plan to its own file: `memory/plans/<YYYY-MM-DD>-<slug>.md`, where
+   behavior should name the test that proves it, written before the implementation. For an
+   epic, each story also gets an `### Acceptance Criteria` block (2–5 observable,
+   independently-testable `[ ]` items) — same checkbox shape as `core.architect.sk` Phase
+   3a's decomposition block. That list is the story's verification contract: `PLAN_EXECUTE`
+   runs it through `core.self-healing.sk`'s Verification-Before-Completion Protocol before
+   the story is `done`, and an item that can't be exercised is disclosed per that
+   protocol's step 4, never ticked silently.
+5. Present the full plan (flat) or the whole epic — every story, every acceptance criterion
+   — to the user. Wait for approval before `PLAN_EXECUTE` starts — same "present, wait for
+   approval" pattern as `core.architect.sk`'s Phase 2/3.
+6. Write the approved plan to its own file: `memory/plans/<YYYY-MM-DD>-<slug>.md`, where
    `<slug>` is a short kebab-case name from the feature (`add-pkce-flow`, not the whole
-   sentence) and `<YYYY-MM-DD>` is today. Structure:
+   sentence) and `<YYYY-MM-DD>` is today.
 
+   **Flat plan:**
    ```markdown
    # Plan: <one-line title>
    - Branch: <sanitized branch name, or "none">
@@ -90,15 +118,48 @@ Turn a clarified feature into a concrete, ordered implementation plan.
    what's explicitly out of scope>
 
    ## Steps
-   1. [ ] <step> — verify: <the test or check from procedure step 3>
+   1. [ ] <step> — verify: <the test or check from procedure step 4>
    2. [ ] ...
    ```
 
+   **Epic** — same file, add `Type: epic` to the header, and replace `## Steps` with
+   `## Story` sections. `## Context` carries epic-level acceptance criteria (what "epic
+   done" means beyond the sum of stories) plus out-of-scope. Story `Status:` uses the same
+   enum as the header.
+   ```markdown
+   # Epic: <one-line title>
+   - Branch: <...>
+   - Created: <YYYY-MM-DD>
+   - Status: approved          # DERIVED roll-up once execution starts — see PLAN_EXECUTE
+   - Type: epic                 # omit (or "plan") for a flat plan
+   - Task file: memory/tasks/<name>.md
+
+   ## Context
+   <what the epic delivers; epic-level acceptance criteria; out of scope>
+
+   ## Story 1: <kebab-slug> — <title>
+   Status: approved
+   ### Acceptance Criteria
+   - [ ] <observable, independently testable criterion>
+   ### Steps
+   1. [ ] <step> — verify: <test/check>
+
+   ## Story 2: <kebab-slug> — <title>
+   Status: approved
+   depends on: Story 1          # optional
+   ### Acceptance Criteria
+   - [ ] ...
+   ### Steps
+   1. [ ] ...
+   ```
+
    This file is the single source of truth for both the plan and its execution progress.
-   In the active task file, write only a one-line pointer:
-   `Active plan: memory/plans/<file>.md (approved, 0/<N>)` — never a second copy of the
-   step list. Plans are not gitignored; they're shared project artifacts like the task
-   file itself.
+   In the active task file, write only a one-line pointer — never a second copy of the
+   steps:
+   - flat: `Active plan: memory/plans/<file>.md (approved, 0/<N>)`
+   - epic: `Active plan: memory/plans/<file>.md (epic approved, 0/<N> stories)`
+
+   Plans are not gitignored; they're shared project artifacts like the task file itself.
 
 ---
 
@@ -111,21 +172,84 @@ Work an approved plan step by step.
 ```
 
 **Procedure:**
-1. Load the plan file — the one named by the active task file's `Active plan:` pointer,
-   or the path given in `--plan`. Set its `Status:` to `in-progress`.
+1. Load the plan file — the one named by the active task file's `Active plan:` pointer, or
+   the path given in `--plan`. **Flat plan:** set `Status:` to `in-progress`. **Epic**
+   (`Type: epic`): the active story is the lowest-numbered story not `done` whose
+   `depends on` stories are all `done`; set that story's `Status:` to `in-progress`.
 2. Execute one step at a time. After each step, run its verification (per `PLAN_WRITE`
-   step 3 and `core.self-healing.sk`'s Verification-Before-Completion Protocol) before
+   step 4 and `core.self-healing.sk`'s Verification-Before-Completion Protocol) before
    moving to the next — don't batch verification to the end.
-3. Check off each step (`[ ]` → `[x]`) in the plan file as it completes, and update the
-   task file's `Active plan:` pointer count (`.../my-plan.md (in-progress, 3/7)`) — so
-   progress survives a session break from either file.
-4. A step turns out wrong, blocked, or reveals the plan itself was mistaken → stop, don't
-   silently improvise past it. Surface it to the user rather than guessing (R24: confirm
-   before applying a fix when confidence is below High).
-5. All steps done → set the plan file's `Status:` to `done`, then report completion
-   through the Verification-Before-Completion Protocol, not a bare "done." The plan file
-   stays in `memory/plans/` as a dated record — `TASK_CLOSE`/`MEMORY_CONSOLIDATE` handle
-   its eventual pruning (`core.memory.sk`), not this command.
+3. Check off each step (`[ ]` → `[x]`) in the plan file as it completes. **Epic story-done
+   gate:** when every step in the active story is `[x]`, run that story's
+   `### Acceptance Criteria` through the Verification-Before-Completion Protocol — tick
+   each criterion `[ ]` → `[x]` only when a run or exercise actually confirms it; disclose
+   an unverifiable one per that protocol's step 4. Then set the story `Status: done` and
+   move to the next eligible story (step 1).
+4. **Refresh the roll-up — always re-derived, never a stored counter.** After any checkbox
+   or story-status change, recompute: (flat) the `Active plan:` pointer's `N/M` step count;
+   (epic) each `## Story` `Status:` line from its checkbox state, the epic header `Status:`
+   (`approved` = all stories approved, none started; `in-progress` = any story started or
+   any box checked; `done` = every story `done`; `abandoned` = closed with stories
+   outstanding), and the pointer's `N/M stories` = count of `done` stories. Active-story
+   step detail is never mirrored into the pointer — it's read from the plan file.
+5. A step or story turns out wrong, blocked, or reveals the plan itself was mistaken →
+   stop, don't silently improvise past it. Surface it to the user rather than guessing
+   (R24: confirm before applying a fix when confidence is below High). Never auto-upgrade a
+   flat plan into an epic mid-execution — stop and re-plan through `PLAN_WRITE`. A single
+   story may be set `Status: abandoned` with user approval; the epic then finishes on the
+   rest or is itself `abandoned` at `TASK_CLOSE`.
+6. All steps done (flat) / all stories `done` and epic-level acceptance in `## Context`
+   verified (epic) → set the plan file's `Status:` to `done`, report completion through the
+   Verification-Before-Completion Protocol (not a bare "done"), and for an epic offer
+   `PLAN_RETRO`. The plan file stays in `memory/plans/` as a dated record —
+   `TASK_CLOSE`/`MEMORY_CONSOLIDATE` handle its eventual pruning (`core.memory.sk`), not
+   this command.
+
+---
+
+### PLAN_RETRO
+
+Structured retrospective when an epic plan closes. Epic-scoped — a flat plan's lessons go
+through the normal `TASK_CLOSE`/`MEMORY_CONSOLIDATE` path, not this command.
+
+```
+> OS_COMMAND PLAN_RETRO [--plan=<plan_file>]
+```
+
+**Trigger:** an epic reaches `Status: done`, or is closed `abandoned` with 2+ stories that
+had completed work. `PLAN_EXECUTE` step 6 and `TASK_CLOSE` (when the linked plan is an
+epic without a `## Retro` section) both offer it; the user can also invoke it directly or
+by natural language ("retro on the checkout epic", "what did we learn from that epic").
+
+**Procedure:**
+1. Resolve the epic plan file (pointer or `--plan`). Not `Type: epic` → tell the user retro
+   is epic-scoped and offer normal consolidation instead.
+2. Assemble the span, all on-demand reads (no stored retro state):
+   - the epic file — stories `done`/`abandoned`/added mid-flight, acceptance criteria that
+     ended unmet, steps added or dropped;
+   - `memory/episodic/decisions.jsonl` — entries from the epic's `Created:` date to now
+     whose `what`/`files` reference the plan path or the branch task file;
+   - the branch task file's working notes;
+   - `git log <fork-point>..HEAD` for the branch, if there is one.
+3. Write a terse `## Retro` section appended **inside the epic plan file** (not a sidecar),
+   four headings:
+   - **Delivered vs planned** — stories done/abandoned/added; acceptance criteria that
+     shipped unmet, with why.
+   - **What worked** — practices/decisions to repeat, each traceable to a `decisions.jsonl`
+     line or a diff.
+   - **What didn't** — friction, rework, mis-specified steps, scope misjudgements, each
+     with evidence.
+   - **Lessons → candidates** — generalizable statements proposed for promotion, each
+     tagged with a destination (`knowledge/conventions_patterns.md` /
+     `knowledge/known_gotchas.md` / `procedural/playbooks.md` / "epic-local, don't
+     promote").
+4. **Promote nothing directly.** `PLAN_RETRO` writes only the `## Retro` section. Each
+   "Lessons → candidates" item is fed through `core.memory.sk` steps 2/2a/4 (re-verify
+   against current repo state, confirm the underlying change was accepted not just closed,
+   dedup, archetype-scaled accept gate) — run now if the user is closing out, else at the
+   next `TASK_CLOSE`/`MEMORY_CONSOLIDATE`. The `## Retro` section is an *input* to that
+   gate, never a bypass.
+5. Log: `{"ts":"…","type":"decision","what":"PLAN_RETRO: <slug> — N lessons proposed","why":"epic closed","files":["memory/plans/<file>"]}`.
 
 ---
 
@@ -140,3 +264,9 @@ Work an approved plan step by step.
 3. **Marking a step done without verifying it** — defeats the point of splitting execution
    into steps in the first place; see `core.self-healing.sk`'s Verification-Before-
    Completion Protocol.
+4. **Reaching for an epic on ordinary work** — the epic form is for a genuine multi-piece
+   initiative (`PLAN_WRITE` step 2's three-part test). A two-story "epic" where the stories
+   aren't independently shippable is just a flat plan with extra headers. When in doubt,
+   flat.
+5. **Treating a `## Retro` as a promotion** — `PLAN_RETRO` proposes lesson candidates; it
+   does not write semantic memory. Promotion still goes through `core.memory.sk`'s gate.

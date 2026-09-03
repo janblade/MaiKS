@@ -9,6 +9,7 @@
     "test": "TEST_RUN",
     "plan": "ARCHITECT_PLAN",
     "feature": "PLAN_BRAINSTORM",
+    "retro": "PLAN_RETRO",
     "discover": "INFRA_DISCOVER_MODULES",
     "wrap": "WRAP",
     "consolidate": "MEMORY_CONSOLIDATE",

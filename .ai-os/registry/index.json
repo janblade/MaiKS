@@ -170,7 +170,8 @@
       "commands": [
         "PLAN_BRAINSTORM",
         "PLAN_WRITE",
-        "PLAN_EXECUTE"
+        "PLAN_EXECUTE",
+        "PLAN_RETRO"
       ],
       "dependencies": [
         "core.observability.sk",

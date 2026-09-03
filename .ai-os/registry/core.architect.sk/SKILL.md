@@ -153,6 +153,10 @@ For each MVP feature:
 - **Dependencies**: [other features this depends on]
 ```
 
+This is the same feature/user-story/acceptance-criteria shape `core.planning.sk` uses for
+an epic's `## Story` sections — greenfield decomposition here, in-project decomposition
+there. One shape; don't fork it.
+
 #### 3b. Milestone Plan
 
 Organize features into phased milestones:

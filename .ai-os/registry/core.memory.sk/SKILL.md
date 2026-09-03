@@ -97,7 +97,9 @@ archive a task that isn't the one you're on.
    register it in `project_knowledge.md`'s index when you do.
 5. **Archive.** Move `tasks/[file].md` → `archived_tasks/[file].md`. If the task file's
    `Active plan:` pointer names a plan in `memory/plans/`, set that plan's `Status:` to
-   `done` (steps finished) or `abandoned` (task closed with steps outstanding). Leave the
+   `done` (steps finished) or `abandoned` (task closed with steps outstanding). If that
+   plan is `Type: epic` and has no `## Retro` section yet, offer `PLAN_RETRO` before
+   archiving — its lesson candidates then feed steps 2/2a of this same procedure. Leave the
    plan file in `memory/plans/` — it's a dated record; step 6 and `MEMORY_CONSOLIDATE`
    handle its eventual pruning, not this step.
 6. **Prune the archive.** If `archived_tasks/` now has more than ~20 files, or files
@@ -147,10 +149,13 @@ to `decisions.archive.jsonl` (per `BOOT.md` §9) rather than leaving them to acc
 **Plan pruning** (run every time, cheap): list `memory/plans/*.md`. Any plan with
 `Status: done` or `Status: abandoned` and a `Created:` date older than the same window
 step 6 of `TASK_CLOSE` uses for `archived_tasks/` (~a few months, archetype-scaled) → fold
-into `memory/plans/_summary.md` (one line each: date, slug, final status) and delete the
-original. Plans still `draft`/`approved`/`in-progress` are left alone regardless of age —
-an old open plan is a signal, not clutter. A plan whose `Task file:` no longer exists and
-that isn't `done`/`abandoned` → flag to the user, don't auto-prune.
+into `memory/plans/_summary.md` (one line each: date, slug, final status; for an epic, add
+`epic — retro captured` or `epic — no retro`) and delete the original. The `## Retro`
+section of an epic is pruned with its file — acceptable because its lessons already passed
+or were explicitly denied `core.memory.sk`'s promotion gate at retro time. Plans still
+`draft`/`approved`/`in-progress` are left alone regardless of age — an old open plan is a
+signal, not clutter. A plan whose `Task file:` no longer exists and that isn't
+`done`/`abandoned` → flag to the user, don't auto-prune.
 
 ---
 
@@ -212,10 +217,13 @@ of these sitting outside `.ai-os/` for the branch/task currently being loaded:
 2. **Ask whether to absorb it, and route by shape.** If yes:
    - **A structured plan** (ordered steps, acceptance criteria, milestones) → create
      `memory/plans/<YYYY-MM-DD>-<slug>.md`, prepend the standard plan header
-     (`core.planning.sk` `PLAN_WRITE` step 5: `Branch`, `Created`, `Status`, `Task file:`),
+     (`core.planning.sk` `PLAN_WRITE` step 6: `Branch`, `Created`, `Status`, `Task file:`),
      and move the host file's plan content in with its structure intact — `## Steps` as a
-     `[ ]` checklist, not a flattened paragraph. Add the `Active plan:` pointer line to the
-     task file. This preserves what a flatten-into-notes absorb would lose.
+     `[ ]` checklist, not a flattened paragraph. If the host file is itself epic-shaped
+     (several independently-shippable pieces, each with its own criteria), add `Type: epic`
+     and lay it out as `## Story` sections per that same step 6. Add the `Active plan:`
+     pointer line to the task file. This preserves what a flatten-into-notes absorb would
+     lose.
    - **Loose notes / scratch** (no real plan structure) → append to the current task file
      under a labeled heading (`## Absorbed from <filename> (<date>)`), dropping IDE-template
      boilerplate. Unchanged from before.

@@ -13,6 +13,34 @@ content shipped under a version number that already exists, which by precedent d
 `ai_os_version` — actually reach the users already on that version. A non-idempotent action
 would corrupt a little more on each pass.
 
+## v2.7.0 (cont'd 4) — Epic/Story Planning, PLAN_RETRO
+
+- **`core.planning.sk` gains epic decomposition** (EP-65): `PLAN_WRITE` can now write a
+  large multi-piece initiative as an *epic* — one `memory/plans/<date>-<slug>.md` file with
+  `Type: epic` in the header and `## Story` sections, each carrying its own
+  `### Acceptance Criteria` and `### Steps`. Flat plans are unchanged — `Type:` absent means
+  the exact behavior shipped in v2.7.0 (cont'd 3). `PLAN_EXECUTE` works stories in
+  dependency order and re-derives the epic's roll-up `Status` and the `Active plan:`
+  pointer's story count from checkbox state (never a stored counter). **Migration action:**
+  none — additive skill content, covered by the `registry/` copy in `UPDATE_PROMPT.md`
+  Step 3. Existing plan files stay valid (they're flat plans by the absent-`Type:` default).
+- **New command `PLAN_RETRO`** (EP-65, alias `retro`): structured retrospective when an
+  epic closes — appends a `## Retro` section to the epic plan file (delivered vs planned /
+  what worked / what didn't / lessons → promotion candidates) and routes every lesson
+  through `core.memory.sk`'s verify-before-promote gate rather than writing semantic memory
+  itself. **Migration action:** merge the new entry into `commands/index.json`'s command
+  list, add `"PLAN_RETRO"` to `core.planning.sk`'s `commands` array in `registry/index.json`,
+  and add the `retro` alias to `commands/aliases.json` without dropping any the user added —
+  all covered by the standard merge in `UPDATE_PROMPT.md` Step 3. No `manifest.json`
+  `installed_skills` or `kernel/integrity.md` change (the skill was already registered).
+- **Acceptance criteria feed the existing gate, no protocol edit** (EP-65): a story's
+  `### Acceptance Criteria` list is consumed by `core.self-healing.sk`'s
+  Verification-Before-Completion Protocol as its concrete checklist; the protocol itself is
+  unchanged. `core.architect.sk` Phase 3a gained a one-line cross-reference noting its
+  feature/AC block is the same shape. No migration action.
+- No `ai_os_version` bump — additive skill/command content, no kernel edit, consistent with
+  the v2.1.0/EP-43 precedent.
+
 ## v2.7.0 (cont'd 3) — Plans Folder, Skill-Invocation Banner
 
 - **New memory location `.ai-os/memory/plans/`** (EP-64): dated standalone plan files,
