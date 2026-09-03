@@ -13,6 +13,37 @@ content shipped under a version number that already exists, which by precedent d
 `ai_os_version` — actually reach the users already on that version. A non-idempotent action
 would corrupt a little more on each pass.
 
+## v2.7.0 (cont'd 3) — Plans Folder, Skill-Invocation Banner
+
+- **New memory location `.ai-os/memory/plans/`** (EP-64): dated standalone plan files,
+  `plans/<YYYY-MM-DD>-<slug>.md`, written by `PLAN_WRITE` and `ARCHITECT_PLAN` instead of
+  being inlined into the branch task file. Each carries a header
+  (`Branch`/`Created`/`Status`/`Task file:`) plus `## Context` and a `## Steps` checklist;
+  the plan file is the source of truth for execution progress, the task file keeps only a
+  one-line `Active plan:` pointer. **Migration action:** ensure `.ai-os/memory/plans/`
+  exists with a `.keep` (covered by `UPDATE_PROMPT.md` Step 2 item 1). Never delete or
+  overwrite plan files already present. Existing installs simply have an empty `plans/`
+  until the next `PLAN_WRITE`. Tracked, not gitignored — no `.gitignore` change.
+- **Stray-host-plan handling redirected** (EP-64, revises EP-48): when a host force-creates
+  `implementation_plan.md`/`walkthrough.md` outside `.ai-os/`, a *structured* plan is now
+  moved into `plans/` with its shape intact rather than flattened into task notes; loose
+  notes still append to the task file. Still gated on the two existing confirmations (ask
+  before absorbing, ask separately before deleting the original). No migration action —
+  behavior change in `BOOT.md` §2 step 4 and `core.memory.sk`, covered by the Step 3
+  `BOOT.md`/`registry/` copy.
+- **`PLAN_EXECUTE` / `TASK_CLOSE` / `MEMORY_CONSOLIDATE` updated** (EP-64): execute ticks
+  checkboxes in the plan file; `TASK_CLOSE` sets the linked plan's `Status`;
+  `MEMORY_CONSOLIDATE` gained a "Plan pruning" pass folding old `done`/`abandoned` plans
+  into `plans/_summary.md`. No migration action — skill-file content, covered by the
+  `registry/` copy.
+- **Skill-invocation banner** (EP-63): `BOOT.md` §4 now has the agent emit a one-line
+  `▸ AI-OS · {skill-id | "built-in"} · {COMMAND}` receipt before running any registered
+  command's procedure. No migration action — `BOOT.md` content, covered by the Step 3
+  copy. Self-report convention, not a hook.
+- None of the above bumped `ai_os_version` — additive skill/command/kernel-text content and
+  a new memory sub-directory, no compatibility break, consistent with the v2.1.0/EP-43
+  precedent.
+
 ## v2.7.0 (cont'd 2) — Simplicity Skill, Subagent Boot-State Injection
 
 - **New skill `core.simplicity.sk`** (`SIMPLIFY_REVIEW`/`SIMPLIFY_AUDIT`/`DEBT_LEDGER`,

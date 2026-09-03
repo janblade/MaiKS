@@ -74,7 +74,31 @@ Turn a clarified feature into a concrete, ordered implementation plan.
    behavior should name the test that proves it, written before the implementation.
 4. Present the full plan to the user. Wait for approval before `PLAN_EXECUTE` starts —
    same "present, wait for approval" pattern as `core.architect.sk`'s Phase 2/3.
-5. Write the approved plan into the active task file as a checklist.
+5. Write the approved plan to its own file: `memory/plans/<YYYY-MM-DD>-<slug>.md`, where
+   `<slug>` is a short kebab-case name from the feature (`add-pkce-flow`, not the whole
+   sentence) and `<YYYY-MM-DD>` is today. Structure:
+
+   ```markdown
+   # Plan: <one-line title>
+   - Branch: <sanitized branch name, or "none">
+   - Created: <YYYY-MM-DD>
+   - Status: approved          # draft | approved | in-progress | done | abandoned
+   - Task file: memory/tasks/<name>.md
+
+   ## Context
+   <the one-paragraph PLAN_BRAINSTORM outcome — what it does, acceptance criteria,
+   what's explicitly out of scope>
+
+   ## Steps
+   1. [ ] <step> — verify: <the test or check from procedure step 3>
+   2. [ ] ...
+   ```
+
+   This file is the single source of truth for both the plan and its execution progress.
+   In the active task file, write only a one-line pointer:
+   `Active plan: memory/plans/<file>.md (approved, 0/<N>)` — never a second copy of the
+   step list. Plans are not gitignored; they're shared project artifacts like the task
+   file itself.
 
 ---
 
@@ -83,21 +107,25 @@ Turn a clarified feature into a concrete, ordered implementation plan.
 Work an approved plan step by step.
 
 ```
-> OS_COMMAND PLAN_EXECUTE [--plan=<task_file>]
+> OS_COMMAND PLAN_EXECUTE [--plan=<plan_file>]
 ```
 
 **Procedure:**
-1. Load the plan checklist from the active task file (or the specified one).
+1. Load the plan file — the one named by the active task file's `Active plan:` pointer,
+   or the path given in `--plan`. Set its `Status:` to `in-progress`.
 2. Execute one step at a time. After each step, run its verification (per `PLAN_WRITE`
    step 3 and `core.self-healing.sk`'s Verification-Before-Completion Protocol) before
    moving to the next — don't batch verification to the end.
-3. Check off each step in the task file as it completes, so progress survives a session
-   break.
+3. Check off each step (`[ ]` → `[x]`) in the plan file as it completes, and update the
+   task file's `Active plan:` pointer count (`.../my-plan.md (in-progress, 3/7)`) — so
+   progress survives a session break from either file.
 4. A step turns out wrong, blocked, or reveals the plan itself was mistaken → stop, don't
    silently improvise past it. Surface it to the user rather than guessing (R24: confirm
    before applying a fix when confidence is below High).
-5. All steps done → report completion through the Verification-Before-Completion
-   Protocol, not a bare "done."
+5. All steps done → set the plan file's `Status:` to `done`, then report completion
+   through the Verification-Before-Completion Protocol, not a bare "done." The plan file
+   stays in `memory/plans/` as a dated record — `TASK_CLOSE`/`MEMORY_CONSOLIDATE` handle
+   its eventual pruning (`core.memory.sk`), not this command.
 
 ---
 

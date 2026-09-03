@@ -16,6 +16,8 @@ You **MUST NOT** overwrite, delete, or lose the user's existing memory file cont
    - `procedural/`
    - `tasks/`
    - `archived_tasks/`
+   - `plans/` (dated plan files from `PLAN_WRITE`/`ARCHITECT_PLAN`, v2.7.0 cont'd 3 —
+     ensure it exists with a `.keep`; never delete or overwrite plan files already in it)
 2. Safely migrate existing files from old locations (e.g. root of `.ai-os/memory/`) to their new subdirectories if they are found in the old location:
    - Move `project_knowledge.md` and `patterns.json` to `.ai-os/memory/semantic/`
    - Move `decisions.jsonl` and `sessions.jsonl` to `.ai-os/memory/episodic/`

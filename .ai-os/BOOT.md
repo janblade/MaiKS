@@ -63,7 +63,9 @@ Every session, cheap by design:
    - Stray host-native plan file present (`task.md`, `implementation_plan.md`,
      `walkthrough.md`, or similar, outside `.ai-os/`) → some hosts force these via their own
      planning-mode hook regardless of instruction. Don't ignore or delete silently: ask the
-     user whether to absorb it into the task file just loaded/created (`core.memory.sk`).
+     user whether to absorb it — a structured plan moved into `memory/plans/` with its
+     shape intact, loose notes appended to the task file just loaded/created
+     (`core.memory.sk`) — then ask separately before deleting the original.
 5. CAPABILITIES: `commands/index.json` / `registry/index.json` = source of truth. Read on
    invocation, not at boot.
 
@@ -227,8 +229,10 @@ their larger procedure — don't invoke either just to record a pause.
 
 ROUTING: working notes → task file, never directly to `project_knowledge.md` — always
 one open, including `main`/`master`/`develop`/`release` and non-git workspaces (§2 step
-4). `project_knowledge.md` receives only confirmed truths, at `TASK_CLOSE` (or
-consolidation, on protected branches).
+4). A written plan (`PLAN_WRITE`, `ARCHITECT_PLAN`) → `memory/plans/<YYYY-MM-DD>-<slug>.md`,
+one standalone dated file, linked from the task file by a one-line pointer — not inlined
+into task notes (`core.planning.sk`). `project_knowledge.md` receives only confirmed
+truths, at `TASK_CLOSE` (or consolidation, on protected branches).
 
 THREE TASK-FILE KINDS, TWO LIFECYCLES: ticket branches and user-named ad-hoc tasks
 (opened by asking, no git identity) both end explicitly via `TASK_CLOSE` → archived.

@@ -20,6 +20,7 @@ MaiKS is a microkernel-inspired governance layer that runs inside your project w
 *   **IDE Bridge Files**: Hooks into your IDE's customization system (`.agents/skills.json`, a root `AGENTS.md`, plus host-specific files like `CLAUDE.md` and Cursor's `.mdc` rules) so skills and memory are loaded into the agent's context — each bridge file carries a self-sufficient minimum contract even on hosts that never run the full boot sequence.
 *   **Four-Tier Memory Model**: Reduces cross-session context loss by maintaining Episodic (decisions), Semantic (project structure), Task (active branch), and Procedural (executable playbooks) memory.
 *   **Hub and Spoke Task Memory**: When you switch to a feature or bugfix branch, working memory is isolated into a dedicated task file, keeping the global project knowledge file free of branch-specific noise.
+*   **Dedicated Plans Folder**: Approved implementation plans are written to `.ai-os/memory/plans/` as dated standalone files (`2026-09-03-add-pkce-flow.md`), not buried in scratch task notes. `PLAN_WRITE` and the `Architect` skill both land here; execution progress is tracked as checkboxes in the plan file itself. When a host IDE force-creates its own `implementation_plan.md`, the framework offers to move it here with its structure intact rather than flattening it into notes.
 *   **Verified Memory Promotion**: Task notes are deliberately unscrutinized working memory — half-formed ideas and dead ends are expected. Before anything gets promoted into permanent, cross-session semantic memory, it's checked two ways: is the claim still factually true against the current code, *and* was the underlying change actually accepted (not still buggy, mid-revision, or awaiting your sign-off)? A description of a bug that's still in the code is a true statement and a bad thing to remember as "how it works."
 
 ## Token Economics
@@ -81,7 +82,7 @@ graph TB
         subgraph MemorySystem ["Memory System - Structured Files"]
             EPISODIC["Episodic Memory<br>(decisions.jsonl + sessions.jsonl<br>+ last_session.json, decisions.archive.jsonl)"]:::database
             SEMANTIC["Semantic (Hub)<br>(project_knowledge.md index<br>+ knowledge/*.md sub-files)"]:::database
-            TASK["Task (Spokes)<br>(tasks/ + archived_tasks/,<br>orphan-swept & pruned)"]:::database
+            TASK["Task (Spokes)<br>(tasks/ + archived_tasks/ + plans/,<br>orphan-swept & pruned)"]:::database
             PROCEDURAL["Procedural Memory<br>(workflows.json + playbooks.md)"]:::database
         end
 
@@ -184,7 +185,8 @@ your-project/
 │   │   │                            # + generated/ (regenerable caches, e.g. dataflow_map.json)
 │   │   ├── procedural/              # workflows.json + playbooks.md
 │   │   ├── tasks/                   # Active Jira/feature branch working memory
-│   │   └── archived_tasks/          # History of closed tasks (pruned, not unbounded)
+│   │   ├── archived_tasks/          # History of closed tasks (pruned, not unbounded)
+│   │   └── plans/                   # Dated approved plans (PLAN_WRITE / ARCHITECT_PLAN)
 │   ├── agents/                      # Custom specialized agent profiles
 │   └── registry/                    # Skill catalogs (.sk/), incl. core.memory.sk
 │

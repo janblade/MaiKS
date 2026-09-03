@@ -95,7 +95,11 @@ archive a task that isn't the one you're on.
    domain it matches (`architecture_overview.md` / `conventions_patterns.md` /
    `known_gotchas.md`) — only create a new domain file if nothing existing fits, and
    register it in `project_knowledge.md`'s index when you do.
-5. **Archive.** Move `tasks/[file].md` → `archived_tasks/[file].md`.
+5. **Archive.** Move `tasks/[file].md` → `archived_tasks/[file].md`. If the task file's
+   `Active plan:` pointer names a plan in `memory/plans/`, set that plan's `Status:` to
+   `done` (steps finished) or `abandoned` (task closed with steps outstanding). Leave the
+   plan file in `memory/plans/` — it's a dated record; step 6 and `MEMORY_CONSOLIDATE`
+   handle its eventual pruning, not this step.
 6. **Prune the archive.** If `archived_tasks/` now has more than ~20 files, or files
    clearly older than a few months of project history, fold the oldest ones into a single
    `archived_tasks/_summary.md` (one line each: date, branch, one-sentence outcome) and
@@ -116,7 +120,7 @@ archive a task that isn't the one you're on.
 Same verify/accept/diff/dedup rules as `TASK_CLOSE` steps 2, 2a, 3, 4 apply here when
 extracting episodic decisions into semantic knowledge — a `decisions.jsonl` entry
 describing a fix that was later reverted is just as promotable-by-mistake as a buggy task
-note. Three additions specific to this command:
+note. Four additions specific to this command:
 
 **Drain rolling task files on protected branches**: every branch has a task file (`BOOT.md`
 §2 step 4 — main/master/develop/release included, there's no branch where working notes
@@ -139,6 +143,14 @@ that was rejected, not confirmed; surface it to the user instead if it looks sub
 
 **Episodic rotation**: after extracting lessons, move the processed `decisions.jsonl` lines
 to `decisions.archive.jsonl` (per `BOOT.md` §9) rather than leaving them to accumulate.
+
+**Plan pruning** (run every time, cheap): list `memory/plans/*.md`. Any plan with
+`Status: done` or `Status: abandoned` and a `Created:` date older than the same window
+step 6 of `TASK_CLOSE` uses for `archived_tasks/` (~a few months, archetype-scaled) → fold
+into `memory/plans/_summary.md` (one line each: date, slug, final status) and delete the
+original. Plans still `draft`/`approved`/`in-progress` are left alone regardless of age —
+an old open plan is a signal, not clutter. A plan whose `Task file:` no longer exists and
+that isn't `done`/`abandoned` → flag to the user, don't auto-prune.
 
 ---
 
@@ -197,9 +209,16 @@ of these sitting outside `.ai-os/` for the branch/task currently being loaded:
 
 1. **Never absorb or delete silently.** It's the host's own artifact, possibly still in
    active use by the IDE's UI — surface it and ask first, every time.
-2. **Ask whether to absorb it.** If yes, append its content to the current task file under
-   a clearly labeled heading (`## Absorbed from <filename> (<date>)`), not a raw dump — keep
-   concrete plan steps and decisions, drop boilerplate the IDE template added.
+2. **Ask whether to absorb it, and route by shape.** If yes:
+   - **A structured plan** (ordered steps, acceptance criteria, milestones) → create
+     `memory/plans/<YYYY-MM-DD>-<slug>.md`, prepend the standard plan header
+     (`core.planning.sk` `PLAN_WRITE` step 5: `Branch`, `Created`, `Status`, `Task file:`),
+     and move the host file's plan content in with its structure intact — `## Steps` as a
+     `[ ]` checklist, not a flattened paragraph. Add the `Active plan:` pointer line to the
+     task file. This preserves what a flatten-into-notes absorb would lose.
+   - **Loose notes / scratch** (no real plan structure) → append to the current task file
+     under a labeled heading (`## Absorbed from <filename> (<date>)`), dropping IDE-template
+     boilerplate. Unchanged from before.
 3. **Ask separately whether to delete the original.** Absorbing and deleting are two
    different confirmations — a user may want the content copied but the file left alone
    (e.g. the IDE's own panel still displays it).

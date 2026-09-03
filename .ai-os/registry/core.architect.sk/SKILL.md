@@ -186,6 +186,13 @@ Identify top 3-5 risks:
 
 **Present the plan to the user. Wait for approval before scaffolding.**
 
+On approval, write the full plan (3a feature decomposition + 3b milestones + 3c risks) to
+`memory/plans/<YYYY-MM-DD>-<project-slug>.md` with the same header block
+`core.planning.sk`'s `PLAN_WRITE` step 5 defines (`Branch`, `Created`, `Status`,
+`Task file:`) — one standalone dated file, not inlined into task or semantic memory. The
+task file gets the one-line `Active plan:` pointer. This keeps greenfield and in-project
+plans in one predictable place.
+
 ---
 
 ### Phase 4: SCAFFOLD — Generate the Project
