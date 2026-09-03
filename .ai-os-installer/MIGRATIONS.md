@@ -13,6 +13,28 @@ content shipped under a version number that already exists, which by precedent d
 `ai_os_version` — actually reach the users already on that version. A non-idempotent action
 would corrupt a little more on each pass.
 
+## v2.7.0 (cont'd 5) — RELEASE (project-only)
+
+- **New command `RELEASE`** in `core.evolution.sk` (EP-66): MaiKS's own commit-and-push-to-
+  `main` gate for an applied evolution — scope the APPLIED EPs since last push, re-run the
+  CHECK sweep, decide the `ai_os_version` bump, one commit per EP, push (no PR). It is
+  **project-only**, in the same class as `EVOLVE_BENCHMARK`. **Migration action for an
+  installed project: none — and specifically do *not* add it.** `UPDATE_PROMPT.md` Step 3's
+  merge exception already names `RELEASE` alongside `EVOLVE_BENCHMARK`: its
+  `commands/index.json` entry, its string in `registry/index.json`'s
+  `core.evolution.sk.commands`, and its `"release"`/`"ship"` aliases are never merged into
+  an install, even though the update source ships all of them. An install that somehow
+  already has it (hand-added) keeps it — not stripped retroactively.
+- `core.evolution.sk/SKILL.md` gained the `### RELEASE` section and an `EVOLVE_APPLY` step 6
+  pointer ("in this repo, finish by running `RELEASE`; in an installed project, follow the
+  project's own VCS conventions"). That documentation copies in with the `registry/` sync
+  and is harmless in an install (the command is unregistered there). No migration action.
+- `rules/ultimate_rules.md`'s Project-Specific Addendum gained a "Framework Release
+  Workflow" entry — purged on fresh install (Step 4 item 7) and preserved-not-merged on
+  upgrade (Step 3a) like the rest of that block. No migration action.
+- No `ai_os_version` bump — additive project-only content, consistent with the
+  v2.1.0/EP-43 precedent.
+
 ## v2.7.0 (cont'd 4) — Epic/Story Planning, PLAN_RETRO
 
 - **`core.planning.sk` gains epic decomposition** (EP-65): `PLAN_WRITE` can now write a

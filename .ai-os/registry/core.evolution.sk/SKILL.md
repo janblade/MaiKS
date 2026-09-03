@@ -87,6 +87,9 @@ Apply an approved evolution.
    - If the evolution was structural or architectural, update `memory/semantic/project_knowledge.md` to reflect the new system behavior
    - Increment `manifest.json.evolution_history.total_evolutions`
    - Update `manifest.json.evolution_history.last_evolution`
+   - **Commit and push**: in this repo (MaiKS's own dev repo), finish by running `RELEASE`
+     — the documented commit/push gate. In an installed project, follow the project's own
+     VCS conventions; `RELEASE` is not shipped to installs.
 7. **If verification fails**:
    - Restore preserved files
    - Update proposal status to ROLLED_BACK
@@ -178,6 +181,55 @@ so that cost is paid only when asked for.
    finding), what was excluded as already-considered.
 6. Counts toward the standard 5-evolutions-per-conversation rate limit like any other
    batch of proposals.
+
+---
+
+### RELEASE
+
+**Project-only** — specific to MaiKS's own dev repo, like `EVOLVE_BENCHMARK`. Its
+registrations are stripped from fresh installs (`INSTALL_PROMPT.md` Step 4) and never
+merged in on upgrade (`UPDATE_PROMPT.md` Step 3); an installed project commits its own
+evolutions per its own VCS conventions, not this procedure. The commit/push gate for an
+applied evolution in this repo — the documented tail of `EVOLVE_APPLY` step 6.
+
+```
+> OS_COMMAND RELEASE
+```
+
+**Procedure:**
+1. **Scope.** Identify the evolution(s) APPLIED since the last push: `git log origin/main..HEAD`
+   plus `progress.md` entries whose Status is `APPLIED` and whose files aren't yet in a
+   pushed commit. Confirm the working tree contains only those EPs' intended files — a
+   stray unrelated change → stop, surface it, don't sweep it into the release commit.
+2. **CHECK sweep** (re-run `EVOLVE_APPLY`'s verify at release time, it's cheap):
+   - every touched JSON parses;
+   - `registry/index.json` ↔ `commands/index.json` consistent — the same skill's command
+     list matches on both sides;
+   - each EP's `progress.md` Status is `APPLIED` (not `PROPOSED`/`ROLLED_BACK`);
+   - a `type: "evolution"` `decisions.jsonl` entry exists for each EP;
+   - if an EP changed `.ai-os/` behaviour that `UPDATE_PROMPT.md` propagates, a
+     `MIGRATIONS.md` section covers it (the newer-than-or-equal walk, EP-62);
+   - `manifest.json.evolution_history.last_evolution` = the newest EP being released;
+     `total_evolutions` incremented once per APPLIED EP that touched `.ai-os/` payload —
+     an installer-doc-only or `README.md`-only EP consumes an EP-ID without bumping the
+     counter (EP-45/47/62 precedent).
+3. **Version.** Bump `manifest.json.ai_os_version` (and the README footer) **only if an EP
+   explicitly calls for it.** Additive skill/command/memory content does not bump it
+   (EP-43 / EP-58..61 precedent); a change to a kernel contract or anything that alters
+   compatibility for an installed project does.
+4. **Gate.** R9 clean-tree-before-self-modification (already satisfied if step 1 passed);
+   R20 — never `--force`, hard-reset, or discard uncommitted work without explicit
+   confirmation; `evolution_policy.md`'s 5-evolutions-per-conversation soft cap — if this
+   release covers the 6th+ applied EP this conversation, pause and summarise first.
+5. **Commit** — one commit per EP, message:
+   `<type>(<scope>): <summary> (EP-NN)` where `<type>` matches the EP's Type
+   (`feat`/`fix`/`docs`/`chore`/`refactor`), a brief what-and-why body, and the
+   `Co-Authored-By:` trailer **the harness specifies for the current session** — the model
+   name in it varies by session, never hardcode one.
+6. **Push** — `git push origin main`. This repo commits straight to `main`, no PR (its
+   `progress.md`/`decisions.jsonl` are its changelog). Report the pushed SHA(s).
+
+Does **not** touch semantic memory — promotion stays with `TASK_CLOSE`/`MEMORY_CONSOLIDATE`.
 
 ---
 

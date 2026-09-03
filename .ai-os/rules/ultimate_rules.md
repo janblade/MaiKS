@@ -232,4 +232,14 @@ BOOT.md §2's cheap-by-design boot path intact. Compares this framework against 
 AI agent frameworks/practices; genuine gaps become PROPOSED evolutions in `progress.md`
 (reviewed like any other proposal, never auto-applied). Project-only — excluded from
 other installs by the install-time Addendum purge (EP-42).
+
+### Project Rule: Framework Release Workflow
+An applied evolution in this repo is committed and pushed via `RELEASE`
+(`core.evolution.sk`) — the documented tail of `EVOLVE_APPLY` step 6. One commit per EP,
+`<type>(<scope>): <summary> (EP-NN)`, straight to `main`, no PR (this repo's
+`progress.md`/`decisions.jsonl` are its changelog). `RELEASE` re-runs the CHECK sweep,
+decides the `ai_os_version` bump (only when an EP calls for it), and uses the session's
+own `Co-Authored-By` trailer. Project-only — `RELEASE`'s registrations are stripped on
+fresh install and never merged in on upgrade (EP-66); an installed project commits its
+evolutions per its own VCS conventions.
 <!-- PROJECT_RULES_END -->
