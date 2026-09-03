@@ -134,6 +134,17 @@ silently, commit — no "this could be X or Y" narration; one clarifying questio
 two commands are substantially different fits. Granular actions (read a file, fix a
 line, search a symbol) won't match anything — use normal tools directly.
 
+ANNOUNCE ON INVOCATION. Before running any registered command's procedure — skill
+command or built-in, however triggered (typed `OS_COMMAND`, alias, natural-language
+match) — emit one line first, exact format:
+`▸ AI-OS · {skill-id | "built-in"} · {COMMAND}`
+e.g. `▸ AI-OS · core.planning.sk · PLAN_BRAINSTORM` | `▸ AI-OS · built-in · WRAP`.
+Receipt, not deliberation — after the match, one line, no alternatives narrated; does
+not reopen "match once, silently, commit" above. No banner for granular actions
+matching no command, or for always-on protocols that aren't discrete invocations (TDD
+loop, Verification-Before-Completion, Response Credibility). Self-report — reinforced by
+sitting in this hot core, not host-enforced.
+
 "WHAT WOULD THIS AFFECT" → `INFRA_MAP_DATAFLOW`, even framed as a new feature, not a
 bug. "If we add X, what does it touch" / "impact of this requirement" / "what breaks if
 we change this field" name a field/entity without saying "trace"/"dataflow" — easy to
