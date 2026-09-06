@@ -40,3 +40,16 @@
   recorded in `memory/episodic/session_override.json`, disk-checked not
   conversation-memory (so `/compact` can't resurrect/erase it) → capped 5 kernel edits per
   grant or session end, whichever first.
+- **Automatic Peer Review** (EP-53 + EP-67): `core.dev-loop.sk`'s review pass is not
+  opt-in. EP-53 created `DEV_IMPLEMENT_REVIEWED` but nothing invoked it — the self-grading
+  blind spot was live by default. EP-67 factored the review half into a named **Review
+  Pass** sub-procedure (independent reviewer subagent where the host supports dispatch;
+  honestly-labeled cold self-review where it doesn't; non-blocking, findings surfaced
+  as-is, never auto-resolved) and wired it in two places: `PLAN_EXECUTE` runs it once per
+  flat plan (at completion) and once per epic story (at the story-done gate); `BOOT.md` §4
+  routes a plan-less "implement this feature/endpoint/function" request to
+  `DEV_IMPLEMENT_REVIEWED`. Carve-outs: granular edits (one line, a rename) trigger
+  nothing; "execute the plan" when a plan exists stays `PLAN_EXECUTE`. Deliberately no
+  archetype gate and no `--no-review` opt-out — cost accepted (~6.5K tokens/review where
+  subagents exist, cold re-read where they don't). First `ai_os_version` bump since EP-41
+  (2.7.0 → 2.8.0) because it changes default execution behavior.
