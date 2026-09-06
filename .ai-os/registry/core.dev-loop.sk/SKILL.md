@@ -71,27 +71,57 @@ Implement a task with a review pass — independent when possible, self-review w
       matcher-narrowed to exclude the agent type being dispatched, or the host may not be
       Claude Code at all. Not confirmed present and in scope for this dispatch → carry the
       context inline as above. Never assume the hook fired.
-   b. Once implementation returns, dispatch a **second, independent** reviewer subagent —
-      give it only the diff/changed files and the original task description, **not** the
-      implementer's own reasoning or self-assessment (feeding the reviewer the
-      implementer's justification biases it toward agreement instead of independent
-      judgment). Ask it to check: correctness against the task description, convention
-      adherence, security (cross-reference `SECURITY_SCAN_FILE`), and test coverage.
-   c. Report the reviewer's findings to the user as-is, including disagreements with the
-      implementer — don't silently auto-resolve a disagreement by picking a side; that
-      defeats the point of having an independent check.
+   b. Once implementation returns, run the **Review Pass** (below) with the implementer's
+      diff / changed files and the original task description as the spec. It is already on
+      Path A's independent branch — a second, independent reviewer subagent.
 
 3. **Path B — same-agent structured fallback** (no subagent capability):
    a. Implement the task normally.
-   b. Re-read the diff cold, as a **separate step** from writing it, against an explicit
-      checklist: correctness against the task description, convention adherence, a
-      security pass (`SECURITY_SCAN_FILE`), test coverage.
-   c. State plainly in the report that this was a same-agent fallback review, not
-      independent review — never word it as if a second agent checked the work.
+   b. Run the **Review Pass** (below) against the diff you just produced. With no subagent
+      tool it takes the fallback branch — an explicitly-labeled cold self-review.
 
 4. Either path ends with `core.self-healing.sk`'s Verification-Before-Completion Protocol
    before reporting the task done.
 5. Log which path was used and why in `memory/episodic/decisions.jsonl`.
+
+---
+
+### Review Pass
+
+The second-opinion half of `DEV_IMPLEMENT_REVIEWED`, factored out so a skill that has
+**already done its own implementation** can get the review without the implementer
+dispatch. `core.planning.sk`'s `PLAN_EXECUTE` invokes this directly — once per flat plan
+at completion, once per epic story at the story-done gate (EP-67). `DEV_IMPLEMENT_REVIEWED`
+steps 2b / 3b are this same procedure.
+
+Not a standalone `OS_COMMAND` — no independent invocation, always a step of a calling
+command, so it emits no `▸ AI-OS` banner of its own (the caller already announced). The
+caller emits one plain line naming the branch taken (`independent reviewer` /
+`self-review fallback`) so the check is visible.
+
+**Inputs:** the diff / changed file set, and the task spec — a plan's `## Context`, a
+story's title + `### Acceptance Criteria`, or the original task description. **Never** the
+implementer's reasoning or self-assessment (feeding the reviewer the implementer's
+justification biases it toward agreement instead of independent judgment).
+
+**Procedure:**
+1. **Capability check** — same introspection as `DEV_IMPLEMENT_REVIEWED` step 1: is a
+   genuine subagent-dispatch tool actually present this session? Available → step 2. Not →
+   step 3. (A caller already on Path B has established there is none; the check just
+   confirms it.)
+2. **Independent branch** — dispatch one reviewer subagent with the diff + spec only.
+   Carry governance context inline (Rules Digest, decision-log schema, conventions) unless
+   the `SubagentStart` hook is confirmed present and in scope (step 2a's rule). Ask it to
+   check: correctness against the spec, convention adherence, security
+   (`SECURITY_SCAN_FILE`), test coverage.
+3. **Fallback branch** — re-read the diff cold, as a **separate step** from any writing,
+   against that same checklist. Report it plainly as a same-agent review, never worded as
+   if a second agent checked the work.
+4. Surface findings to the user as-is, including any disagreement with the implementation
+   — do **not** auto-resolve by picking a side, and do **not** treat the pass as a
+   completion gate. The caller decides what to act on.
+5. Log which branch ran in `decisions.jsonl` (folded into the caller's own logging when it
+   already logs a completion entry).
 
 ---
 

@@ -13,6 +13,37 @@ content shipped under a version number that already exists, which by precedent d
 `ai_os_version` — actually reach the users already on that version. A non-idempotent action
 would corrupt a little more on each pass.
 
+## v2.8.0 — Automatic Peer Review on Plan Execution
+
+- **`PLAN_EXECUTE` now runs a review pass automatically** (EP-67): `core.planning.sk` gained
+  `core.dev-loop.sk` as a dependency and invokes its new **Review Pass** sub-procedure once
+  per flat plan (at completion, on the accumulated diff) and once per epic story (at the
+  story-done gate, on that story's diff). The pass is an independent reviewer subagent where
+  the host supports subagent dispatch, an honestly-labeled cold self-review where it
+  doesn't; findings surface to the user, non-blocking. **Migration action:** none —
+  additive skill content, covered by the `registry/` copy in `UPDATE_PROMPT.md` Step 3.
+  Existing plan files are unaffected.
+- **`core.dev-loop.sk` refactor** (EP-67): the review half of `DEV_IMPLEMENT_REVIEWED` is
+  factored into a named `### Review Pass` section that both `DEV_IMPLEMENT_REVIEWED` and
+  `PLAN_EXECUTE` call. `DEV_IMPLEMENT_REVIEWED` behavior is unchanged. No migration action —
+  skill-file content, covered by the Step 3 copy.
+- **New `BOOT.md` §4 routing rule** (EP-67): a plain-English "implement this feature /
+  endpoint / function" request **with no approved `PLAN_WRITE` plan** now routes to
+  `DEV_IMPLEMENT_REVIEWED` instead of a bare in-thread write. Granular edits (fix a line,
+  rename a symbol) still match nothing; "execute the plan" when a plan exists still routes
+  to `PLAN_EXECUTE`. No migration action — `BOOT.md` content, covered by the Step 3 copy
+  (itself gated by this repo's `KERNEL OVERRIDE`).
+- **Cost note for upgraders:** on a host with subagent dispatch this adds roughly one
+  reviewer subagent (~6.5K tokens, per the v2.7.0(cont'd 2) `SubagentStart` measurement)
+  per plan, per epic story, and per plan-less implement. On a host without it, the pass is a
+  cold re-read — no dispatch, negligible cost. There is deliberately no archetype gate and
+  no `--no-review` opt-out in this release; if the cost is unwanted, the narrowest local
+  change is to add a `--no-review` parameter to `PLAN_EXECUTE`.
+- **`ai_os_version` bumped `2.7.0` → `2.8.0`** — unlike the additive `(cont'd)` releases,
+  this one changes *default execution behavior* with a real per-run token cost, which an
+  upgrading project should consciously notice. `UPDATE_PROMPT.md` Step 4 walks this section
+  on any install below 2.8.0.
+
 ## v2.7.0 (cont'd 5) — RELEASE (project-only)
 
 - **New command `RELEASE`** in `core.evolution.sk` (EP-66): MaiKS's own commit-and-push-to-

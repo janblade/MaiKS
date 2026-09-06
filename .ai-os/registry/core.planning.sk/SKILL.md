@@ -42,6 +42,10 @@ closes an epic with a structured lessons pass.
   story's acceptance criteria, and the final report
 - `core.memory.sk` — `PLAN_RETRO`'s lesson candidates route through its verify-before-promote
   gate (steps 2/2a/4); `TASK_CLOSE`/`MEMORY_CONSOLIDATE` prune closed plan files
+- `core.dev-loop.sk` — its **Review Pass** sub-procedure runs as an independent second
+  opinion on the diff: once per flat plan at completion, once per epic story at the
+  story-done gate. `PLAN_EXECUTE` implements in-thread, so it calls the Review Pass only,
+  not `DEV_IMPLEMENT_REVIEWED` whole (which also dispatches an implementer subagent)
 
 ## Commands
 
@@ -183,7 +187,11 @@ Work an approved plan step by step.
    gate:** when every step in the active story is `[x]`, run that story's
    `### Acceptance Criteria` through the Verification-Before-Completion Protocol — tick
    each criterion `[ ]` → `[x]` only when a run or exercise actually confirms it; disclose
-   an unverifiable one per that protocol's step 4. Then set the story `Status: done` and
+   an unverifiable one per that protocol's step 4. Then run `core.dev-loop.sk`'s **Review
+   Pass** on that story's diff (`git diff` for its steps) with the story title +
+   `### Acceptance Criteria` as the spec — emit one line naming the branch taken
+   (`independent reviewer` / `self-review fallback`), surface its findings to the user,
+   non-blocking (it is a second opinion, not a gate). Then set the story `Status: done` and
    move to the next eligible story (step 1).
 4. **Refresh the roll-up — always re-derived, never a stored counter.** After any checkbox
    or story-status change, recompute: (flat) the `Active plan:` pointer's `N/M` step count;
@@ -199,11 +207,14 @@ Work an approved plan step by step.
    story may be set `Status: abandoned` with user approval; the epic then finishes on the
    rest or is itself `abandoned` at `TASK_CLOSE`.
 6. All steps done (flat) / all stories `done` and epic-level acceptance in `## Context`
-   verified (epic) → set the plan file's `Status:` to `done`, report completion through the
-   Verification-Before-Completion Protocol (not a bare "done"), and for an epic offer
-   `PLAN_RETRO`. The plan file stays in `memory/plans/` as a dated record —
-   `TASK_CLOSE`/`MEMORY_CONSOLIDATE` handle its eventual pruning (`core.memory.sk`), not
-   this command.
+   verified (epic) → run `core.dev-loop.sk`'s **Review Pass** once on the full accumulated
+   diff with the plan's `## Context` as the spec (**flat plan only** — an epic reviewed
+   each story at its step-3 gate, so no repeat sweep here); emit one line naming the branch
+   taken, surface findings, non-blocking. Then set the plan file's `Status:` to `done`,
+   report completion through the Verification-Before-Completion Protocol (not a bare
+   "done"), and for an epic offer `PLAN_RETRO`. The plan file stays in `memory/plans/` as a
+   dated record — `TASK_CLOSE`/`MEMORY_CONSOLIDATE` handle its eventual pruning
+   (`core.memory.sk`), not this command.
 
 ---
 
@@ -270,3 +281,8 @@ by natural language ("retro on the checkout epic", "what did we learn from that 
    flat.
 5. **Treating a `## Retro` as a promotion** — `PLAN_RETRO` proposes lesson candidates; it
    does not write semantic memory. Promotion still goes through `core.memory.sk`'s gate.
+6. **Expecting `PLAN_EXECUTE` to catch its own implementation errors** — step 2's
+   verification and the Verification-Before-Completion Protocol are both self-checks. The
+   independent second opinion is `core.dev-loop.sk`'s Review Pass, which `PLAN_EXECUTE`
+   runs once per flat plan and once per epic story (EP-67); before that it only ran when
+   `DEV_IMPLEMENT_REVIEWED` was invoked by name.
