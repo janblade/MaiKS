@@ -44,6 +44,23 @@ would corrupt a little more on each pass.
   upgrading project should consciously notice. `UPDATE_PROMPT.md` Step 4 walks this section
   on any install below 2.8.0.
 
+## v2.8.0 (cont'd) — Ownership-Fit Lens in the Review Pass
+
+- **`core.dev-loop.sk`'s Review Pass gained a fifth check** (EP-68): alongside correctness,
+  convention adherence, security, and test coverage, both branches (independent reviewer
+  subagent / cold self-review) now check **ownership fit** — "if you owned this repo, would
+  you merge this diff as-is, or is it in the wrong module / at the wrong abstraction /
+  under-designed even though it works?" Distinct from `core.simplicity.sk`, which is scoped
+  to over-engineering only. Findings surface to the user, non-blocking, same as the other
+  four. Because `PLAN_EXECUTE` and `DEV_IMPLEMENT_REVIEWED` both call the one Review Pass
+  sub-procedure, the lens reaches every implementation the pass already runs on — no new
+  invocation, no added per-run cost. **Migration action:** none — additive skill-file
+  content, covered by the `registry/` copy in `UPDATE_PROMPT.md` Step 3.
+- **No `ai_os_version` bump** — additive content, consistent with the v2.1.0/EP-43
+  precedent. EP-67 bumped `2.8.0` because it added a per-run token cost; this EP adds a
+  criterion to a pass that already runs, so no bump. `UPDATE_PROMPT.md` Step 4 walks this
+  `(cont'd)` section on any install at or below 2.8.0.
+
 ## v2.7.0 (cont'd 5) — RELEASE (project-only)
 
 - **New command `RELEASE`** in `core.evolution.sk` (EP-66): MaiKS's own commit-and-push-to-
